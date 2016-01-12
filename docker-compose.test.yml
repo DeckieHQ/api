@@ -1,0 +1,12 @@
+test:
+  build: .
+  command: 'bundle exec rake test'
+  working_dir: /app/user
+  environment:
+    - PORT=8080
+    - DATABASE_URL=postgres://postgres:@herokuPostgresql:5432/postgres
+    - CODECLIMATE_REPO_TOKEN
+  ports:
+    - '8080:8080'
+  links:
+    - herokuPostgresql
