@@ -8,6 +8,10 @@ dependencies:
   override:
     - docker-compose --version
 
+database:
+  override:
+    - echo "Skipping database preparation..."
+
 test:
   override:
     - make test
