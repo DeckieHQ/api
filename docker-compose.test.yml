@@ -1,3 +1,8 @@
+# Heroku toolbelt generates automatically the docker-compose.yml file.
+#
+# Therefore, this file is here for additional tools required either in
+# development or by the CI server.
+
 test:
   build: .
   command: 'bundle exec rake test'
