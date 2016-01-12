@@ -1,0 +1,8 @@
+{
+  "name": "Deckie",
+  "description": "Deckie is on online social networking",
+  "image": "heroku/ruby:2.2.3",
+  "addons": [
+    "heroku-postgresql"
+  ]
+}
