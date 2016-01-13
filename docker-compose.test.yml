@@ -5,7 +5,7 @@
 
 test:
   build: .
-  command: 'bundle exec rake test'
+  command: 'bundle exec rspec'
   working_dir: /app/user
   environment:
     - PORT=8080

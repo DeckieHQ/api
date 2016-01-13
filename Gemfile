@@ -38,6 +38,8 @@ end
 
 group :test do
   gem 'codeclimate-test-reporter', '~> 0.4', require: nil
+  gem 'shoulda-matchers', '~> 3.0'
+  gem 'factory_girl_rails', '~> 4.5'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
