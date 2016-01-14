@@ -1,5 +1,5 @@
 # Deckie API
-[![Circle CI](https://circleci.com/gh/foliea/deckie-api.svg?style=svg)](https://circleci.com/gh/foliea/deckie-api)
+[![Circle CI](https://circleci.com/gh/foliea/deckie-api.svg?style=svg&circle-token=b3609c7f157c2a1dee147f9a26674685bd01e651)](https://circleci.com/gh/foliea/deckie-api)
 [![Code Climate](https://codeclimate.com/repos/56952273300abe0069003150/badges/eaf4748164208d70e374/gpa.svg)](https://codeclimate.com/repos/56952273300abe0069003150/feed)
 [![Test Coverage](https://codeclimate.com/repos/56952273300abe0069003150/badges/eaf4748164208d70e374/coverage.svg)](https://codeclimate.com/repos/56952273300abe0069003150/coverage)
 [![Issue Count](https://codeclimate.com/repos/56952273300abe0069003150/badges/eaf4748164208d70e374/issue_count.svg)](https://codeclimate.com/repos/56952273300abe0069003150/feed)
