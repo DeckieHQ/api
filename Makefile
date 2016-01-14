@@ -23,7 +23,7 @@ detach:
 	$(compose) up -d web
 
 shell: build
-	$(compose) run shell
+	$(compose) run --service-port shell
 
 clean:
 	$(compose) kill
