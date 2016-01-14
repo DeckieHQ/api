@@ -24,6 +24,9 @@ gem 'puma', '~> 2.15'
 # making cross-origin AJAX possible
 gem 'rack-cors', '~> 0.4'
 
+# Authentication
+gem 'devise', git: 'git://github.com/plataformatec/devise.git'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'
