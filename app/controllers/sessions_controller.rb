@@ -6,8 +6,7 @@ class SessionsController < Devise::SessionsController
       data = { token: user.authentication_token }
 
       render json: data, status: 201
-
-      return true
+      return
     end
   end
 end
