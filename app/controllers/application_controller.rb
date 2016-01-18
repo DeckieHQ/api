@@ -8,7 +8,7 @@ class ApplicationController < ActionController::API
 
   #  before_action :authenticate_user!
 
-  private
+  protected
 
   def authenticate_user_from_token!
     authenticate_with_http_token do |token, options|

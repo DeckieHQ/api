@@ -1,6 +1,12 @@
 class DeviseCreateUsers < ActiveRecord::Migration
-  def change
+  def up
     create_table(:users) do |t|
+      ## Identity
+      t.string :first_name, null: false
+      t.string :last_name,  null: false
+      t.date   :birthday,   null: false
+      t.string :phone_number
+
       ## Database authenticatable
       t.string :email,              null: false, default: ""
       t.string :encrypted_password, null: false, default: ""
@@ -27,5 +33,9 @@ class DeviseCreateUsers < ActiveRecord::Migration
 
     add_index :users, :email,                unique: true
     add_index :users, :reset_password_token, unique: true
+  end
+
+  def down
+    drop_table :users
   end
 end

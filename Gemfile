@@ -27,6 +27,9 @@ gem 'rack-cors', '~> 0.4'
 # Authentication
 gem 'devise', git: 'git://github.com/plataformatec/devise.git'
 
+# Validations
+gem 'phony_rails', '~> 0.12'
+gem 'date_validator', '~> 0.9'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'

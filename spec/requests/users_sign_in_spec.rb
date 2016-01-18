@@ -13,6 +13,11 @@ RSpec.describe 'POST /users/sign_in', :type => :request do
     it 'returns the user authentication token' do
       expect(json_response).to eq({ token: user.authentication_token })
     end
+
+    it 'sets the user :last_sign_in_at to current datetime' do
+      user.reload
+      expect(user.last_sign_in_at).to equal_time(DateTime.current)
+    end
   end
 
   context "when user doesn't exist" do

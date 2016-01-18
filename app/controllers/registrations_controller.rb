@@ -11,4 +11,12 @@ class RegistrationsController < Devise::RegistrationsController
       return
     end
   end
+
+  private
+
+  def sign_up_params
+    params
+    .require(resource_name)
+    .permit(:first_name, :last_name, :birthday, :email, :password)
+  end
 end
