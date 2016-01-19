@@ -3,9 +3,7 @@ class SessionsController < Devise::SessionsController
 
   def create
     super do |user|
-      data = { token: user.authentication_token }
-
-      render json: data, status: 201
+      render json: { token: user.authentication_token }, status: 201
       return
     end
   end

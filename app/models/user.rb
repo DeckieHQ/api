@@ -16,7 +16,7 @@ class User < ApplicationRecord
     after:  Proc.new { Time.now - 100.year },
     before: Proc.new { Time.now - 18.year  }
   }
-
+  validates :phone_number, uniqueness: true
   validates_plausible_phone :phone_number
 
   def generate_authentication_token

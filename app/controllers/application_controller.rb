@@ -1,23 +1,21 @@
 class ApplicationController < ActionController::API
   include ActionController::HttpAuthentication::Token::ControllerMethods
 
-  #  before_action :authenticate_user_from_token!
-
-  # Enter the normal Devise authentication path,
-  # using the token authenticated user if available
-
-  #  before_action :authenticate_user!
-
   protected
 
-  def authenticate_user_from_token!
-    authenticate_with_http_token do |token, options|
-      user_email = options[:email].presence
-      user = user_email && User.find_by_email(user_email)
+  def authenticate!(options={})
+    authenticate_token || render_unauthorized
+  end
 
-      if user && Devise.secure_compare(user.authentication_token, token)
-        sign_in user, store: false
-      end
+  def authenticate_token
+    authenticate_with_http_token do |token, options|
+      user = User.find_by(authentication_token: token)
+
+      sign_up(user, store: false)
     end
+  end
+
+  def render_unauthorized
+    render json: { error: I18n.t('failure.unauthorized') }, status: 401
   end
 end

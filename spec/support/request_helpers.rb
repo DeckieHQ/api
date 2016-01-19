@@ -5,7 +5,13 @@ module Request
     end
 
     def json_headers
-      @json_headers ||= { 'ACCEPT' => 'application/json' }
+      headers = {}
+      if defined?(authentified) && authentified
+        headers = {
+          'Authorization' => "Token token=#{user.authentication_token}"
+        }
+      end
+      headers.merge({ 'ACCEPT' => 'application/json' })
     end
   end
 end

@@ -1,24 +1,23 @@
 require 'rails_helper'
 
 RSpec.describe 'POST /users', :type => :request do
+  let(:sign_up_params) { user.attributes.merge(password: user.password) }
   before do
-    @sign_up_params = user.attributes.merge(password: user.password)
-
-    post '/users', { user: @sign_up_params }, json_headers
+    post '/users', { user: sign_up_params }, json_headers
   end
 
   context 'when attributes are valid' do
     let(:user)         { FactoryGirl.build(:user) }
     let(:created_user) { User.find_by(email: user.email) }
 
+    it { is_expected.to return_status_code 201 }
+
     it 'creates a new user with permited parameters' do
-      permited_params = @sign_up_params.slice(
+      permited_params = sign_up_params.slice(
         'first_name', 'last_name', 'birthday'
       )
       expect(created_user).to have_attributes(permited_params)
     end
-
-    it { is_expected.to return_status_code 201 }
 
     it 'returns the created user authentication token' do
       expect(json_response).to eq({ token: created_user.authentication_token })
@@ -29,10 +28,6 @@ RSpec.describe 'POST /users', :type => :request do
     let(:user) { FactoryGirl.build(:user, email: 'test@') }
 
     it { is_expected.to return_status_code 422 }
-
-    it 'returns the validation errors' do
-      user.valid?
-      expect(json_response).to eq({ errors: user.errors.messages })
-    end
+    it { is_expected.to return_validation_errors :user }
   end
 end

@@ -4,6 +4,7 @@ RSpec.describe User, :type => :model do
   # Database
   it { is_expected.to have_db_index(:email).unique(true) }
   it { is_expected.to have_db_index(:reset_password_token).unique(true) }
+  it { is_expected.to have_db_index(:phone_number).unique(true) }
 
   # Validations
   it { is_expected.to validate_presence_of(:first_name) }
