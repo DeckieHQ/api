@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'POST /users', :type => :request do
   let(:sign_up_params) { user.attributes.merge(password: user.password) }
+
   before do
     post '/users', { user: sign_up_params }, json_headers
   end

@@ -6,7 +6,7 @@ module Request
 
     def json_headers
       headers = {}
-      if defined?(authentified) && authentified
+      if defined?(authenticated) && authenticated
         headers = {
           'Authorization' => "Token token=#{user.authentication_token}"
         }

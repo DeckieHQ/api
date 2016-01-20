@@ -25,6 +25,10 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def destroy
+    super { head :no_content and return }
+  end
+
   private
 
   def sign_up_params
