@@ -19,6 +19,10 @@ RSpec.describe 'Users account update', :type => :request do
     end
 
     context 'when attributes are valid' do
+      let(:account_update_params) do
+        user_update.attributes.merge(current_password: user.password)
+      end
+
       it { is_expected.to return_status_code 200 }
 
       it 'returns the user attributes' do
@@ -27,7 +31,7 @@ RSpec.describe 'Users account update', :type => :request do
 
       it 'updates the user with permited params' do
         permited_params = account_update_params.slice(
-          'email', 'first_name', 'last_name', 'birthday', 'phone_number'
+          'email', 'password', 'first_name', 'last_name', 'birthday', 'phone_number'
         )
         expect(user).to have_attributes(permited_params)
       end

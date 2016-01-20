@@ -32,17 +32,14 @@ class RegistrationsController < Devise::RegistrationsController
   def sign_up_params
     params
     .require(resource_name)
-    .permit(:first_name, :last_name, :birthday, :email, :password)
+    .permit(:email, :password, :first_name, :last_name, :birthday)
   end
 
   def account_update_params
     params
-    .require(resource_name)
-    .permit(:first_name, :last_name, :birthday, :email, :phone_number)
-  end
-
-  # Skip_current password confirmation for account update.
-  def update_resource(resource, params)
-    resource.update_without_password(params)
+    .require(resource_name).permit(
+      :email,      :password,   :current_password,
+      :first_name, :last_name,  :birthday, :phone_number
+    )
   end
 end
