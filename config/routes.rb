@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  # Removes all routes first in order to remove routes unnecessary for an API.
+  devise_for :users, skip: :all
 
-  # Serve websocket cable requests in-process
-  # mount ActionCable.server => '/cable'
+  devise_scope :user do
+    post '/users/sign_in' => 'sessions#create', as: :users_sign_in
+
+    post   '/users' => 'registrations#create',  as: :users_sign_up
+    put    '/users' => 'registrations#update',  as: :users_account_update
+    delete '/users' => 'registrations#destroy', as: :users_account_cancel
+  end
 end

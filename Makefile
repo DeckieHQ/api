@@ -11,6 +11,7 @@ build:
 
 migrations: build
 	$(compose) run web bundle exec rake db:migrate
+	$(compose) run web bundle exec rake db:seed
 
 test: migrations
 	$(compose) -f docker-compose.test.yml run test
@@ -22,7 +23,7 @@ detach:
 	$(compose) up -d web
 
 shell: build
-	$(compose) run shell
+	$(compose) run --service-port shell
 
 clean:
 	$(compose) kill
