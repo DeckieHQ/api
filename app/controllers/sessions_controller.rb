@@ -1,9 +1,8 @@
 class SessionsController < Devise::SessionsController
-  respond_to :json
-
   def create
     super do |user|
-      render json: { token: user.authentication_token }, status: 201 and return
+      render json: { token: user.authentication_token }, status: :created
+      return
     end
   end
 end

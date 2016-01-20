@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe 'POST /users', :type => :request do
+RSpec.describe 'Users sign up', :type => :request do
   let(:sign_up_params) { user.attributes.merge(password: user.password) }
 
   before do
-    post '/users', { user: sign_up_params }, json_headers
+    post users_sign_up_path, { user: sign_up_params }, json_headers
   end
 
   context 'when attributes are valid' do

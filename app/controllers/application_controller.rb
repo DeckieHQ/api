@@ -18,4 +18,8 @@ class ApplicationController < ActionController::API
   def render_unauthorized
     render json: { error: I18n.t('failure.unauthorized') }, status: 401
   end
+
+  def render_validation_errors(model)
+    render json: { errors: model.errors }, status: :unprocessable_entity
+  end
 end

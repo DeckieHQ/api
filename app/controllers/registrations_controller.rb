@@ -1,14 +1,12 @@
 class RegistrationsController < Devise::RegistrationsController
   alias_method :authenticate_user!, :authenticate!
 
-  respond_to :json
-
   def create
     super do |user|
       if user.persisted?
-        render json: { token: user.authentication_token }, status: 201
+        render json: { token: user.authentication_token }, status: :created
       else
-        render json: { errors: user.errors }, status: 422
+        render_validation_errors(user)
       end
       return
     end
@@ -16,10 +14,10 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update
     super do |user|
-      if user.save
-        render json: user, status: 200
+      if user.valid?
+        render json: user, status: :ok
       else
-        render json: { errors: user.errors }, status: 422
+        render_validation_errors(user)
       end
       return
     end
@@ -29,7 +27,7 @@ class RegistrationsController < Devise::RegistrationsController
     super { head :no_content and return }
   end
 
-  private
+  protected
 
   def sign_up_params
     params
@@ -41,5 +39,10 @@ class RegistrationsController < Devise::RegistrationsController
     params
     .require(resource_name)
     .permit(:first_name, :last_name, :birthday, :email, :phone_number)
+  end
+
+  # Skip_current password confirmation for account update.
+  def update_resource(resource, params)
+    resource.update_without_password(params)
   end
 end

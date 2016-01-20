@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe 'DELETE /users', :type => :request do
+RSpec.describe 'Users account cancel', :type => :request do
   before do
-    delete '/users', {}, json_headers
+    delete users_account_cancel_path, {}, json_headers
   end
 
   it_behaves_like 'an action requiring authentication'

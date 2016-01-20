@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe 'PATCH /users', :type => :request do
+RSpec.describe 'Users account update', :type => :request do
   let(:user_update)           { FactoryGirl.build(:user_update) }
   let(:account_update_params) { user_update.attributes }
 
   before do
-    put '/users', { user: account_update_params }, json_headers
+    put users_account_update_path, { user: account_update_params }, json_headers
   end
 
   it_behaves_like 'an action requiring authentication'
