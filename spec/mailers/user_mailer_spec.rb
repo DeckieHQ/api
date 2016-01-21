@@ -2,9 +2,11 @@ require 'rails_helper'
 
 RSpec.describe UserMailer do
   describe '#reset_password_instructions' do
-    let(:user) { FactoryGirl.create(:user, reset_password_token: 'test')  }
+    let(:user) { FactoryGirl.create(:user)  }
 
-    let(:mail) { UserMailer.reset_password_instructions(user, user.reset_password_token) }
+    let(:reset_password_token) { user.send(:set_reset_password_token) }
+
+    let(:mail) { UserMailer.reset_password_instructions(user, reset_password_token) }
 
     it 'renders the subject' do
       expect(mail.subject).to eq(
@@ -30,7 +32,7 @@ RSpec.describe UserMailer do
 
     it 'assigns @reset_password_url' do
       reset_password_url = users_reset_password_url
-      reset_password_url << "/edit?reset_password_token=#{user.reset_password_token}"
+      reset_password_url << "/edit?reset_password_token=#{reset_password_token}"
 
       expect(mail.body.encoded).to include(reset_password_url)
     end

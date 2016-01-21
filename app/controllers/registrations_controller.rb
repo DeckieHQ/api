@@ -3,23 +3,18 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     super do |user|
-      if user.persisted?
-        render json: user, status: :created
-      else
-        render_validation_errors(user)
-      end
+      return render_validation_errors(user) unless user.persisted?
+
+      render json: user, status: :created
       return
     end
   end
 
   def update
     super do |user|
-      if user.valid?
-        render json: user, status: :ok
-      else
-        render_validation_errors(user)
-      end
-      return
+      return render_validation_errors(user) unless user.valid?
+
+      render json: user, status: :ok and return
     end
   end
 
