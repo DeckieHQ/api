@@ -4,7 +4,7 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     super do |user|
       if user.persisted?
-        render json: { token: user.authentication_token }, status: :created
+        render json: user, status: :created
       else
         render_validation_errors(user)
       end

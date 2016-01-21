@@ -20,8 +20,8 @@ RSpec.describe 'Users sign up', :type => :request do
       expect(created_user).to have_attributes(permited_params)
     end
 
-    it 'returns the created user authentication token' do
-      expect(json_response).to eq({ token: created_user.authentication_token })
+    it 'returns the user attributes' do
+      expect(response.body).to equal_serialized(created_user)
     end
   end
 
