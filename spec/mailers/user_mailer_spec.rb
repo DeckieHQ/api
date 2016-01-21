@@ -20,6 +20,10 @@ RSpec.describe UserMailer do
       expect(mail.from).to eq ['notifications@deckie.io']
     end
 
+    it 'renders the reply to email' do
+      expect(mail.reply_to).to eq ['notifications@deckie.io']
+    end
+
     it 'assigns @user.email' do
       expect(mail.body.encoded).to match(user.email)
     end

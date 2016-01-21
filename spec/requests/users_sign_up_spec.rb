@@ -4,7 +4,8 @@ RSpec.describe 'Users sign up', :type => :request do
   let(:sign_up_params) { user.attributes.merge(password: user.password) }
 
   before do
-    post users_sign_up_path, { user: sign_up_params }, json_headers
+    post users_sign_up_path,
+      params: { user: sign_up_params }, headers: json_headers
   end
 
   context 'when attributes are valid' do

@@ -1,6 +1,13 @@
 class PasswordsController < Devise::PasswordsController
   def create
-    super { head :no_content and return }
+    super do |user|
+      if user.persisted?
+        head :no_content
+      else
+        render_not_found
+      end
+      return
+    end
   end
 
   def update

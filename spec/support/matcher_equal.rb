@@ -11,3 +11,13 @@ RSpec::Matchers.define :equal_serialized do |expected|
     actual == ActiveModel::SerializableResource.new(expected).to_json
   end
 end
+
+RSpec::Matchers.define :equal_mail do |expected|
+  match do |actual|
+    attributes(actual) == attributes(expected)
+  end
+
+  def attributes(mail)
+    mail.instance_values.slice('from', 'reply_to', 'to', 'subject')
+  end
+end

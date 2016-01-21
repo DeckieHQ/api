@@ -17,6 +17,10 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def render_not_found
+    render json: { error: I18n.t('failure.not_found') }, status: :not_found
+  end
+
   def render_unauthorized
     render json: { error: I18n.t('failure.unauthorized') }, status: :unauthorized
   end

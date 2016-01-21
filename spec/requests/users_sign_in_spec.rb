@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Users sign in', :type => :request do
   before do
-    post users_sign_in_path, { user: user.slice(:email, :password) }, json_headers
+    post users_sign_in_path,
+      params: { user: user.slice(:email, :password) }, headers: json_headers
   end
 
   context 'when user exists' do
