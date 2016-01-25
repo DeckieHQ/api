@@ -22,3 +22,4 @@
 en:
   failure:
     unauthorized: 'Bad credentials.'
+    not_found: 'Not found.'

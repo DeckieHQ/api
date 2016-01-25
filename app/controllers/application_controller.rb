@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::API
   include ActionController::HttpAuthentication::Token::ControllerMethods
 
+  respond_to :json
+
   protected
 
   def authenticate!(options={})
@@ -15,8 +17,12 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def render_not_found
+    render json: { error: I18n.t('failure.not_found') }, status: :not_found
+  end
+
   def render_unauthorized
-    render json: { error: I18n.t('failure.unauthorized') }, status: 401
+    render json: { error: I18n.t('failure.unauthorized') }, status: :unauthorized
   end
 
   def render_validation_errors(model)

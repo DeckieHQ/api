@@ -3,21 +3,21 @@ require 'rspec/expectations'
 
 class DateExpectations < ValidationExpectations
   def validate_after?
-    valid?(day_after_limit) && !valid?(day_limit)
+    validate?(1.day)
   end
 
   def validate_before?
-    valid?(day_limit) && !valid?(day_after_limit)
+    validate?(-1.day)
   end
 
   private
 
-  def day_limit
-    @limit ||= Time.now - @interval
+  def validate?(time)
+    !valid?(day_limit) && valid?(day_limit + time)
   end
 
-  def day_after_limit
-    @day_after_limit ||= day_limit + 1.day
+  def day_limit
+    @day_limit ||= Time.now - @interval
   end
 end
 

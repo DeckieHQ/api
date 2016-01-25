@@ -5,7 +5,8 @@ RSpec.describe 'Users account update', :type => :request do
   let(:account_update_params) { user_update.attributes }
 
   before do
-    put users_account_update_path, { user: account_update_params }, json_headers
+    put users_account_update_path,
+      params: { user: account_update_params }, headers: json_headers
   end
 
   it_behaves_like 'an action requiring authentication'
@@ -19,6 +20,10 @@ RSpec.describe 'Users account update', :type => :request do
     end
 
     context 'when attributes are valid' do
+      let(:account_update_params) do
+        user_update.attributes.merge(current_password: user.password)
+      end
+
       it { is_expected.to return_status_code 200 }
 
       it 'returns the user attributes' do
@@ -27,7 +32,7 @@ RSpec.describe 'Users account update', :type => :request do
 
       it 'updates the user with permited params' do
         permited_params = account_update_params.slice(
-          'email', 'first_name', 'last_name', 'birthday', 'phone_number'
+          'email', 'password', 'first_name', 'last_name', 'birthday', 'phone_number'
         )
         expect(user).to have_attributes(permited_params)
       end
