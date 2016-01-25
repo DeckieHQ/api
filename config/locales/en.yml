@@ -23,3 +23,10 @@ en:
   failure:
     unauthorized: 'Bad credentials.'
     not_found: 'Not found.'
+  verifications:
+    failure:
+      already_verified: '%{type} is already verified.'
+      token_invalid: '%{type} verification token is invalid.'
+      token_expired: '%{type} verification token has expired.'
+    email:
+      subject: 'Email Verifications'

@@ -4,5 +4,5 @@ module MailDeliveries
 
   @@deliveries = ActionMailer::Base.deliveries
 
-  def_delegators :@@deliveries, :last, :clear, :empty?
+  def_delegators :@@deliveries, :last, :clear, :empty?, :count
 end
