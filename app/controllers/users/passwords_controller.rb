@@ -1,4 +1,4 @@
-class PasswordsController < Devise::PasswordsController
+class Users::PasswordsController < Devise::PasswordsController
   def create
     super do |user|
       return render_not_found unless user.persisted?

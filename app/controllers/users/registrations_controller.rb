@@ -1,12 +1,17 @@
-class RegistrationsController < Devise::RegistrationsController
+class Users::RegistrationsController < Devise::RegistrationsController
   alias_method :authenticate_user!, :authenticate!
+
+  before_action :authenticate!, only: :show
+
+  def show
+    render json: current_user, status: :ok and return
+  end
 
   def create
     super do |user|
       return render_validation_errors(user) unless user.persisted?
 
-      render json: user, status: :created
-      return
+      render json: user, status: :created and return
     end
   end
 

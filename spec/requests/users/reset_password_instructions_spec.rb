@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Users reset password instructions', :type => :request do
   before do
-    post users_reset_password_instructions_path,
+    post users_reset_password_path,
       params: { user: user.slice(:email) }, headers: json_headers
   end
 
