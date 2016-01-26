@@ -66,17 +66,17 @@ RSpec.describe 'Users verification', :type => :request do
           end
         end
 
-        it { is_expected.to return_status_code 410 }
+        it { is_expected.to return_status_code 422 }
 
-        it 'returns a token expired error' do
+        it 'returns a token invalid error' do
           expect(json_response).to eql({ error:
-            I18n.t('verifications.failure.token_expired', type: :email)
+            I18n.t('verifications.failure.token_invalid', type: :email)
           })
         end
       end
 
       context 'when email verification token is invalid' do
-        it { is_expected.to return_status_code 403 }
+        it { is_expected.to return_status_code 422 }
 
         it 'returns a token invalid error' do
           expect(json_response).to eql({ error:

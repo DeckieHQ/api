@@ -13,11 +13,7 @@ class VerificationsService
   end
 
   def token_valid?
-    @model.send("#{type}_verification_token") == token
-  end
-
-  def token_expired?
-    @model.send("#{type}_verification_sent_at") + 5.hours > Time.now
+    @model.send("#{type}_verification_token") == token && expiration_time > Time.now
   end
 
   def send_instructions
@@ -41,6 +37,10 @@ class VerificationsService
 
     @token ||= (@params[@token_attribute] || '')
   end
+
+  def expiration_time
+    @model.send("#{type}_verification_sent_at") + 5.hours
+  end
 end
 
 class Users::VerificationsController < ApplicationController
@@ -56,10 +56,7 @@ class Users::VerificationsController < ApplicationController
 
   def update
     unless @verification.token_valid?
-      return render_verification_error :token_invalid, status: :forbidden
-    end
-    unless @verification.token_expired?
-      return render_verification_error :token_expired, status: :gone
+      return render_verification_error :token_invalid, status: :unprocessable_entity
     end
 
     @verification.complete!
