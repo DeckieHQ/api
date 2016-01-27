@@ -33,10 +33,17 @@ RSpec::Matchers.define :return_validation_errors do |resource_name|
 
     resource.valid?
 
-    json_response == { errors: resource.errors.messages }
+    expected_errors =  {
+      errors: {
+        details:  resource.errors.details,
+        messages: resource.errors.messages
+      }
+    }.to_json
+
+    response.body == expected_errors
   end
 end
 
 RSpec::Matchers.define :return_validation_errors_on do |expected|
-  match { json_response[:errors][expected].present? }
+  match { json_response[:errors][:details][expected].present? }
 end
