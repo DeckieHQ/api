@@ -31,7 +31,7 @@ RSpec::Matchers.define :return_validation_errors do |resource_name|
   match do
     resource = send(resource_name)
 
-    resource.valid?
+    resource.valid? unless resource.errors.present?
 
     expected_errors =  {
       errors: {
