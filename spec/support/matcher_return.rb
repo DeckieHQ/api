@@ -27,11 +27,12 @@ RSpec::Matchers.define :return_status_code do |expected|
   end
 end
 
-RSpec::Matchers.define :return_validation_errors do |resource_name|
+RSpec::Matchers.define :return_validation_errors do |resource_name, options|
   match do
+    options  = options || {}
     resource = send(resource_name)
 
-    resource.valid? unless resource.errors.present?
+    resource.valid?(options[:context]) unless resource.errors.present?
 
     expected_errors =  {
       errors: {

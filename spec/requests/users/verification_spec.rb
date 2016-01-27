@@ -13,16 +13,20 @@ RSpec.describe 'Users verification', :type => :request do
     let(:user)          { FactoryGirl.create(:user) }
     let(:authenticated) { true }
 
-    context 'with empty parameters' do
-      let(:verification_params) {}
+    let(:verification) do
+      Verification.new(verification_params[:verification], user: user)
+    end
 
-      it { is_expected.to return_not_found }
+    context 'with empty parameters' do
+      let(:verification_params) { {} }
+
+      it { is_expected.to return_validation_errors :verification }
     end
 
     context 'with invalid type' do
       let(:verification_params) { { verification: { type: :invalid } } }
 
-      it { is_expected.to return_not_found }
+      it { is_expected.to return_validation_errors :verification }
     end
 
     context 'with email type' do
@@ -39,7 +43,7 @@ RSpec.describe 'Users verification', :type => :request do
           FactoryGirl.create(:user).tap(&:generate_email_verification_token!)
         end
 
-        it { is_expected.to return_status_code 200 }
+        it { is_expected.to return_no_content }
 
         it 'completes user email verification' do
           expect(user.email_verified_at).to equal_time(Time.now)
@@ -66,22 +70,14 @@ RSpec.describe 'Users verification', :type => :request do
           end
         end
 
-        it { is_expected.to return_status_code 422 }
-
-        it 'returns a token invalid error' do
-          expect(json_response).to eql({ error:
-            I18n.t('verifications.failure.token_invalid', type: :email)
-          })
+        it do
+          is_expected.to return_validation_errors :verification, context: :complete
         end
       end
 
       context 'when email verification token is invalid' do
-        it { is_expected.to return_status_code 422 }
-
-        it 'returns a token invalid error' do
-          expect(json_response).to eql({ error:
-            I18n.t('verifications.failure.token_invalid', type: :email)
-          })
+        it do
+          is_expected.to return_validation_errors :verification, context: :complete
         end
       end
     end

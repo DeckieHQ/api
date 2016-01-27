@@ -26,6 +26,5 @@ en:
   verifications:
     failure:
       already_verified: '%{type} is already verified.'
-      token_invalid: '%{type} verification token is invalid or has expired.'
     email:
       subject: 'Email Verifications'

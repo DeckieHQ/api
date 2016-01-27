@@ -13,21 +13,25 @@ RSpec.describe 'Users verification instructions', :type => :request do
     let(:user)          { FactoryGirl.create(:user) }
     let(:authenticated) { true }
 
+    let(:verification) do
+      Verification.new(verification_params[:verification], user: user)
+    end
+
     before do
       MailDeliveries.clear
     end
 
     context 'with empty parameters' do
-      let(:verification_params) {}
+      let(:verification_params) { {} }
 
-      it { is_expected.to return_not_found }
+      it { is_expected.to return_validation_errors :verification }
       it { is_expected.not_to have_sent_mail }
     end
 
     context 'with invalid type' do
       let(:verification_params) { { verification: { type: :invalid } } }
 
-      it { is_expected.to return_not_found }
+      it { is_expected.to return_validation_errors :verification }
       it { is_expected.not_to have_sent_mail }
     end
 

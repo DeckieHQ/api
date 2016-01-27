@@ -1,85 +1,32 @@
-class VerificationsService
-  def initialize(model, params)
-    @model   = model
-    @params  = params[:verification] || {}
-  end
-
-  def exist?
-    ['email', 'phone_number'].include?(type)
-  end
-
-  def already_verified?
-    @model.send("#{type}_verified_at").present?
-  end
-
-  def token_valid?
-    @model.send("#{type}_verification_token") == token && expiration_time > Time.now
-  end
-
-  def send_instructions
-    @model.send("generate_#{type}_verification_token!")
-    @model.send("send_#{type}_verification_instructions")
-  end
-
-  def complete!
-    @model.send("verify_#{type}!")
-  end
-
-  def type
-    @type ||= (@params[:type] || '')
-  end
-
-  private
-
-  # TODO: Rethink this whole idea of token/pin
-  def token
-    @token_attribute ||= type == 'phone_number' ? :pin : :token
-
-    @token ||= (@params[@token_attribute] || '')
-  end
-
-  def expiration_time
-    @model.send("#{type}_verification_sent_at") + 5.hours
-  end
-end
-
 class Users::VerificationsController < ApplicationController
   before_action :authenticate!
 
   before_action :retrieve_verification
 
   def create
-    @verification.send_instructions
+    return head :no_content if @verification.send_instructions
 
-    head :no_content and return
+    render_validation_errors(@verification) and return
   end
 
   def update
-    unless @verification.token_valid?
-      return render_verification_error :token_invalid, status: :unprocessable_entity
-    end
+    return head :no_content if @verification.complete
 
-    @verification.complete!
-
-    render json: current_user, status: :ok and return
+    render_validation_errors(@verification) and return
   end
 
   protected
 
   def retrieve_verification
-    @verification = VerificationsService.new(current_user, params)
+    @verification = Verification.new(params[:verification], user: current_user)
 
-    return render_not_found unless @verification.exist?
-
-    if @verification.already_verified?
-      return render_verification_error :already_verified, status: :conflict
-    end
+    return render_already_verified_error if @verification.already_verified?
   end
 
-  def render_verification_error(error_type, status:)
+  def render_already_verified_error
     error_message = I18n.t(
-      "verifications.failure.#{error_type}", type: @verification.type
+      "verifications.failure.already_verified", type: @verification.type
     )
-    render json: { error: error_message }, status: status
+    render json: { error: error_message }, status: :conflict
   end
 end
