@@ -12,7 +12,7 @@ RSpec.describe 'Users sign in', :type => :request do
     it { is_expected.to return_status_code 201 }
 
     it 'returns the user authentication token' do
-      expect(json_response).to eq({ token: user.authentication_token })
+      expect(json_response).to eq({ email: user.email, token: user.authentication_token })
     end
 
     it 'sets the user :last_sign_in_at to current datetime' do
