@@ -53,12 +53,9 @@ RSpec.describe 'Users verification', :type => :request do
       context 'when user email is already verified' do
         let(:user) { FactoryGirl.create(:user).tap(&:verify_email!) }
 
-        it { is_expected.to return_status_code 409 }
-
-        it 'returns a already verified error' do
-          expect(json_response).to eql({ error:
-            I18n.t('verifications.failure.already_verified', type: :email)
-          })
+        it do
+          is_expected.to return_validation_errors :verification,
+            context: :complete
         end
       end
 
@@ -71,13 +68,15 @@ RSpec.describe 'Users verification', :type => :request do
         end
 
         it do
-          is_expected.to return_validation_errors :verification, context: :complete
+          is_expected.to return_validation_errors :verification,
+            context: :complete
         end
       end
 
       context 'when email verification token is invalid' do
         it do
-          is_expected.to return_validation_errors :verification, context: :complete
+          is_expected.to return_validation_errors :verification,
+            context: :complete
         end
       end
     end

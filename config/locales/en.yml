@@ -24,7 +24,13 @@ en:
     unauthorized: 'Bad credentials.'
     not_found: 'Not found.'
   verifications:
-    failure:
-      already_verified: '%{type} is already verified.'
     email:
       subject: 'Email Verifications'
+
+  activemodel:
+    errors:
+      models:
+        verification:
+          attributes:
+            type:
+              already_verified: 'is already verified.'

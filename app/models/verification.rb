@@ -14,14 +14,12 @@ class Verification
 
   validates :type, inclusion: { in: %w(email phone_number) }
 
+  validate :user_must_be_unverified, on: [:send_instructions, :complete]
+
   validate :token_must_be_valid, on: :complete
 
-  def already_verified?
-    valid? && @user.send("#{@type}_verified_at").present?
-  end
-
   def send_instructions
-    return false unless valid?
+    return false unless valid? && valid?(:send_instructions)
 
     @user.send("generate_#{@type}_verification_token!")
     @user.send("send_#{@type}_verification_instructions")
@@ -34,6 +32,12 @@ class Verification
   end
 
   private
+
+  def user_must_be_unverified
+    verified_at = @user.send("#{@type}_verified_at")
+
+    errors.add(:type, :already_verified) unless verified_at.nil?
+  end
 
   def token_must_be_valid
     user_token = @user.send("#{@type}_verification_token")
