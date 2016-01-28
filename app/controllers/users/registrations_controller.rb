@@ -17,7 +17,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def update
     super do |user|
-      return render_validation_errors(user) unless user.valid?
+      # If current_password is invalid, devise is not setting properly
+      # the user (user.valid? will be true but errors will still appear in
+      # user.errors).
+      return render_validation_errors(user) if user.errors.present?
 
       render json: user, status: :ok and return
     end
