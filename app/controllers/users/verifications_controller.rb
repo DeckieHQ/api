@@ -18,6 +18,6 @@ class Users::VerificationsController < ApplicationController
   protected
 
   def retrieve_verification
-    @verification = Verification.new(params[:verification], user: current_user)
+    @verification = Verification.new(params[:verification], model: current_user)
   end
 end

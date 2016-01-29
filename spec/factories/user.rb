@@ -4,8 +4,8 @@ FactoryGirl.define do
     last_name  { Faker::Name.last_name  }
     birthday   { Faker::Date.between(100.years.ago, 18.years.ago) }
 
-    email     { Faker::Internet.email }
-    password  { Faker::Internet.password }
+    email    { Faker::Internet.email }
+    password { Faker::Internet.password }
 
     factory :user_invalid do
       email '.'

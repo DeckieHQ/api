@@ -2,7 +2,14 @@ require 'rails_helper'
 
 RSpec.describe 'Users verification', :type => :request do
   before do
+    SMSDeliveries.use_fake_provider
+
     put users_verifications_path, params: verification_params, headers: json_headers
+  end
+
+  after do
+    MailDeliveries.clear
+    SMSDeliveries.clear
   end
 
   let(:verification_params) {}
@@ -14,7 +21,7 @@ RSpec.describe 'Users verification', :type => :request do
     let(:authenticated) { true }
 
     let(:verification) do
-      Verification.new(verification_params[:verification], user: user)
+      Verification.new(verification_params[:verification], model: user)
     end
 
     context 'with empty parameters' do
@@ -29,54 +36,68 @@ RSpec.describe 'Users verification', :type => :request do
       it { is_expected.to return_validation_errors :verification }
     end
 
-    context 'with email type' do
-      let(:verification_params) do
-        { verification: { type: :email, token: user.email_verification_token } }
-      end
+    [:email, :phone_number].each do |type|
+      context "with type #{type}" do
+        let(:verification_params) do
+          user_token = user.send("#{type}_verification_token")
 
-      before do
-        user.reload
-      end
-
-      context 'when user email is not verified' do
-        let(:user) do
-          FactoryGirl.create(:user).tap(&:generate_email_verification_token!)
+          { verification: { type: type, token: user_token } }
         end
 
-        it { is_expected.to return_no_content }
-
-        it 'completes user email verification' do
-          expect(user.email_verified_at).to equal_time(Time.now)
+        before do
+          user.reload
         end
-      end
 
-      context 'when user email is already verified' do
-        let(:user) { FactoryGirl.create(:user).tap(&:verify_email!) }
+        context "when user #{type} is not verified" do
+          let(:user) { FactoryGirl.create(:"user_with_#{type}_verification") }
 
-        it do
-          is_expected.to return_validation_errors :verification,
-            context: :complete
-        end
-      end
+          it { is_expected.to return_no_content }
 
-      context 'when email verification token has expired' do
-        let(:user) do
-          FactoryGirl.create(:user).tap do |user|
-            user.generate_email_verification_token!
-            user.update(email_verification_sent_at: Time.now - 6.hours)
+          it "completes user #{type} verification" do
+            verified_at = user.send("#{type}_verified_at")
+
+            expect(verified_at).to equal_time(Time.now)
           end
         end
 
-        it do
-          is_expected.to return_validation_errors :verification,
-            context: :complete
-        end
-      end
+        context "when user #{type} is already verified" do
+          let(:user) { FactoryGirl.create(:"user_with_#{type}_verified") }
 
-      context 'when email verification token is invalid' do
-        it do
-          is_expected.to return_validation_errors :verification,
-            context: :complete
+          it do
+            is_expected.to return_validation_errors :verification,
+              context: :complete
+          end
+        end
+
+        context "when #{type} verification token has expired" do
+          let(:user) { FactoryGirl.create(:"user_with_#{type}_verification_expired") }
+
+          it do
+            is_expected.to return_validation_errors :verification,
+              context: :complete
+          end
+        end
+
+        context "when #{type} verification token is blank" do
+          let(:user) { FactoryGirl.create(:user_with_phone_number) }
+
+          it do
+            is_expected.to return_validation_errors :verification,
+              context: :complete
+          end
+        end
+
+        context "when #{type} verification token is blank" do
+          let(:user) { FactoryGirl.create(:user_with_phone_number) }
+
+          let(:verification_params) do
+            { verification: { type: type, token: Faker::Internet.password } }
+          end
+
+          it do
+            is_expected.to return_validation_errors :verification,
+              context: :complete
+          end
         end
       end
     end

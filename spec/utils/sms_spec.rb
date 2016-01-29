@@ -9,6 +9,9 @@ RSpec.describe SMS do
 
   before do
     SMSDeliveries.use_fake_provider
+  end
+
+  after do
     SMSDeliveries.clear
   end
 

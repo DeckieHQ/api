@@ -21,3 +21,9 @@ RSpec::Matchers.define :equal_mail do |expected|
     mail.instance_values.slice('from', 'reply_to', 'to', 'subject')
   end
 end
+
+RSpec::Matchers.define :equal_sms do |expected|
+  match do |actual|
+    actual.options == expected.options
+  end
+end

@@ -2,7 +2,14 @@ require 'rails_helper'
 
 RSpec.describe 'Users verification instructions', :type => :request do
   before do
+    SMSDeliveries.use_fake_provider
+
     post users_verifications_path, params: verification_params, headers: json_headers
+  end
+
+  after do
+    MailDeliveries.clear
+    SMSDeliveries.clear
   end
 
   let(:verification_params) {}
@@ -14,11 +21,7 @@ RSpec.describe 'Users verification instructions', :type => :request do
     let(:authenticated) { true }
 
     let(:verification) do
-      Verification.new(verification_params[:verification], user: user)
-    end
-
-    before do
-      MailDeliveries.clear
+      Verification.new(verification_params[:verification], model: user)
     end
 
     context 'with empty parameters' do
@@ -26,6 +29,7 @@ RSpec.describe 'Users verification instructions', :type => :request do
 
       it { is_expected.to return_validation_errors :verification }
       it { is_expected.not_to have_sent_mail }
+      it { is_expected.not_to have_sent_sms  }
     end
 
     context 'with invalid type' do
@@ -33,30 +37,48 @@ RSpec.describe 'Users verification instructions', :type => :request do
 
       it { is_expected.to return_validation_errors :verification }
       it { is_expected.not_to have_sent_mail }
+      it { is_expected.not_to have_sent_sms  }
     end
 
-    context 'with email type' do
-      let(:verification_params) { { verification: { type: :email } } }
+    { email: 'Mail', phone_number: 'SMS' }.each do |type, delivery|
+      context "with type #{type}" do
+        let(:verification_params) { { verification: { type: type } } }
 
-      context 'when user email is not verified' do
-        it { is_expected.to return_no_content }
+        context "when user #{type} is not verified" do
+          let(:user) { FactoryGirl.create(:user_with_phone_number) }
 
-        it 'sends an email with verification instructions' do
-          expect(MailDeliveries.last).to equal_mail(
-            UserMailer.email_verification_instructions(user)
-          )
+          before do
+            user.reload
+          end
+
+          it { is_expected.to return_no_content }
+
+          it "verifies the user" do
+            expect(user).to_not have_unverified type
+          end
+
+          it "sends a #{delivery} with verification instructions" do
+            last_delivery = "#{delivery}Deliveries".constantize.last
+
+            carrier = "User#{delivery}er".constantize
+
+            expect(last_delivery).to send("equal_#{delivery.downcase}",
+              carrier.send("#{type}_verification_instructions", user)
+            )
+          end
         end
-      end
 
-      context 'when user email is already verified' do
-        let(:user) { FactoryGirl.create(:user).tap(&:verify_email!) }
+        context "when user #{type} is already verified" do
+          let(:user) { FactoryGirl.create(:"user_with_#{type}_verified") }
 
-        it do
-          is_expected.to return_validation_errors :verification,
-            context: :send_instructions
+          it do
+            is_expected.to return_validation_errors :verification,
+              context: :send_instructions
+          end
+
+          it { is_expected.not_to have_sent_mail }
+          it { is_expected.not_to have_sent_sms  }
         end
-
-        it { is_expected.not_to have_sent_mail }
       end
     end
   end
