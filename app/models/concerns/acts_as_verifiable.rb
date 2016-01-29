@@ -1,10 +1,10 @@
 module Verifiable
   module Models
-    def acts_as_verifiable(attribute, delivery:)
+    def acts_as_verifiable(attribute, delivery:, token:)
       before_update :"reset_#{attribute}_verification", if: :"#{attribute}_changed?"
 
       define_method :"generate_#{attribute}_verification_token!" do
-        self.send("#{attribute}_verification_token=", Devise.friendly_token)
+        self.send("#{attribute}_verification_token=",   token.call)
         self.send("#{attribute}_verification_sent_at=", Time.now)
         self.save
       end
@@ -17,8 +17,8 @@ module Verifiable
 
       define_method :"send_#{attribute}_verification_instructions" do
         delivery
-          .send("#{attribute}_verification_instructions", self)
-          .deliver_now
+        .send("#{attribute}_verification_instructions", self)
+        .deliver_now
       end
 
       private

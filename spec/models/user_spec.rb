@@ -6,6 +6,7 @@ RSpec.describe User, :type => :model do
   it { is_expected.to have_db_index(:phone_number).unique(true) }
   it { is_expected.to have_db_index(:reset_password_token).unique(true) }
   it { is_expected.to have_db_index(:email_verification_token).unique(true) }
+  it { is_expected.to have_db_index(:phone_number_verification_token).unique(true) }
 
   # Validations
   it { is_expected.to validate_presence_of(:first_name) }
@@ -33,6 +34,13 @@ RSpec.describe User, :type => :model do
     end
   end
 
-  include_examples 'acts as verifiable for', :email,        deliveries: MailDeliveries
-#  include_examples 'acts as verifiable for', :phone_number, deliveries: SMSDeliveries
+  include_examples 'acts as verifiable', :email,
+    deliveries: MailDeliveries,
+    faker: Proc.new { Faker::Internet.email },
+    token_type: :friendly
+
+  include_examples 'acts as verifiable', :phone_number,
+    deliveries: SMSDeliveries,
+    faker: Proc.new { Faker::PhoneNumber.plausible },
+    token_type: :pin
 end

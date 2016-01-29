@@ -24,6 +24,8 @@ en:
     unauthorized: 'Bad credentials.'
     not_found: 'Not found.'
   verifications:
+    phone_number:
+      message: 'To verify your phone number, please enter this code: %{code}.'
     email:
       subject: 'Email Verifications'
 

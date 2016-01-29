@@ -23,6 +23,11 @@ class DeviseCreateUsers < ActiveRecord::Migration
       t.datetime :email_verification_sent_at
       t.datetime :email_verified_at
 
+      # SMS Verifiable
+      t.integer  :phone_number_verification_token
+      t.datetime :phone_number_verification_sent_at
+      t.datetime :phone_number_verified_at
+
       ## Trackable
       t.integer  :sign_in_count, default: 0, null: false
       t.datetime :current_sign_in_at
@@ -36,8 +41,9 @@ class DeviseCreateUsers < ActiveRecord::Migration
     add_index :users, :email,                unique: true
     add_index :users, :phone_number,         unique: true
 
-    add_index :users, :reset_password_token,     unique: true
-    add_index :users, :email_verification_token, unique: true
+    add_index :users, :reset_password_token,            unique: true
+    add_index :users, :email_verification_token,        unique: true
+    add_index :users, :phone_number_verification_token, unique: true
   end
 
   def down

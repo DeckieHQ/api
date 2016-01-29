@@ -33,6 +33,9 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  # In test, the API call will target a fake web server.
+  config.sms_settings = { url: 'http://fake.com/sms' }
+
   # Randomize the order test cases are executed.
   config.active_support.test_order = :random
 

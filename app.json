@@ -1,9 +1,10 @@
 {
   "name": "Deckie",
-  "description": "Deckie is on online social networking",
+  "description": "Deckie is on online social networking platform to organize irl gaming sesions",
   "image": "heroku/ruby:2.2.3",
   "addons": [
     "heroku-postmark",
-    "heroku-postgresql"
+    "heroku-postgresql",
+    "heroku-blowerio"
   ]
 }

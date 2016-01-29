@@ -6,6 +6,38 @@ FactoryGirl.define do
 
     email 'jean@yopmail.com'
     password 'azieoj092'
+
+    factory :user_with_email_verified do
+      after(:create) { |user| user.verify_email! }
+    end
+
+    factory :user_with_email_verification do
+      after(:create) { |user| user.generate_email_verification_token! }
+
+      factory :user_with_email_verification_expired do
+        after(:create) do |user|
+          user.update(email_verification_sent_at: Time.now - 6.hours)
+        end
+      end
+    end
+
+    factory :user_with_phone_number do
+      phone_number '+33687654321'
+
+      factory :user_with_phone_number_verified do
+        after(:create) { |user| user.verify_phone_number! }
+      end
+
+      factory :user_with_phone_number_verification do
+        after(:create) { |user| user.generate_phone_number_verification_token! }
+
+        factory :user_with_phone_number_verification_expired do
+          after(:create) do |user|
+            user.update(phone_number_verification_sent_at: Time.now - 6.hours)
+          end
+        end
+      end
+    end
   end
 
   # This user is not meant to be created. It's sole purpose is to use its

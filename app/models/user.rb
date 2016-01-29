@@ -3,7 +3,11 @@ require_relative './concerns/acts_as_verifiable'
 class User < ApplicationRecord
   before_create :generate_authentication_token
 
-  acts_as_verifiable :email, delivery: UserMailer
+  acts_as_verifiable :email,
+    delivery: UserMailer, token: Proc.new { Token.friendly }
+
+  acts_as_verifiable :phone_number,
+    delivery: UserSMSer,  token: Proc.new { Token.pin }
 
   devise :database_authenticatable,
          :registerable,
@@ -23,6 +27,6 @@ class User < ApplicationRecord
   private
 
   def generate_authentication_token
-    self.authentication_token = Devise.friendly_token
+    self.authentication_token = Token.friendly
   end
 end

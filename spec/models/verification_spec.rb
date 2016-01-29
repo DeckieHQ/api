@@ -39,9 +39,7 @@ RSpec.describe Verification, :type => :model do
     end
 
     context 'when already verified' do
-      before do
-        user.verify_email!
-      end
+      let(:user) { FactoryGirl.create(:user_with_email_verified) }
 
       it 'returns false' do
         expect(verification.send_instructions).to be_falsy
@@ -116,9 +114,7 @@ RSpec.describe Verification, :type => :model do
     end
 
     context 'when already verified' do
-      before do
-        user.verify_email!
-      end
+      let(:user) { FactoryGirl.create(:user_with_email_verified) }
 
       it 'returns false' do
         expect(verification.complete).to be_falsy
@@ -161,9 +157,9 @@ RSpec.describe Verification, :type => :model do
     end
 
     context "when token doesn't match the user token" do
-      before do
-        user.generate_email_verification_token!
+      let(:user) { FactoryGirl.create(:user_with_email_verification) }
 
+      before do
         verification.token = "#{user.email_verification_token}."
       end
 
@@ -185,32 +181,10 @@ RSpec.describe Verification, :type => :model do
     end
 
     context 'when token matches the user token' do
+      let(:user) { FactoryGirl.create(:user_with_email_verification) }
+
       before do
-        user.generate_email_verification_token!
-
         verification.token = user.email_verification_token
-      end
-
-      context 'when user token has expired' do
-        before do
-          user.update(email_verification_sent_at: Time.now - 6.hours)
-        end
-
-        it 'returns false' do
-          expect(verification.complete).to be_falsy
-        end
-
-        it "doesn't verify the user email" do
-          expect(user).to_not receive(:verify_email!)
-
-          verification.complete
-        end
-
-        it 'has errors' do
-          verification.complete
-
-          expect(verification.errors).to_not be_empty
-        end
       end
 
       it 'returns true' do
@@ -227,6 +201,26 @@ RSpec.describe Verification, :type => :model do
         verification.complete
 
         expect(verification.errors).to be_empty
+      end
+
+      context 'when user token has expired' do
+        let(:user) { FactoryGirl.create(:user_with_email_verification_expired) }
+
+        it 'returns false' do
+          expect(verification.complete).to be_falsy
+        end
+
+        it "doesn't verify the user email" do
+          expect(user).to_not receive(:verify_email!)
+
+          verification.complete
+        end
+
+        it 'has errors' do
+          verification.complete
+
+          expect(verification.errors).to_not be_empty
+        end
       end
     end
   end
