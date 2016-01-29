@@ -42,12 +42,12 @@ class Verification
   def token_must_be_valid
     user_token = @user.send("#{@type}_verification_token")
 
-    if @token.blank? || @token != user_token || expiration_time < Time.now
+    if @token.blank? || @token != user_token || sent_at < 5.hours.ago
       errors.add(:token, :invalid)
     end
   end
 
-  def expiration_time
-    @user.send("#{@type}_verification_sent_at") + 5.hours
+  def sent_at
+    @user.send("#{@type}_verification_sent_at")
   end
 end

@@ -23,8 +23,8 @@ RSpec.describe User, :type => :model do
 
   it { is_expected.to validate_plausible_phone(:phone_number) }
 
-  it { is_expected.to validate_date_after(:birthday, 100.year, :ago) }
-  it { is_expected.to validate_date_before(:birthday, 18.year - 1.day, :ago) }
+  it { is_expected.to validate_date_after(:birthday,  100.year.ago) }
+  it { is_expected.to validate_date_before(:birthday,  18.year.ago + 1.day) }
 
   context 'when created' do
     subject(:user) { FactoryGirl.create(:user) }

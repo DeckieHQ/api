@@ -1,8 +1,8 @@
 class ValidationExpectations
-  def initialize(instance, field, interval = nil)
+  def initialize(instance, field, limit = nil)
     @instance = instance
     @field    = field
-    @interval = interval
+    @limit    = limit
   end
 
   protected
