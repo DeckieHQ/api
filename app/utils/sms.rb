@@ -1,12 +1,12 @@
 require 'rest-client'
 
 class SMS
+  URL  = Rails.application.config.sms_settings[:url]
+  PATH = '/messages'
+
   extend Forwardable
 
   attr_reader :options
-
-  URL  = Rails.application.config.sms_settings[:url]
-  PATH = '/messages'
 
   def_delegator :@options, :[]
 

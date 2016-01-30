@@ -1,4 +1,4 @@
-require_relative './concerns/acts_as_verifiable'
+require 'concerns/acts_as_verifiable'
 
 class User < ApplicationRecord
   before_create :generate_authentication_token

@@ -3,8 +3,8 @@
   "description": "Deckie is on online social networking platform to organize irl gaming sesions",
   "image": "heroku/ruby:2.2.3",
   "addons": [
-    "heroku-postmark",
     "heroku-postgresql",
-    "heroku-blowerio"
+    "postmark",
+    "blowerio"
   ]
 }

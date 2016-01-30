@@ -1,3 +1,5 @@
+require 'application_smser'
+
 class UserSMSer < ApplicationSMSer
   def self.phone_number_verification_instructions(user)
     message = I18n.t(

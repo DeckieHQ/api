@@ -12,6 +12,11 @@ RSpec.describe Verification, :type => :model do
     SMSDeliveries.use_fake_provider
   end
 
+  after do
+    MailDeliveries.clear
+    SMSDeliveries.clear
+  end
+
   [:email, :phone_number].each do |attribute|
     describe '#send_instructions' do
       context 'when type is invalid' do

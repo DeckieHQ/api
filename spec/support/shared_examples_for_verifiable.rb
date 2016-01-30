@@ -93,9 +93,13 @@ RSpec.shared_examples 'acts as verifiable' do |attribute, options|
     subject(:model) { FactoryGirl.create(:"#{factory}_with_#{attribute}_verification") }
 
     before do
-      deliveries = options[:deliveries]
+      @deliveries = options[:deliveries]
 
-      deliveries.use_fake_provider if deliveries.respond_to?(:use_fake_provider)
+      @deliveries.use_fake_provider if @deliveries.respond_to?(:use_fake_provider)
+    end
+
+    after do
+      @deliveries.clear
     end
 
     it "sends a message to the #{attribute} with verification instructions" do
