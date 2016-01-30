@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/plataformatec/devise.git
-  revision: cc02d06c5823c667a53c52f6dddafe3109450d7d
+  revision: 475599d4ab969f38fad0e5b52e0efdae54625b1b
   specs:
-    devise (4.0.0.pre.dev)
+    devise (4.0.0.dev)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 4.1.0, < 5.1)
@@ -231,7 +231,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.1)
-    warden (1.2.4)
+    warden (1.2.5)
       rack (>= 1.0)
     webmock (1.22.6)
       addressable (>= 2.3.6)
