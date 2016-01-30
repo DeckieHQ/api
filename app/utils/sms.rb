@@ -1,8 +1,7 @@
 require 'rest-client'
 
 class SMS
-  URL  = Rails.application.config.sms_settings[:url]
-  PATH = '/messages'
+  PATH ||= '/messages'
 
   extend Forwardable
 
@@ -12,10 +11,16 @@ class SMS
 
   def initialize(options)
     @options = options
-    @client  = RestClient::Resource.new(URL)
+    @client  = RestClient::Resource.new(url)
   end
 
   def deliver_now
     @client[PATH].post(@options)
+  end
+
+  private
+
+  def url
+    Rails.application.config.sms_settings[:url]
   end
 end

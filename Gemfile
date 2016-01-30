@@ -57,5 +57,10 @@ group :test do
   gem 'faker', '~> 1.6'
 end
 
+
+group :production do
+  gem 'rails_stdout_logging', '~> 0.0'
+end
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', '~> 1.2', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
