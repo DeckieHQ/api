@@ -6,12 +6,12 @@ class FakeSMSProvider
   URL  = Rails.application.config.sms_settings[:url]
   PATH = '/messages'
 
-  def initialize(deliveries)
+  def initialize(deliveries, status:)
     stub_request(:post, "#{URL}#{PATH}").with do |request|
       options = Rack::Utils.parse_nested_query(request.body).symbolize_keys
 
       deliveries.push(SMS.new(options))
-    end
+    end.to_return status: status
   end
 end
 
@@ -23,7 +23,7 @@ module SMSDeliveries
 
   def_delegators :@deliveries, :last, :clear, :empty?, :count
 
-  def use_fake_provider
-    FakeSMSProvider.new(@deliveries)
+  def use_fake_provider(status: 200)
+    FakeSMSProvider.new(@deliveries, status: status)
   end
 end

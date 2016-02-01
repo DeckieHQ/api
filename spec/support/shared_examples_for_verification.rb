@@ -11,7 +11,7 @@ RSpec.shared_examples 'fails to send verification for' do |attribute|
     verification.send_instructions
   end
 
-  it "doesn't send an #{attribute} with verification instructions to the model" do
+  it "doesn't send a message with verification instructions to the model #{attribute} " do
     expect(verification.model).to_not receive(:"send_#{attribute}_verification_instructions")
 
     verification.send_instructions

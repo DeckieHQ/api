@@ -24,7 +24,10 @@ class Verification
     return false unless valid? && valid?(:send_instructions)
 
     @model.send("generate_#{@type}_verification_token!")
-    @model.send("send_#{@type}_verification_instructions")
+
+    return true if @model.send("send_#{@type}_verification_instructions")
+
+    errors.add(:base, :unassigned, base_error_options) and return false
   end
 
   def complete

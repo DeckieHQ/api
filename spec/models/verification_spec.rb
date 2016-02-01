@@ -51,13 +51,13 @@ RSpec.describe Verification, :type => :model do
             expect(verification.send_instructions).to be_truthy
           end
 
-          it 'generate an email verification token for the model' do
+          it "generate an #{attribute} verification token for the model" do
             expect(verification.model).to receive(:"generate_#{attribute}_verification_token!")
 
             verification.send_instructions
           end
 
-          it 'sends an email with verification instructions to the model' do
+          it "sends a message with verification instructions to the model #{attribute}" do
             expect(verification.model).to receive(:"send_#{attribute}_verification_instructions")
 
             verification.send_instructions
@@ -67,6 +67,18 @@ RSpec.describe Verification, :type => :model do
             verification.send_instructions
 
             expect(verification.errors).to be_empty
+          end
+
+          if attribute == :phone_number
+            context "when #{attribute} is unassigned" do
+              before do
+                SMSDeliveries.use_fake_provider(status: 400)
+              end
+
+              it 'returns false' do
+                expect(verification.send_instructions).to be_falsy
+              end
+            end
           end
         end
       end

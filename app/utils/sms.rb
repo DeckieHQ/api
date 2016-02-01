@@ -15,7 +15,13 @@ class SMS
   end
 
   def deliver_now
-    @client[PATH].post(@options)
+    begin
+      @client[PATH].post(@options)
+    rescue RestClient::ExceptionWithResponse => e
+      return false if e.response.code == 400
+
+      raise e
+    end
   end
 
   private

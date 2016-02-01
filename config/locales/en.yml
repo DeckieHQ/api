@@ -35,5 +35,6 @@ en:
         verification:
           attributes:
             base:
-              unspecified: "%{target} doesn't have a %{type}."
+              unspecified: "%{target} doesn't have a %{type}. "
+              unassigned: "%{target} %{type} is unassigned."
               already_verified: "%{target} %{type} is already verified."
