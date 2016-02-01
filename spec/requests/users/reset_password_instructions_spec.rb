@@ -1,36 +1,35 @@
 require 'rails_helper'
 
 RSpec.describe 'Users reset password instructions', :type => :request do
-  let(:reset_password_params) { { user: user.slice(:email) } }
-
   before do
-    post users_reset_password_path, params: reset_password_params, headers: json_headers
+    params = { user: reset_password_params }
+
+    post users_reset_password_path, params: params, headers: json_headers
   end
 
   after do
     MailDeliveries.clear
   end
 
+  let(:reset_password_params) { user.slice(:email) }
+
   context 'when user exists' do
     let(:user) { FactoryGirl.create(:user) }
 
-    context 'with valid parameters' do
+    before do
+      user.reload
+    end
 
-      before do
-        user.reload
-      end
+    it { is_expected.to return_status_code 204 }
 
-      it { is_expected.to return_status_code 204 }
+    it 'creates a reset password token for the user' do
+      expect(user.reset_password_token).to be_present
+    end
 
-      it 'creates a reset password token for the user' do
-        expect(user.reset_password_token).to be_present
-      end
-
-      it 'sends an email with reset password instructions' do
-        expect(MailDeliveries.last).to equal_mail(
-          UserMailer.reset_password_instructions(user, user.reset_password_token)
-        )
-      end
+    it 'sends an email with reset password instructions' do
+      expect(MailDeliveries.last).to equal_mail(
+        UserMailer.reset_password_instructions(user, user.reset_password_token)
+      )
     end
   end
 
