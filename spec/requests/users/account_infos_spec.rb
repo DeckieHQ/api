@@ -8,8 +8,8 @@ RSpec.describe 'Users account infos', :type => :request do
   it_behaves_like 'an action requiring authentication'
 
   context 'when user is authenticated' do
-    let(:user)          { FactoryGirl.create(:user) }
-    let(:authenticated) { true }
+    let(:user)         { FactoryGirl.create(:user) }
+    let(:authenticate) { user }
 
     it { is_expected.to return_status_code 200 }
 

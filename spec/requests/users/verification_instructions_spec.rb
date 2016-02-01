@@ -20,7 +20,7 @@ RSpec.describe 'Users verification instructions', :type => :request do
 
   context 'when user is authenticated' do
     let(:user)          { FactoryGirl.create(:user) }
-    let(:authenticated) { true }
+    let(:authenticate)  { user }
 
     let(:verification) do
       Verification.new(verification_params, model: user)

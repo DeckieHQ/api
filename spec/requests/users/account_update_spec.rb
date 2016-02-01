@@ -11,8 +11,8 @@ RSpec.describe 'Users account update', :type => :request do
   it_behaves_like 'an action requiring authentication'
 
   context 'when user is authenticated' do
-    let(:user)          { FactoryGirl.create(:user) }
-    let(:authenticated) { true }
+    let(:user)         { FactoryGirl.create(:user) }
+    let(:authenticate) { user }
 
     before do
       user.reload
