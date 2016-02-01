@@ -1,9 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe 'Users reset password instructions', :type => :request do
+  let(:reset_password_params) { { user: user.slice(:email) } }
+
   before do
-    post users_reset_password_path,
-      params: { user: user.slice(:email) }, headers: json_headers
+    post users_reset_password_path, params: reset_password_params, headers: json_headers
   end
 
   after do
@@ -14,6 +15,7 @@ RSpec.describe 'Users reset password instructions', :type => :request do
     let(:user) { FactoryGirl.create(:user) }
 
     context 'with valid parameters' do
+
       before do
         user.reload
       end
@@ -30,14 +32,6 @@ RSpec.describe 'Users reset password instructions', :type => :request do
         )
       end
     end
-
-    context 'with invalid parameters' do
-      let(:user) { Hash.new }
-
-      it { is_expected.to return_not_found }
-
-      it { is_expected.not_to have_sent_mail }
-    end
   end
 
   context "when user doesn't exist" do
@@ -46,5 +40,11 @@ RSpec.describe 'Users reset password instructions', :type => :request do
     it { is_expected.to return_not_found }
 
     it { is_expected.not_to have_sent_mail }
+  end
+
+  context 'without parameters root' do
+    let(:reset_password_params) {}
+
+    it { is_expected.to return_bad_request }
   end
 end

@@ -15,7 +15,7 @@ RSpec.describe 'Users sign up', :type => :request do
 
     it 'creates a new user with permited parameters' do
       permited_params = user.slice(:first_name, :last_name, :birthday)
-      
+
       expect(created_user).to have_attributes(permited_params)
     end
 
@@ -29,5 +29,11 @@ RSpec.describe 'Users sign up', :type => :request do
 
     it { is_expected.to return_status_code 422 }
     it { is_expected.to return_validation_errors :user }
+  end
+
+  context 'without parameters root' do
+    let(:sign_up_params) {}
+
+    it { is_expected.to return_bad_request }
   end
 end

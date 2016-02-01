@@ -1,18 +1,20 @@
 require 'rails_helper'
 
 RSpec.describe 'Users verification', :type => :request do
+  let(:verification_params) {}
+
   before do
     SMSDeliveries.use_fake_provider
 
-    put users_verifications_path, params: verification_params, headers: json_headers
+    params = { verification: verification_params }
+
+    put users_verifications_path, params: params, headers: json_headers
   end
 
   after do
     MailDeliveries.clear
     SMSDeliveries.clear
   end
-
-  let(:verification_params) {}
 
   it_behaves_like 'an action requiring authentication'
 
@@ -21,17 +23,17 @@ RSpec.describe 'Users verification', :type => :request do
     let(:authenticated) { true }
 
     let(:verification) do
-      Verification.new(verification_params[:verification], model: user)
+      Verification.new(verification_params, model: user)
     end
 
-    context 'with empty parameters' do
-      let(:verification_params) { {} }
+    context 'without parameters root' do
+      let(:verification_params) {}
 
-      it { is_expected.to return_validation_errors :verification }
+      it { is_expected.to return_bad_request }
     end
 
     context 'with invalid type' do
-      let(:verification_params) { { verification: { type: :invalid } } }
+      let(:verification_params) { { type: :invalid } }
 
       it { is_expected.to return_validation_errors :verification }
     end
@@ -41,7 +43,7 @@ RSpec.describe 'Users verification', :type => :request do
         let(:verification_params) do
           user_token = user.send("#{type}_verification_token")
 
-          { verification: { type: type, token: user_token } }
+          { type: type, token: user_token }
         end
 
         before do
@@ -91,7 +93,7 @@ RSpec.describe 'Users verification', :type => :request do
           let(:user) { FactoryGirl.create(:user_with_phone_number) }
 
           let(:verification_params) do
-            { verification: { type: type, token: Faker::Internet.password } }
+            { type: type, token: Faker::Internet.password }
           end
 
           it do

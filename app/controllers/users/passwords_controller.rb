@@ -1,4 +1,6 @@
 class Users::PasswordsController < Devise::PasswordsController
+  before_action -> { check_root_for resource_name }
+
   def create
     super do |user|
       return render_not_found unless user.persisted?
