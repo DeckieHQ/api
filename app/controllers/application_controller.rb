@@ -13,7 +13,9 @@ class ApplicationController < ActionController::API
     authenticate_with_http_token do |token, options|
       user = User.find_by(authentication_token: token)
 
-      sign_up(user, store: false)
+      return false unless user
+
+      sign_in(user, store: false)
     end
   end
 

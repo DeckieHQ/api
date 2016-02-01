@@ -30,6 +30,9 @@ gem 'devise', git: 'git://github.com/plataformatec/devise.git'
 # Mails
 gem 'postmark-rails', '~> 0.10'
 
+# HTTP Client
+gem 'rest-client', '2.0.0.rc2'
+
 # Validations
 gem 'phony_rails', '~> 0.12'
 gem 'date_validator', '~> 0.9'
@@ -50,6 +53,13 @@ group :test do
   gem 'codeclimate-test-reporter', '~> 0.4', require: nil
   gem 'shoulda-matchers', '~> 3.0'
   gem 'factory_girl_rails', '~> 4.5'
+  gem 'webmock', '~> 1.22'
+  gem 'faker', '~> 1.6'
+end
+
+
+group :production do
+  gem 'rails_stdout_logging', '~> 0.0'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

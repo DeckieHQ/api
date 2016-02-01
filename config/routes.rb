@@ -13,7 +13,8 @@ Rails.application.routes.draw do
       match  '/', to: 'registrations#update', via: [:put, :patch]
       delete '/', to: 'registrations#destroy'
 
-      resource :password, only: [:create, :update], as: :reset_password
+      resource :password,      only: [:create, :update], as: :reset_password
+      resource :verifications, only: [:create, :update]
     end
   end
 end

@@ -33,5 +33,6 @@ module Deckie
     config.action_mailer.postmark_settings = {
       api_token: ENV['POSTMARK_API_TOKEN']
     }
+    config.sms_settings = { url: ENV['BLOWERIO_URL'] }
   end
 end

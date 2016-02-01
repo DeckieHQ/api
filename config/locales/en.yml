@@ -23,3 +23,18 @@ en:
   failure:
     unauthorized: 'Bad credentials.'
     not_found: 'Not found.'
+  verifications:
+    phone_number:
+      message: 'To verify your phone number, please enter this code: %{code}.'
+    email:
+      subject: 'Email Verification'
+
+  activemodel:
+    errors:
+      models:
+        verification:
+          attributes:
+            base:
+              unspecified: "%{target} doesn't have a %{type}. "
+              unassigned: "%{target} %{type} is unassigned."
+              already_verified: "%{target} %{type} is already verified."

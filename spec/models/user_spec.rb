@@ -3,8 +3,10 @@ require 'rails_helper'
 RSpec.describe User, :type => :model do
   # Database
   it { is_expected.to have_db_index(:email).unique(true) }
-  it { is_expected.to have_db_index(:reset_password_token).unique(true) }
   it { is_expected.to have_db_index(:phone_number).unique(true) }
+  it { is_expected.to have_db_index(:reset_password_token).unique(true) }
+  it { is_expected.to have_db_index(:email_verification_token).unique(true) }
+  it { is_expected.to have_db_index(:phone_number_verification_token).unique(true) }
 
   # Validations
   it { is_expected.to validate_presence_of(:first_name) }
@@ -21,8 +23,8 @@ RSpec.describe User, :type => :model do
 
   it { is_expected.to validate_plausible_phone(:phone_number) }
 
-  it { is_expected.to validate_date_after(:birthday, 100.year, :ago) }
-  it { is_expected.to validate_date_before(:birthday, 18.year - 1.day, :ago) }
+  it { is_expected.to validate_date_after(:birthday,  100.year.ago) }
+  it { is_expected.to validate_date_before(:birthday,  18.year.ago + 1.day) }
 
   context 'when created' do
     subject(:user) { FactoryGirl.create(:user) }
@@ -31,4 +33,14 @@ RSpec.describe User, :type => :model do
       expect(user.authentication_token).to be_present
     end
   end
+
+  include_examples 'acts as verifiable', :email,
+    deliveries: MailDeliveries,
+    faker: Proc.new { Faker::Internet.email },
+    token_type: :friendly
+
+  include_examples 'acts as verifiable', :phone_number,
+    deliveries: SMSDeliveries,
+    faker: Proc.new { Faker::PhoneNumber.plausible },
+    token_type: :pin
 end

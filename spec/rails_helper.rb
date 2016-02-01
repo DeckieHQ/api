@@ -5,6 +5,8 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'shoulda-matchers'
 require 'factory_girl_rails'
+require 'webmock/rspec'
+
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -60,3 +62,14 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 end
+
+# Custom helper to add a generator for plausible phone numbers.
+module PhoneNumber
+  def plausible
+    phone_number = "0#{rand(1..7)}#{rand(10000000..99999999)}"
+
+    PhonyRails.normalize_number(phone_number, country_code: 'FR')
+  end
+end
+
+Faker::PhoneNumber.extend PhoneNumber

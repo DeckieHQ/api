@@ -6,16 +6,16 @@ RSpec.describe 'Users reset password instructions', :type => :request do
       params: { user: user.slice(:email) }, headers: json_headers
   end
 
+  after do
+    MailDeliveries.clear
+  end
+
   context 'when user exists' do
     let(:user) { FactoryGirl.create(:user) }
 
     context 'with valid parameters' do
       before do
         user.reload
-      end
-
-      after do
-        MailDeliveries.clear
       end
 
       it { is_expected.to return_status_code 204 }

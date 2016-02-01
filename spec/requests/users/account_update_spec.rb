@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Users account update', :type => :request do
-  let(:user_update)           { FactoryGirl.build(:user_update) }
+  let(:user_update)           { FactoryGirl.build(:user_with_phone_number) }
   let(:account_update_params) { user_update.attributes }
 
   before do
@@ -62,8 +62,8 @@ RSpec.describe 'Users account update', :type => :request do
       it { is_expected.to return_validation_errors :user_update }
     end
 
-    context 'when attributes are invalid' do
-      let(:user_update) { FactoryGirl.build(:user_update_invalid) }
+    context 'when attributes are not valid' do
+      let(:user_update) { FactoryGirl.build(:user_invalid) }
 
       before do
         user_update.tap(&:valid?).errors.add(:current_password, :blank)

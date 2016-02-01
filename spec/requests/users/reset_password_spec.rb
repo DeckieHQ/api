@@ -7,19 +7,18 @@ RSpec.describe 'Users reset password', :type => :request do
   end
 
   context 'when user exists' do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user)     { FactoryGirl.create(:user) }
+    let(:password) { Faker::Internet.password }
 
     context 'with a valid reset password token' do
       let(:reset_password_token) { user.send(:set_reset_password_token) }
-
-      NEW_PASSWORD = 'azerty1234'
 
       context 'with valid password and password_confirmation' do
         let(:reset_password_params) do
           {
             reset_password_token: reset_password_token,
-            password: NEW_PASSWORD,
-            password_confirmation: NEW_PASSWORD
+            password: password,
+            password_confirmation: password
           }
         end
 
@@ -30,15 +29,15 @@ RSpec.describe 'Users reset password', :type => :request do
         it { is_expected.to return_no_content }
 
         it 'updates the user password' do
-          expect(user.valid_password?(NEW_PASSWORD)).to be_truthy
+          expect(user.valid_password?(password)).to be_truthy
         end
       end
 
       context 'with invalid password confirmation' do
         let(:reset_password_params) do
           { reset_password_token: reset_password_token,
-            password: NEW_PASSWORD,
-            password_confirmation: "#{NEW_PASSWORD}."
+            password: password,
+            password_confirmation: "#{password}."
           }
         end
 

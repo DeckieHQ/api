@@ -1,27 +1,51 @@
 FactoryGirl.define do
   factory :user do
-    first_name 'Jean'
-    last_name 'Malakof'
-    birthday '09/11/1988'
+    first_name { Faker::Name.first_name }
+    last_name  { Faker::Name.last_name  }
+    birthday   { Faker::Date.between(100.years.ago, 18.years.ago) }
 
-    email 'jean@yopmail.com'
-    password 'azieoj092'
-  end
+    email    { Faker::Internet.email }
+    password { Faker::Internet.password }
 
-  # This user is not meant to be created. It's sole purpose is to use its
-  # attributes to update an existing user (like in account update tests).
-  factory :user_update, class: User do
-    first_name 'Jean-Luc'
-    last_name 'Robert'
-    birthday '09/12/1990'
-    phone_number '+33612345678'
-
-    email 'jean.luc@yopmail.com'
-    password 'plop1234'
-
-    factory :user_update_invalid do
+    factory :user_invalid do
       email '.'
       phone_number '.'
+    end
+
+    factory :user_with_email_verified do
+      after(:create) { |user| user.verify_email! }
+    end
+
+    factory :user_with_email_verification do
+      after(:create) { |user| user.generate_email_verification_token! }
+
+      factory :user_with_email_verification_expired do
+        after(:create) do |user|
+          sent_at = Faker::Time.between(10.hours.ago, 6.hours.ago)
+
+          user.update(email_verification_sent_at: sent_at)
+        end
+      end
+    end
+
+    factory :user_with_phone_number do
+      phone_number { Faker::PhoneNumber.plausible }
+
+      factory :user_with_phone_number_verified do
+        after(:create) { |user| user.verify_phone_number! }
+      end
+
+      factory :user_with_phone_number_verification do
+        after(:create) { |user| user.generate_phone_number_verification_token! }
+
+        factory :user_with_phone_number_verification_expired do
+          after(:create) do |user|
+            sent_at = Faker::Time.between(10.hours.ago, 6.hours.ago)
+
+            user.update(phone_number_verification_sent_at: sent_at)
+          end
+        end
+      end
     end
   end
 end
