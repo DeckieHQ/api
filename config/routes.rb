@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # Removes all routes first in order to remove routes unnecessary for an API.
   devise_for :users, skip: :all
 
-  namespace :users do
+  namespace :user do
     devise_scope :user do
       post '/sign_in', to: 'sessions#create', as: :sign_in
 

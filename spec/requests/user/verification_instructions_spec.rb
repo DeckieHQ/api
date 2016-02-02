@@ -8,7 +8,7 @@ RSpec.describe 'Users verification instructions', :type => :request do
 
     params = { verification: verification_params }
 
-    post users_verifications_path, params: params, headers: json_headers
+    post user_verifications_path, params: params, headers: json_headers
   end
 
   after do

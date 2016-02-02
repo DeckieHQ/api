@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Users reset password', :type => :request do
   before do
-    put users_reset_password_path,
+    put user_reset_password_path,
       params: { user: reset_password_params }, headers: json_headers
   end
 

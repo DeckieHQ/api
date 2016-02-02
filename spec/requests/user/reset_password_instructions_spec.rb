@@ -4,7 +4,7 @@ RSpec.describe 'Users reset password instructions', :type => :request do
   before do
     params = { user: reset_password_params }
 
-    post users_reset_password_path, params: params, headers: json_headers
+    post user_reset_password_path, params: params, headers: json_headers
   end
 
   after do

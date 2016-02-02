@@ -1,4 +1,4 @@
-class Users::RegistrationsController < Devise::RegistrationsController
+class User::RegistrationsController < Devise::RegistrationsController
   alias_method :authenticate_user!, :authenticate!
 
   before_action :authenticate!, only: :show

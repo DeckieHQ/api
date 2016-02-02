@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe 'Users account infos', :type => :request do
+RSpec.describe 'Users account cancel', :type => :request do
   before do
-    get users_path, headers: json_headers
+    delete user_path, headers: json_headers
   end
 
   it_behaves_like 'an action requiring authentication'
@@ -11,10 +11,10 @@ RSpec.describe 'Users account infos', :type => :request do
     let(:user)         { FactoryGirl.create(:user) }
     let(:authenticate) { user }
 
-    it { is_expected.to return_status_code 200 }
+    it { is_expected.to return_no_content }
 
-    it 'returns the user attributes' do
-      expect(response.body).to equal_serialized(user)
+    it 'deletes the user' do
+      expect(User.find_by(email: user.email)).to_not be_present
     end
   end
 end

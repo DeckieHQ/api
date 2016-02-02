@@ -1,4 +1,4 @@
-class Users::SessionsController < Devise::SessionsController
+class User::SessionsController < Devise::SessionsController
   before_action -> { check_root_for resource_name }
 
   def create

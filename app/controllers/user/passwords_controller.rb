@@ -1,4 +1,4 @@
-class Users::PasswordsController < Devise::PasswordsController
+class User::PasswordsController < Devise::PasswordsController
   before_action -> { check_root_for resource_name }
 
   def create
