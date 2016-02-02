@@ -18,6 +18,8 @@ RSpec.describe Verification, :type => :model do
   end
 
   [:email, :phone_number].each do |attribute|
+    let(:base_options) { { type: verification.type, target: :User } }
+
     describe '#send_instructions' do
       context 'when type is invalid' do
         let(:verification) { Verification.new({ type: nil }, model: user) }
@@ -27,6 +29,12 @@ RSpec.describe Verification, :type => :model do
         end
 
         include_examples 'fails to send verification for', attribute
+
+        it 'has an inclusion error on type' do
+          verification.send_instructions
+
+          expect(verification.errors.added?(:type, :inclusion)).to be_truthy
+        end
       end
 
       context "when type is #{attribute}" do
@@ -38,12 +46,28 @@ RSpec.describe Verification, :type => :model do
           end
 
           include_examples 'fails to send verification for', attribute
+
+          it "has a #{attribute} unspecified error on base" do
+            verification.send_instructions
+
+            expect(
+              verification.errors.added?(:base, :unspecified, base_options)
+            ).to be_truthy
+          end
         end
 
         context "when #{attribute} is already verified" do
           let(:user) { FactoryGirl.create(:"user_with_#{attribute}_verified") }
 
           include_examples 'fails to send verification for', attribute
+
+          it "has a #{attribute} already verified error on base" do
+            verification.send_instructions
+
+            expect(
+              verification.errors.added?(:base, :already_verified, base_options)
+            ).to be_truthy
+          end
         end
 
         context 'when everything is valid' do
@@ -78,6 +102,14 @@ RSpec.describe Verification, :type => :model do
               it 'returns false' do
                 expect(verification.send_instructions).to be_falsy
               end
+
+              it "has a #{attribute} unassigned error on base" do
+                verification.send_instructions
+
+                expect(
+                  verification.errors.added?(:base, :unassigned, base_options)
+                ).to be_truthy
+              end
             end
           end
         end
@@ -89,6 +121,12 @@ RSpec.describe Verification, :type => :model do
         let(:verification) { Verification.new({ type: nil }, model: user) }
 
         include_examples 'fails to complete verification for', attribute
+
+        it 'has an inclusion error on type' do
+          verification.complete
+
+          expect(verification.errors.added?(:type, :inclusion)).to be_truthy
+        end
       end
 
       context "when type is #{attribute}" do
@@ -98,6 +136,14 @@ RSpec.describe Verification, :type => :model do
           let(:user) { FactoryGirl.create(:"user_with_#{attribute}_verified") }
 
           include_examples 'fails to complete verification for', attribute
+
+          it "has a #{attribute} already verified error on base" do
+            verification.complete
+
+            expect(
+              verification.errors.added?(:base, :already_verified, base_options)
+            ).to be_truthy
+          end
         end
 
         context 'when verification token is invalid' do
@@ -106,6 +152,12 @@ RSpec.describe Verification, :type => :model do
           end
 
           include_examples 'fails to complete verification for', attribute
+
+          it 'has an invalid error on token' do
+            verification.complete
+
+            expect(verification.errors.added?(:token, :invalid)).to be_truthy
+          end
         end
 
         context "when model has no #{attribute} verification token" do
@@ -116,6 +168,12 @@ RSpec.describe Verification, :type => :model do
           end
 
           include_examples 'fails to complete verification for', attribute
+
+          it 'has an invalid error on token' do
+            verification.complete
+
+            expect(verification.errors.added?(:token, :invalid)).to be_truthy
+          end
         end
 
         context "when verification token doesn't match the model token" do
@@ -128,6 +186,12 @@ RSpec.describe Verification, :type => :model do
           end
 
           include_examples 'fails to complete verification for', attribute
+
+          it 'has an invalid error on token' do
+            verification.complete
+
+            expect(verification.errors.added?(:token, :invalid)).to be_truthy
+          end
         end
 
         context 'when verification token matches the model token' do
@@ -159,6 +223,12 @@ RSpec.describe Verification, :type => :model do
             let(:user) { FactoryGirl.create(:"user_with_#{attribute}_verification_expired") }
 
             include_examples 'fails to complete verification for', attribute
+
+            it 'has an invalid error on token' do
+              verification.complete
+
+              expect(verification.errors.added?(:token, :invalid)).to be_truthy
+            end
           end
         end
       end
