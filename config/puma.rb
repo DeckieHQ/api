@@ -17,7 +17,7 @@ environment ENV['RACK_ENV'] || 'development'
 #
 #   body = 'Hello, World!'
 #
-#   [200, { 'Content-Type' => 'text/plain', 'Content-Length' => body.length.to_s }, [body]]
+#   [200, { 'Content-Type': 'text/plain', 'Content-Length': body.length.to_s }, [body]]
 # end
 
 # Load "path" as a rackup file.
