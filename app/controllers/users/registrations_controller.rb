@@ -3,6 +3,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   before_action :authenticate!, only: :show
 
+  before_action -> { check_root_for resource_name }, only: [:create, :update]
+
   def show
     render json: current_user, status: :ok and return
   end
@@ -39,8 +41,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def account_update_params
-    params
-    .require(resource_name).permit(
+    params.require(resource_name).permit(
       :email,      :password,   :current_password,
       :first_name, :last_name,  :birthday, :phone_number
     )

@@ -70,9 +70,18 @@ RSpec.describe 'Users reset password', :type => :request do
   end
 
   context "when user doesn't exist" do
-    let(:user)                  { FactoryGirl.build(:user) }
-    let(:reset_password_params) { Hash.new }
+    let(:reset_password_params) do
+      { reset_password_token: Faker::Hipster.sentence }
+    end
 
-    it { is_expected.to return_not_found }
+    it { is_expected.to return_status_code 422 }
+
+    it { is_expected.to return_validation_errors_on :reset_password_token }
+  end
+
+  context 'without parameters root' do
+    let(:reset_password_params) {}
+
+    it { is_expected.to return_bad_request }
   end
 end

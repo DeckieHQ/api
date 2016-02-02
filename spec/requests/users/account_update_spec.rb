@@ -11,8 +11,8 @@ RSpec.describe 'Users account update', :type => :request do
   it_behaves_like 'an action requiring authentication'
 
   context 'when user is authenticated' do
-    let(:user)          { FactoryGirl.create(:user) }
-    let(:authenticated) { true }
+    let(:user)         { FactoryGirl.create(:user) }
+    let(:authenticate) { user }
 
     before do
       user.reload
@@ -38,7 +38,8 @@ RSpec.describe 'Users account update', :type => :request do
 
       context 'when password is specified' do
         let(:account_update_params) do
-          user_update.attributes.merge(current_password: user.password,
+          user_update.attributes.merge(
+            current_password: user.password,
             password: user_update.password
           )
         end
@@ -71,6 +72,12 @@ RSpec.describe 'Users account update', :type => :request do
 
       it { is_expected.to return_status_code 422 }
       it { is_expected.to return_validation_errors :user_update }
+    end
+
+    context 'without parameters root' do
+      let(:account_update_params) {}
+
+      it { is_expected.to return_bad_request }
     end
   end
 end

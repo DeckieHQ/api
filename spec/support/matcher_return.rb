@@ -6,6 +6,16 @@ RSpec::Matchers.define :return_no_content do
   failure_message { failure_message_for(:no_content) }
 end
 
+RSpec::Matchers.define :return_bad_request do
+  match do
+   response.code == '400' &&
+   json_response == { error: I18n.t('failure.bad_request') }
+  end
+
+  failure_message { failure_message_for(:bad_request) }
+end
+
+
 RSpec::Matchers.define :return_not_found do
   match do
    response.code == '404' &&

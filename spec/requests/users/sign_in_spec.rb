@@ -2,9 +2,10 @@ require 'rails_helper'
 
 RSpec.describe 'Users sign in', :type => :request do
   before do
-    post users_sign_in_path,
-      params: { user: user.slice(:email, :password) }, headers: json_headers
+    post users_sign_in_path, params: { user: sign_in_params }, headers: json_headers
   end
+
+  let(:sign_in_params) { user.slice(:email, :password) }
 
   context 'when user exists' do
     let(:user) { FactoryGirl.create(:user) }
@@ -32,5 +33,11 @@ RSpec.describe 'Users sign in', :type => :request do
       )}
       expect(json_response).to eq expected_response
     end
+  end
+
+  context 'without parameters root' do
+    let(:sign_in_params) {}
+
+    it { is_expected.to return_bad_request }
   end
 end

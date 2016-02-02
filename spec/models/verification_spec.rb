@@ -8,150 +8,157 @@ RSpec.describe Verification, :type => :model do
 
   let(:user) { FactoryGirl.create(:user_with_phone_number) }
 
-  before do
-    SMSDeliveries.use_fake_provider
-  end
-
-  after do
-    MailDeliveries.clear
-    SMSDeliveries.clear
-  end
-
   [:email, :phone_number].each do |attribute|
+    let(:base_options) { { type: verification.type, target: :User } }
+
     describe '#send_instructions' do
+      let(:user_send_instructions?) { true }
+
+      before do
+        allow(user).to receive(:"generate_#{attribute}_verification_token!")
+          .and_return(true)
+        allow(user).to receive(:"send_#{attribute}_verification_instructions")
+          .and_return(user_send_instructions?)
+
+        @success = verification.send_instructions
+      end
+
       context 'when type is invalid' do
         let(:verification) { Verification.new({ type: nil }, model: user) }
 
-        before do
-          verification.type = nil
-        end
-
         include_examples 'fails to send verification for', attribute
+
+        it { expect_validation_error_on(:type, :inclusion) }
       end
 
       context "when type is #{attribute}" do
         let(:verification) { Verification.new({ type: attribute }, model: user) }
 
         context 'when model has no attribute to verify' do
-          before do
-            user.send("#{attribute}=", nil)
+          let(:user) do
+            FactoryGirl.create(:user) do |u|
+              u.send("#{attribute}=", nil)
+            end
           end
 
           include_examples 'fails to send verification for', attribute
+
+          it { expect_validation_error_on(:base, :unspecified, base_options) }
+        end
+
+        context "when #{attribute} is unassigned" do
+          let(:user_send_instructions?) { false }
+
+          it 'returns false' do
+            expect(@success).to be_falsy
+          end
+
+          it { expect_validation_error_on(:base, :unassigned, base_options) }
         end
 
         context "when #{attribute} is already verified" do
           let(:user) { FactoryGirl.create(:"user_with_#{attribute}_verified") }
 
           include_examples 'fails to send verification for', attribute
+
+          it { expect_validation_error_on(:base, :already_verified, base_options) }
         end
 
         context 'when everything is valid' do
           it 'returns true' do
-            expect(verification.send_instructions).to be_truthy
+            expect(@success).to be_truthy
           end
 
           it "generate an #{attribute} verification token for the model" do
-            expect(verification.model).to receive(:"generate_#{attribute}_verification_token!")
-
-            verification.send_instructions
+            expect(verification.model).to have_received(:"generate_#{attribute}_verification_token!")
           end
 
           it "sends a message with verification instructions to the model #{attribute}" do
-            expect(verification.model).to receive(:"send_#{attribute}_verification_instructions")
-
-            verification.send_instructions
+            expect(verification.model).to have_received(:"send_#{attribute}_verification_instructions")
           end
 
           it 'has no error' do
-            verification.send_instructions
-
             expect(verification.errors).to be_empty
-          end
-
-          if attribute == :phone_number
-            context "when #{attribute} is unassigned" do
-              before do
-                SMSDeliveries.use_fake_provider(status: 400)
-              end
-
-              it 'returns false' do
-                expect(verification.send_instructions).to be_falsy
-              end
-            end
           end
         end
       end
     end
 
     describe '#complete' do
+      before do
+        allow(user).to receive(:"verify_#{attribute}!").and_return(true)
+
+        @success = verification.complete
+      end
+
       context 'when type is invalid' do
         let(:verification) { Verification.new({ type: nil }, model: user) }
 
         include_examples 'fails to complete verification for', attribute
+
+        it { expect_validation_error_on(:type, :inclusion) }
       end
 
       context "when type is #{attribute}" do
-        let(:verification) { Verification.new({ type: attribute }, model: user) }
+        let(:verification) do
+          Verification.new({ type: attribute, token: token }, model: user)
+        end
 
         context 'when already verified' do
-          let(:user) { FactoryGirl.create(:"user_with_#{attribute}_verified") }
+          let(:user)  { FactoryGirl.create(:"user_with_#{attribute}_verified") }
+          let(:token) {}
 
           include_examples 'fails to complete verification for', attribute
+
+          it { expect_validation_error_on(:base, :already_verified, base_options) }
         end
 
         context 'when verification token is invalid' do
-          before do
-            verification.token = nil
-          end
+          let(:token) {}
 
           include_examples 'fails to complete verification for', attribute
+
+          it { expect_validation_error_on(:token, :invalid) }
         end
 
         context "when model has no #{attribute} verification token" do
-          let(:user) { FactoryGirl.create(:user) }
-
-          before do
-            verification.token = Faker::Internet.password
+          let(:user) do
+            FactoryGirl.create(:user) do |u|
+              u.send("#{attribute}=", nil)
+            end
           end
 
+          let(:token) { Faker::Internet.password  }
+
           include_examples 'fails to complete verification for', attribute
+
+          it 'has an invalid error on token' do
+            expect(verification.errors.added?(:token, :invalid)).to be_truthy
+          end
         end
 
         context "when verification token doesn't match the model token" do
-          let(:user) { FactoryGirl.create(:"user_with_#{attribute}_verification") }
-
-          before do
-            model_token = user.send("#{attribute}_verification_token")
-
-            verification.token = "#{model_token}."
-          end
+          let(:user)  { FactoryGirl.create(:"user_with_#{attribute}_verification") }
+          let(:token) { Faker::Internet.password }
 
           include_examples 'fails to complete verification for', attribute
+
+          it { expect_validation_error_on(:token, :invalid) }
         end
 
         context 'when verification token matches the model token' do
-          let(:user) { FactoryGirl.create(:"user_with_#{attribute}_verification") }
-
-          before do
-            model_token = user.send("#{attribute}_verification_token")
-
-            verification.token = model_token
-          end
+          let(:user)  { FactoryGirl.create(:"user_with_#{attribute}_verification") }
+          let(:token) { user.send("#{attribute}_verification_token") }
 
           it 'returns true' do
-            expect(verification.complete).to be_truthy
+            expect(@success).to be_truthy
           end
 
           it "verifies the model #{attribute}"  do
-            expect(verification.model).to receive(:"verify_#{attribute}!")
-
-            verification.complete
+            expect(verification.model).to have_received(:"verify_#{attribute}!")
           end
 
           it 'has no error' do
-            verification.complete
-
             expect(verification.errors).to be_empty
           end
 
@@ -159,9 +166,15 @@ RSpec.describe Verification, :type => :model do
             let(:user) { FactoryGirl.create(:"user_with_#{attribute}_verification_expired") }
 
             include_examples 'fails to complete verification for', attribute
+
+            it { expect_validation_error_on(:token, :invalid) }
           end
         end
       end
     end
+  end
+
+  def expect_validation_error_on(attribute, message, options = {})
+    expect(verification.errors.added?(attribute, message, options)).to be_truthy
   end
 end
