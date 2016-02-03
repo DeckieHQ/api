@@ -1,4 +1,4 @@
-class Users::VerificationsController < ApplicationController
+class User::VerificationsController < ApplicationController
   before_action :authenticate!
 
   before_action -> { check_root_for :verification }

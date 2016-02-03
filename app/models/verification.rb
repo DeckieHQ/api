@@ -12,8 +12,6 @@ class Verification
   validate :token_must_be_valid, on: :complete
 
   def initialize(attributes = {}, model: nil)
-    attributes = attributes || {}
-
     # Allow type to be set with a symbol for conveniency.
     @type  = (attributes[:type]  || '').to_s
     @token =  attributes[:token] || ''

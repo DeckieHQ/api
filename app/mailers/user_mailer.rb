@@ -21,6 +21,6 @@ class UserMailer < ApplicationMailer
   private
 
   def front_link_for(action:, path: '', params:)
-    send("users_#{action}_url") << "#{path}?#{params.to_query}"
+    send("user_#{action}_url") << "#{path}?#{params.to_query}"
   end
 end

@@ -5,7 +5,7 @@ RSpec.describe 'Users account update', :type => :request do
   let(:account_update_params) { user_update.attributes }
 
   before do
-    put users_path, params: { user: account_update_params }, headers: json_headers
+    put user_path, params: { user: account_update_params }, headers: json_headers
   end
 
   it_behaves_like 'an action requiring authentication'

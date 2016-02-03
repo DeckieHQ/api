@@ -3,7 +3,7 @@ require 'rspec/expectations'
 
 class PhoneExpectations < ValidationExpectations
   PLAUSIBLE_SAMPLES = {
-    '+33652796793' => true,
+    '+33652796793': true,
     'lol'          => false,
     '0652796793'   => false
   }
