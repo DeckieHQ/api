@@ -8,13 +8,13 @@ class User::VerificationsController < ApplicationController
   def create
     return head :no_content if @verification.send_instructions
 
-    render_validation_errors(@verification) and return
+    render_validation_errors(@verification)
   end
 
   def update
     return head :no_content if @verification.complete
 
-    render_validation_errors(@verification) and return
+    render_validation_errors(@verification)
   end
 
   protected

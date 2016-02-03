@@ -6,7 +6,7 @@ class User::RegistrationsController < Devise::RegistrationsController
   before_action -> { check_root_for resource_name }, only: [:create, :update]
 
   def show
-    render json: current_user, status: :ok and return
+    render json: current_user, status: :ok
   end
 
   def create
