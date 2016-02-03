@@ -22,7 +22,7 @@ class User::RegistrationsController < Devise::RegistrationsController
       # If current_password is invalid, devise is not setting properly
       # the user (user.valid? will be true but errors will still appear in
       # user.errors).
-      return render_validation_errors(user) if user.errors.present?
+      return render_validation_errors(user) unless user.errors.empty?
 
       render json: user, status: :ok and return
     end
