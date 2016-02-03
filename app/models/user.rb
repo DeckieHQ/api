@@ -1,13 +1,13 @@
 require 'concerns/acts_as_verifiable'
 
 class User < ApplicationRecord
-  before_create :generate_authentication_token
+  has_secure_token :authentication_token
 
   acts_as_verifiable :email,
-    delivery: UserMailer, token: Proc.new { Token.friendly }
+    delivery: UserMailer, token: -> { Token.friendly }
 
   acts_as_verifiable :phone_number,
-    delivery: UserSMSer,  token: Proc.new { Token.pin }
+    delivery: UserSMSer,  token: -> { Token.pin }
 
   devise :database_authenticatable,
          :registerable,
@@ -23,10 +23,4 @@ class User < ApplicationRecord
   }
   validates :phone_number, uniqueness: true, allow_nil: true
   validates_plausible_phone :phone_number
-
-  private
-
-  def generate_authentication_token
-    self.authentication_token = Token.friendly
-  end
 end
