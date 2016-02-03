@@ -30,17 +30,17 @@ RSpec.describe User, :type => :model do
     subject(:user) { FactoryGirl.create(:user) }
 
     it 'has an authentication token' do
-      expect(user.authentication_token).to be_present
+      expect(user.authentication_token).to be_valid_token :secure
     end
   end
 
   include_examples 'acts as verifiable', :email,
     deliveries: MailDeliveries,
-    faker: Proc.new { Faker::Internet.email },
+    faker: -> { Faker::Internet.email },
     token_type: :friendly
 
   include_examples 'acts as verifiable', :phone_number,
     deliveries: SMSDeliveries,
-    faker: Proc.new { Faker::PhoneNumber.plausible },
+    faker: -> { Faker::PhoneNumber.plausible },
     token_type: :pin
 end

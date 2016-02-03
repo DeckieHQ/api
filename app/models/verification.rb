@@ -37,7 +37,7 @@ class Verification
   private
 
   def model_attribute_must_be_speficied
-    model_attribute = @model.send("#{type}")
+    model_attribute = @model.send(@type)
 
     errors.add(:base, :unspecified, base_error_options) unless model_attribute
   end
