@@ -1,7 +1,11 @@
 require 'concerns/acts_as_verifiable'
 
 class User < ApplicationRecord
+  has_one :profile, dependent: :nullify
+
   has_secure_token :authentication_token
+
+  after_create :create_profile
 
   acts_as_verifiable :email,
     delivery: UserMailer, token: -> { Token.friendly }

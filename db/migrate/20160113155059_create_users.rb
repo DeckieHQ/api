@@ -1,4 +1,4 @@
-class DeviseCreateUsers < ActiveRecord::Migration
+class CreateUsers < ActiveRecord::Migration
   def up
     create_table(:users) do |t|
       ## Identity
