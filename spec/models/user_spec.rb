@@ -8,6 +8,9 @@ RSpec.describe User, :type => :model do
   it { is_expected.to have_db_index(:email_verification_token).unique(true) }
   it { is_expected.to have_db_index(:phone_number_verification_token).unique(true) }
 
+  # Relations
+  it { is_expected.to have_one(:profile) }
+
   # Validations
   it { is_expected.to validate_presence_of(:first_name) }
   it { is_expected.to validate_length_of(:first_name).is_at_most(64) }
@@ -31,6 +34,24 @@ RSpec.describe User, :type => :model do
 
     it 'has an authentication token' do
       expect(user.authentication_token).to be_valid_token :secure
+    end
+
+    it 'has a profile' do
+      expect(user.profile).to be_present
+    end
+
+    context 'when destroyed' do
+      before do
+        @profile = user.profile
+
+        user.destroy
+
+        @profile.reload
+      end
+
+      it 'unlinks its profile' do
+        expect(@profile.user_id).to be_nil
+      end
     end
   end
 
