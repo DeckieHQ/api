@@ -6,27 +6,22 @@ RSpec::Matchers.define :return_no_content do
   failure_message { failure_message_for(:no_content) }
 end
 
-RSpec::Matchers.define :return_bad_request do
-  match do
-   response.code == '400' &&
-   json_response == { error: I18n.t('failure.bad_request') }
+{
+  bad_request: '400',
+  not_found:   '404'
+}.each do |status, code|
+  RSpec::Matchers.define :"return_#{status}" do
+    match do
+      response.code == code &&
+      json_response == { error: I18n.t("failure.#{status}") }
+    end
+
+    failure_message { failure_message_for(status) }
   end
-
-  failure_message { failure_message_for(:bad_request) }
-end
-
-
-RSpec::Matchers.define :return_not_found do
-  match do
-   response.code == '404' &&
-   json_response == { error: I18n.t('failure.not_found') }
-  end
-
-  failure_message { failure_message_for(:not_found) }
 end
 
 def failure_message_for(status)
-  "expected to receive :not_found but received #{response.code} with #{json_response}"
+  "expected to receive #{status} but received #{response.code} with #{json_response}"
 end
 
 RSpec::Matchers.define :return_status_code do |expected|
