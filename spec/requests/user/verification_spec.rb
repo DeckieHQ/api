@@ -65,28 +65,19 @@ RSpec.describe 'Users verification', :type => :request do
         context "when user #{type} is already verified" do
           let(:user) { FactoryGirl.create(:"user_with_#{type}_verified") }
 
-          it do
-            is_expected.to return_validation_errors :verification,
-              context: :complete
-          end
+          it { expect_validation_errors_on_complete }
         end
 
         context "when #{type} verification token has expired" do
           let(:user) { FactoryGirl.create(:"user_with_#{type}_verification_expired") }
 
-          it do
-            is_expected.to return_validation_errors :verification,
-              context: :complete
-          end
+          it { expect_validation_errors_on_complete }
         end
 
         context "when #{type} verification token is blank" do
           let(:user) { FactoryGirl.create(:user_with_phone_number) }
 
-          it do
-            is_expected.to return_validation_errors :verification,
-              context: :complete
-          end
+          it { expect_validation_errors_on_complete }
         end
 
         context "when #{type} verification token is blank" do
@@ -96,12 +87,13 @@ RSpec.describe 'Users verification', :type => :request do
             { type: type, token: Faker::Internet.password }
           end
 
-          it do
-            is_expected.to return_validation_errors :verification,
-              context: :complete
-          end
+          it { expect_validation_errors_on_complete }
         end
       end
+    end
+
+    def expect_validation_errors_on_complete
+      is_expected.to return_validation_errors :verification, context: :complete
     end
   end
 end

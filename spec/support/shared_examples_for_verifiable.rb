@@ -27,17 +27,13 @@ RSpec.shared_examples 'acts as verifiable' do |attribute, options|
     context "when #{attribute} is already verified" do
       subject(:model) { FactoryGirl.create(:"#{factory}_with_#{attribute}_verified") }
 
-      it "reset the #{attribute} verification" do
-        expect(model).to have_unverified attribute
-      end
+      include_examples 'reset the verification', attribute
     end
 
     context "when #{attribute} is waiting for verification" do
       subject(:model) { FactoryGirl.create(:"#{factory}_with_#{attribute}_verification") }
 
-      it "reset the #{attribute} verification" do
-        expect(model).to have_unverified attribute
-      end
+      include_examples 'reset the verification', attribute
     end
   end
 
@@ -107,5 +103,11 @@ RSpec.shared_examples 'acts as verifiable' do |attribute, options|
 
       expect { model.send(send_instructions) }.to change { deliveries.count }.by 1
     end
+  end
+end
+
+RSpec.shared_examples 'reset the verification' do |attribute|
+  it do
+    expect(model).to have_unverified attribute
   end
 end
