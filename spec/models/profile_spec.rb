@@ -6,4 +6,7 @@ RSpec.describe Profile, :type => :model do
 
   # Relations
   it { is_expected.to belong_to(:user) }
+
+  # Validations
+  it { is_expected.to validate_length_of(:nickname).is_at_most(64) }
 end
