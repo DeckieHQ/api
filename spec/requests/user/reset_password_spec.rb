@@ -2,8 +2,10 @@ require 'rails_helper'
 
 RSpec.describe 'Users reset password', :type => :request do
   before do
-    put user_reset_password_path,
-      params: { user: reset_password_params }, headers: json_headers
+    params = {
+      data: { type: 'users', attributes: reset_password_params }
+    }
+    put user_reset_password_path, params: params, headers: json_headers
   end
 
   context 'when user exists' do

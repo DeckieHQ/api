@@ -23,4 +23,12 @@ class User::PasswordsController < Devise::PasswordsController
       head :no_content and return
     end
   end
+
+  protected
+
+  def resource_params
+    params.require(:data).require(:attributes).permit(
+      :email, :reset_password_token, :password, :password_confirmation
+    )
+  end
 end

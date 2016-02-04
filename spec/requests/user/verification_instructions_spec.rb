@@ -6,8 +6,9 @@ RSpec.describe 'Users verification instructions', :type => :request do
   before do
     SMSDeliveries.use_fake_provider
 
-    params = { verification: verification_params }
-
+    params = {
+      data: { type: 'verifications', attributes: verification_params }
+    }
     post user_verifications_path, params: params, headers: json_headers
   end
 

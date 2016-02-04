@@ -22,6 +22,10 @@ class User::VerificationsController < ApplicationController
   protected
 
   def retrieve_verification
-    @verification = Verification.new(params[:verification], model: current_user)
+    @verification = Verification.new(verification_params, model: current_user)
+  end
+
+  def verification_params
+    params.require(:data).require(:attributes).permit(:type, :token)
   end
 end

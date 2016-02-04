@@ -8,4 +8,10 @@ class User::SessionsController < Devise::SessionsController
       render json: response, status: :created and return
     end
   end
+
+  protected
+
+  def check_root_for(resource_name)
+    render_bad_request unless params[resource_name]
+  end
 end

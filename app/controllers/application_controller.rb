@@ -20,9 +20,16 @@ class ApplicationController < ActionController::API
   end
 
   def check_root_for(root)
-    err = { error: I18n.t('failure.bad_request') }
+    if params['data'] &&
+       params['data']['attributes'] &&
+       params['data']['type'] == root.to_s.pluralize
+      return
+    end
+    render_bad_request
+  end
 
-    render json: err, status: :bad_request unless params[root]
+  def render_bad_request
+    render json: { error: I18n.t('failure.bad_request') }, status: :bad_request
   end
 
   def render_not_found
