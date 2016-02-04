@@ -12,7 +12,7 @@ module Request
           'Authorization': "Token token=#{authenticate.authentication_token}"
         }
       end
-      headers.merge({ 'ACCEPT': 'application/json' })
+      headers.merge({ 'Accept': 'application/json' })
     end
   end
 end
