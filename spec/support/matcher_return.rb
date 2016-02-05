@@ -39,17 +39,16 @@ RSpec::Matchers.define :return_validation_errors do |resource_name, options|
 
     resource.valid?(options[:context]) unless resource.errors.present?
 
-    expected_errors =  {
-      errors: {
-        details:  resource.errors.details,
-        messages: resource.errors.messages
-      }
-    }.to_json
+    expected_errors = ValidationErrorsSerializer.serialize(resource)
 
-    response.body == expected_errors
+    json_response == expected_errors
   end
 end
 
-RSpec::Matchers.define :return_validation_errors_on do |expected|
-  match { json_response[:errors][:details][expected].present? }
+RSpec::Matchers.define :return_validation_errors_on do |field|
+  match do
+    json_response[:errors].any? do |error|
+      error[:source][:pointer] == "/data/attributes/#{field}"
+    end
+  end
 end

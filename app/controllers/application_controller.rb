@@ -37,10 +37,8 @@ class ApplicationController < ActionController::API
   end
 
   def render_validation_errors(model)
-    errors = {
-      details:  model.errors.details,
-      messages: model.errors.messages
-    }
-    render json: { errors: errors }, status: :unprocessable_entity
+    errors = ValidationErrorsSerializer.serialize(model)
+
+    render json: errors, status: :unprocessable_entity
   end
 end
