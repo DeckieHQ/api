@@ -20,7 +20,7 @@ RSpec.describe ValidationErrorsSerializer, :type => :serializer do
         field_errors.each_with_index.map do |errors, index|
           {
             status: 422,
-            code: errors[:error],
+            code: errors[:error].to_s,
             detail: model.errors[field][index],
             source: { pointer: "/data/attributes/#{field}"}
           }
