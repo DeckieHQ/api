@@ -7,8 +7,9 @@ RSpec::Matchers.define :return_no_content do
 end
 
 {
-  bad_request: '400',
-  not_found:   '404'
+  bad_request:  '400',
+  unauthorized: '401',
+  not_found:    '404'
 }.each do |status, code|
   RSpec::Matchers.define :"return_#{status}" do
     match do

@@ -6,7 +6,7 @@ RSpec.shared_examples 'an action requiring authentication' do
   context 'when user is not authenticated' do
     let(:authenticated) { false }
 
-    it { is_expected.to return_status_code 401 }
+    it { is_expected.to return_unauthorized }
 
     it 'returns an unauthorized error' do
       expected_response = { error: I18n.t('failure.unauthorized') }
@@ -24,7 +24,7 @@ RSpec.shared_examples 'an action requiring authentication' do
 
     let(:authenticated) { true }
 
-    it { is_expected.to return_status_code 401 }
+    it { is_expected.to return_unauthorized }
 
     it 'returns an unauthorized error' do
       expected_response = { error: I18n.t('failure.unauthorized') }
