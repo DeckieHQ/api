@@ -23,10 +23,10 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def check_parameters_for(root)
+  def check_parameters_for(resource_name)
     if params['data'] &&
        params['data']['attributes'] &&
-       params['data']['type'] == root.to_s.pluralize
+       params['data']['type'] == resource_name.to_s.pluralize
       return
     end
     render_error_for(:bad_request)
