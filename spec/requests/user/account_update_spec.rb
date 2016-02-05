@@ -64,7 +64,6 @@ RSpec.describe 'User account update', :type => :request do
         user_update.errors.add(:current_password, :invalid)
       end
 
-      it { is_expected.to return_status_code 422 }
       it { is_expected.to return_validation_errors :user_update }
     end
 
@@ -75,7 +74,6 @@ RSpec.describe 'User account update', :type => :request do
         user_update.tap(&:valid?).errors.add(:current_password, :blank)
       end
 
-      it { is_expected.to return_status_code 422 }
       it { is_expected.to return_validation_errors :user_update }
     end
   end

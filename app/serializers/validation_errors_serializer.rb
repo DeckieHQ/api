@@ -1,4 +1,7 @@
-# Serialize ActiveModel::Errors to json-api.
+# Serialize ActiveModel::Errors to json-api
+#
+# See: http://jsonapi.org/format/#errors
+#
 module ValidationErrorsSerializer
   extend self
 

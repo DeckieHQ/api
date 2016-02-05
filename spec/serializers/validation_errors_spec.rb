@@ -11,6 +11,7 @@ RSpec.describe ValidationErrorsSerializer, :type => :serializer do
     end
 
     it 'serializes the model valdations errors to json api' do
+      expect(@errors).to_not be_empty
       expect(@errors).to eql(expected_errors)
     end
 

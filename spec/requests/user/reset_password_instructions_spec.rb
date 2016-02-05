@@ -22,7 +22,7 @@ RSpec.describe 'User reset password instructions', :type => :request do
       user.reload
     end
 
-    it { is_expected.to return_status_code 204 }
+    it { is_expected.to return_no_content }
 
     it 'creates a reset password token for the user' do
       expect(user.reset_password_token).to be_present

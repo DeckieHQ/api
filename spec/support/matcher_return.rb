@@ -41,13 +41,13 @@ RSpec::Matchers.define :return_validation_errors do |resource_name, options|
 
     expected_errors = ValidationErrorsSerializer.serialize(resource)
 
-    json_response == expected_errors
+    response.code == '422' && json_response == expected_errors
   end
 end
 
 RSpec::Matchers.define :return_validation_errors_on do |field|
   match do
-    json_response[:errors].any? do |error|
+    response.code == '422' && json_response[:errors].any? do |error|
       error[:source][:pointer] == "/data/attributes/#{field}"
     end
   end

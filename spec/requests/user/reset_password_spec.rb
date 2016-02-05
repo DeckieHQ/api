@@ -44,8 +44,6 @@ RSpec.describe 'User reset password', :type => :request do
           }
         end
 
-        it { is_expected.to return_status_code 422 }
-
         it { is_expected.to return_validation_errors_on :password_confirmation }
       end
 
@@ -57,16 +55,12 @@ RSpec.describe 'User reset password', :type => :request do
           }
         end
 
-        it { is_expected.to return_status_code 422 }
-
         it { is_expected.to return_validation_errors_on :password }
       end
     end
 
     context 'with invalid :reset_password_token' do
       let(:reset_password_params) { { reset_password_token: '.' } }
-
-      it { is_expected.to return_status_code 422 }
 
       it { is_expected.to return_validation_errors_on :reset_password_token }
     end
@@ -76,8 +70,6 @@ RSpec.describe 'User reset password', :type => :request do
     let(:reset_password_params) do
       { reset_password_token: Faker::Hipster.sentence }
     end
-
-    it { is_expected.to return_status_code 422 }
 
     it { is_expected.to return_validation_errors_on :reset_password_token }
   end

@@ -30,7 +30,6 @@ RSpec.describe 'User sign up', :type => :request do
   context 'when attributes are invalid' do
     let(:user) { FactoryGirl.build(:user, email: 'test@') }
 
-    it { is_expected.to return_status_code 422 }
     it { is_expected.to return_validation_errors :user }
   end
 end
