@@ -23,6 +23,7 @@ en:
   failure:
     unauthorized: 'Bad credentials.'
     not_found: 'Not found.'
+    bad_request: 'Bad request.'
   verifications:
     phone_number:
       message: 'To verify your phone number, please enter this code: %{code}.'

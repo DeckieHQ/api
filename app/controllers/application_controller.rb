@@ -10,7 +10,7 @@ class ApplicationController < ActionController::API
   protected
 
   def authenticate!(options={})
-    authenticate_token || render_unauthorized
+    authenticate_token || render_error_for(:unauthorized)
   end
 
   def authenticate_token
@@ -29,19 +29,11 @@ class ApplicationController < ActionController::API
        params['data']['type'] == root.to_s.pluralize
       return
     end
-    render_bad_request
+    render_error_for(:bad_request)
   end
 
-  def render_bad_request
-    render json: { error: I18n.t('failure.bad_request') }, status: :bad_request
-  end
-
-  def render_not_found
-    render json: { error: I18n.t('failure.not_found') }, status: :not_found
-  end
-
-  def render_unauthorized
-    render json: { error: I18n.t('failure.unauthorized') }, status: :unauthorized
+  def render_error_for(status)
+    render json: { error: I18n.t("failure.#{status}") }, status: status
   end
 
   def render_validation_errors(model)

@@ -12,6 +12,6 @@ class User::SessionsController < Devise::SessionsController
   protected
 
   def check_root_for(root_name)
-    render_bad_request unless params[root_name]
+    render_error_for(:bad_request) unless params[root_name]
   end
 end
