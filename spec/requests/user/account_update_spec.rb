@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe 'Users account update', :type => :request do
-  let(:user_update)           { FactoryGirl.build(:user_with_phone_number) }
+RSpec.describe 'User account update', :type => :request do
+  let(:params) { Serialize.params(account_update_params, type: :users) }
+
   let(:account_update_params) { user_update.attributes }
 
+  let(:user_update) { FactoryGirl.build(:user_with_phone_number) }
+
   before do
-    params = {
-      data: { type: 'users', attributes: account_update_params }
-    }
     put user_path, params: params, headers: json_headers
   end
 
@@ -20,6 +20,8 @@ RSpec.describe 'Users account update', :type => :request do
     before do
       user.reload
     end
+
+    include_examples 'check parameters for', :users
 
     context 'when attributes are valid' do
       let(:account_update_params) do
@@ -75,12 +77,6 @@ RSpec.describe 'Users account update', :type => :request do
 
       it { is_expected.to return_status_code 422 }
       it { is_expected.to return_validation_errors :user_update }
-    end
-
-    context 'without parameters root' do
-      let(:account_update_params) {}
-
-      it { is_expected.to return_bad_request }
     end
   end
 end

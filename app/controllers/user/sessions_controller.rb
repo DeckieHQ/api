@@ -1,5 +1,5 @@
 class User::SessionsController < Devise::SessionsController
-  before_action -> { check_root_for resource_name }
+  before_action -> { check_root_for :user }
 
   def create
     super do |user|
@@ -11,7 +11,7 @@ class User::SessionsController < Devise::SessionsController
 
   protected
 
-  def check_root_for(resource_name)
-    render_bad_request unless params[resource_name]
+  def check_root_for(root_name)
+    render_bad_request unless params[root_name]
   end
 end

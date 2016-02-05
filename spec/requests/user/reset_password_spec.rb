@@ -1,12 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe 'Users reset password', :type => :request do
+RSpec.describe 'User reset password', :type => :request do
+  let(:params) { Serialize.params(reset_password_params, type: :users) }
+
   before do
-    params = {
-      data: { type: 'users', attributes: reset_password_params }
-    }
     put user_reset_password_path, params: params, headers: json_headers
   end
+
+  include_examples 'check parameters for', :user
 
   context 'when user exists' do
     let(:user)     { FactoryGirl.create(:user) }
@@ -79,11 +80,5 @@ RSpec.describe 'Users reset password', :type => :request do
     it { is_expected.to return_status_code 422 }
 
     it { is_expected.to return_validation_errors_on :reset_password_token }
-  end
-
-  context 'without parameters root' do
-    let(:reset_password_params) {}
-
-    it { is_expected.to return_bad_request }
   end
 end

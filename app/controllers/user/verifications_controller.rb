@@ -1,7 +1,7 @@
 class User::VerificationsController < ApplicationController
   before_action :authenticate!
 
-  before_action -> { check_root_for :verification }
+  before_action -> { check_parameters_for :verification }
 
   before_action :retrieve_verification
 

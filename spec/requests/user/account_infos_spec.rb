@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Users account infos', :type => :request do
+RSpec.describe 'User account infos', :type => :request do
   before do
     get user_path, headers: json_headers
   end

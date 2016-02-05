@@ -19,7 +19,7 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def check_root_for(root)
+  def check_parameters_for(root)
     if params['data'] &&
        params['data']['attributes'] &&
        params['data']['type'] == root.to_s.pluralize

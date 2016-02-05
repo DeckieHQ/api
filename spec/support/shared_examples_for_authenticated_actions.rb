@@ -1,6 +1,8 @@
 require 'set'
 
 RSpec.shared_examples 'an action requiring authentication' do
+  let(:params) {}
+
   context 'when user is not authenticated' do
     let(:authenticated) { false }
 

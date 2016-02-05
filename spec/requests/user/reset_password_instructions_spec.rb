@@ -1,10 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe 'Users reset password instructions', :type => :request do
+RSpec.describe 'User reset password instructions', :type => :request do
+  let(:params) { Serialize.params(reset_password_params, type: :users) }
+
+  let(:reset_password_params) { user.slice(:email) }
+
   before do
-    params = {
-      data: { type: 'users', attributes: reset_password_params }
-    }
     post user_reset_password_path, params: params, headers: json_headers
   end
 
@@ -12,7 +13,7 @@ RSpec.describe 'Users reset password instructions', :type => :request do
     MailDeliveries.clear
   end
 
-  let(:reset_password_params) { user.slice(:email) }
+  include_examples 'check parameters for', :user
 
   context 'when user exists' do
     let(:user) { FactoryGirl.create(:user) }
@@ -40,11 +41,5 @@ RSpec.describe 'Users reset password instructions', :type => :request do
     it { is_expected.to return_not_found }
 
     it { is_expected.not_to have_sent_mail }
-  end
-
-  context 'without parameters root' do
-    let(:reset_password_params) {}
-
-    it { is_expected.to return_bad_request }
   end
 end
