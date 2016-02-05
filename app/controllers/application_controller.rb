@@ -3,6 +3,10 @@ class ApplicationController < ActionController::API
 
   respond_to :json
 
+  def resource_attributes
+    params.require(:data).require(:attributes)
+  end
+
   protected
 
   def authenticate!(options={})

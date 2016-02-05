@@ -27,7 +27,7 @@ class User::PasswordsController < Devise::PasswordsController
   protected
 
   def resource_params
-    params.require(:data).require(:attributes).permit(
+    resource_attributes.permit(
       :email, :reset_password_token, :password, :password_confirmation
     )
   end

@@ -26,6 +26,6 @@ class User::VerificationsController < ApplicationController
   end
 
   def verification_params
-    params.require(:data).require(:attributes).permit(:type, :token)
+    resource_attributes.permit(:type, :token)
   end
 end
