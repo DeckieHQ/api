@@ -7,12 +7,6 @@ RSpec.shared_examples 'an action requiring authentication' do
     let(:authenticated) { false }
 
     it { is_expected.to return_unauthorized }
-
-    it 'returns an unauthorized error' do
-      expected_response = { error: I18n.t('failure.unauthorized') }
-
-      expect(json_response).to eq expected_response
-    end
   end
 
   context 'when authentication token is invalid' do
@@ -25,11 +19,5 @@ RSpec.shared_examples 'an action requiring authentication' do
     let(:authenticated) { true }
 
     it { is_expected.to return_unauthorized }
-
-    it 'returns an unauthorized error' do
-      expected_response = { error: I18n.t('failure.unauthorized') }
-
-      expect(json_response).to eq expected_response
-    end
   end
 end

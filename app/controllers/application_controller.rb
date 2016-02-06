@@ -33,7 +33,14 @@ class ApplicationController < ActionController::API
   end
 
   def render_error_for(status)
-    render json: { error: I18n.t("failure.#{status}") }, status: status
+    code = Rack::Utils::SYMBOL_TO_STATUS_CODE[status]
+
+    errors = {
+      errors: [
+        { status: code, detail: I18n.t("failure.#{status}") }
+      ]
+    }
+    render json: errors, status: status
   end
 
   def render_validation_errors(model)

@@ -38,6 +38,6 @@ RSpec.describe 'User sign in', :type => :request do
   context 'without parameters root' do
     let(:params) {}
 
-    it { is_expected.to return_bad_request }
+    it { is_expected.to return_status_code 400 }
   end
 end
