@@ -1,5 +1,5 @@
 class User::PasswordsController < Devise::PasswordsController
-  before_action -> { check_parameters_for :user }
+  before_action -> { check_parameters_for :users }
 
   def create
     super do |user|

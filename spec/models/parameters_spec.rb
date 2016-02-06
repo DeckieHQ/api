@@ -4,7 +4,7 @@ RSpec.describe Parameters, :type => :model do
   subject(:parameters) do
     params = { data: data }
 
-    Parameters.new(params, resource_name: :users)
+    Parameters.new(params, resource_type: :users)
   end
 
   before do
@@ -34,7 +34,7 @@ RSpec.describe Parameters, :type => :model do
 
     it 'has a validation error on type' do
       expect(
-        parameters.errors.added?(:type, :unmatch, { resource_name: :users })
+        parameters.errors.added?(:type, :unmatch, { resource_type: :users })
       ).to be_truthy
     end
   end

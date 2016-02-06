@@ -23,8 +23,8 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def check_parameters_for(resource_name)
-    parameters = Parameters.new(params, resource_name: resource_name.to_s.pluralize)
+  def check_parameters_for(resource_type)
+    parameters = Parameters.new(params, resource_type: resource_type.to_s)
 
     render_validation_errors(parameters, on: :data) unless parameters.valid?
   end

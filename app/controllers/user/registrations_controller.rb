@@ -3,7 +3,7 @@ class User::RegistrationsController < Devise::RegistrationsController
 
   before_action :authenticate!, only: :show
 
-  before_action -> { check_parameters_for :user }, only: [:create, :update]
+  before_action -> { check_parameters_for :users }, only: [:create, :update]
 
   def show
     render json: current_user, status: :ok

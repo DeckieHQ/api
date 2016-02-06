@@ -8,7 +8,7 @@ RSpec.describe 'User sign up', :type => :request do
     post user_path, params: params, headers: json_headers
   end
 
-  include_examples 'check parameters for', :user
+  include_examples 'check parameters for', :users
 
   context 'when attributes are valid' do
     let(:user)         { FactoryGirl.build(:user) }

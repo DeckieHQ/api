@@ -38,7 +38,7 @@ en:
             base:
               missing_data: "Missing `data` Member at document's top level."
             type:
-              unmatch: 'Must be %{resource_name}.'
+              unmatch: 'Must be %{resource_type}.'
         verification:
           attributes:
             base:

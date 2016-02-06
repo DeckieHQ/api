@@ -1,9 +1,7 @@
 require 'set'
 
-RSpec.shared_examples 'check parameters for' do |model_name|
-  type = model_name.to_s.pluralize
-
-  let(:parameters) { Parameters.new(params || {}, resource_name: type) }
+RSpec.shared_examples 'check parameters for' do |type|
+  let(:parameters) { Parameters.new(params || {}, resource_type: type.to_s) }
 
   context 'with empty parameters' do
     let(:params) {}

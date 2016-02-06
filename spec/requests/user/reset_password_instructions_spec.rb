@@ -13,7 +13,7 @@ RSpec.describe 'User reset password instructions', :type => :request do
     MailDeliveries.clear
   end
 
-  include_examples 'check parameters for', :user
+  include_examples 'check parameters for', :users
 
   context 'when user exists' do
     let(:user) { FactoryGirl.create(:user) }

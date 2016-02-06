@@ -7,7 +7,7 @@ RSpec.describe 'User reset password', :type => :request do
     put user_reset_password_path, params: params, headers: json_headers
   end
 
-  include_examples 'check parameters for', :user
+  include_examples 'check parameters for', :users
 
   context 'when user exists' do
     let(:user)     { FactoryGirl.create(:user) }

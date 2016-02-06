@@ -1,18 +1,18 @@
 class Parameters
   include ActiveModel::Validations
 
-  attr_reader :resource_name
+  attr_reader :resource_type
 
   validate :must_have_data
 
   validates :type,       presence: true, if: :has_data?
   validates :attributes, presence: true, if: :has_data?
 
-  validate :type_matches_resource_name,  if: :has_data?
+  validate :type_matches_resource_type,  if: :has_data?
 
-  def initialize(params, resource_name:)
+  def initialize(params, resource_type:)
     @params        = params
-    @resource_name = resource_name
+    @resource_type = resource_type
   end
 
   def has_data?
@@ -33,9 +33,9 @@ class Parameters
     errors.add(:base, :missing_data) unless has_data?
   end
 
-  def type_matches_resource_name
-    if type != resource_name
-      errors.add(:type, :unmatch, { resource_name: resource_name })
+  def type_matches_resource_type
+    if type != resource_type
+      errors.add(:type, :unmatch, { resource_type: resource_type })
     end
   end
 end
