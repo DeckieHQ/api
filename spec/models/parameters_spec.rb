@@ -1,10 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe Parameters, :type => :model do
+  let(:type) { Faker::Lorem.word }
+
   subject(:parameters) do
     params = { data: data }
 
-    Parameters.new(params, resource_type: :users)
+    Parameters.new(params, resource_type: type)
   end
 
   before do
@@ -30,11 +32,11 @@ RSpec.describe Parameters, :type => :model do
   end
 
   context "when data type doesn't match resource name" do
-    let(:data) { { type: :plop } }
+    let(:data) { { type: "#{type}." } }
 
     it 'has a validation error on type' do
       expect(
-        parameters.errors.added?(:type, :unmatch, { resource_type: :users })
+        parameters.errors.added?(:type, :unmatch, { resource_type: type })
       ).to be_truthy
     end
   end
