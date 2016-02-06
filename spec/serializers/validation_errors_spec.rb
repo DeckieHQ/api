@@ -7,6 +7,8 @@ RSpec.describe ValidationErrorsSerializer, :type => :serializer do
     before do
       model.valid?
 
+      model.errors.add(:base, :invalid)
+
       @errors = ValidationErrorsSerializer.serialize(model)[:errors]
     end
 
@@ -18,11 +20,12 @@ RSpec.describe ValidationErrorsSerializer, :type => :serializer do
     def expected_errors
       model.errors.details.map do |field, field_errors|
         field_errors.each_with_index.map do |errors, index|
+          pointer = field == :base ? "" : "/data/attributes/#{field}"
           {
             status: 422,
             code: errors[:error].to_s,
             detail: model.errors[field][index],
-            source: { pointer: "/data/attributes/#{field}"}
+            source: { pointer: pointer }
           }
         end
       end.flatten
