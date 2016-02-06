@@ -2,22 +2,34 @@
 #
 # See: http://jsonapi.org/format/#errors
 #
-module ValidationErrorsSerializer
-  extend self
+class ValidationErrorsSerializer
+  def initialize(object, on:)
+    @object = object
+    @on     = on
+  end
 
-  def serialize(object)
-    errors = object.errors.details.map do |field, field_errors|
+  def serialize
+    { errors: serialized_errors }
+  end
+
+  protected
+
+  def serialized_errors
+    @object.errors.details.map do |field, field_errors|
       field_errors.each_with_index.map do |errors, index|
-        pointer = field == :base ? "" : "/data/attributes/#{field}"
         {
           status: 422,
           code: errors[:error].to_s,
-          detail: object.errors[field][index],
-          source: { pointer: pointer }
+          detail: @object.errors[field][index],
+          source: { pointer: pointer_for(field) }
         }
       end
     end.flatten
+  end
 
-    { errors: errors }
+  def pointer_for(field)
+    return '' if field == :base
+
+    @on == :data ? "/data/#{field}" : "/data/attributes/#{field}"
   end
 end

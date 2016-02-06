@@ -1,7 +1,9 @@
 class Verification
   include ActiveModel::Validations
 
-  attr_accessor :type, :token, :model
+  attr_accessor :type, :token
+
+  attr_reader :model
 
   validates :type, inclusion: { in: %w(email phone_number) }
 
@@ -21,9 +23,9 @@ class Verification
   def send_instructions
     return false unless valid? && valid?(:send_instructions)
 
-    @model.send("generate_#{@type}_verification_token!")
+    model.send("generate_#{type}_verification_token!")
 
-    sent = @model.send("send_#{@type}_verification_instructions")
+    sent = model.send("send_#{type}_verification_instructions")
 
     errors.add(:base, :unassigned, base_error_options) unless sent
 
@@ -33,36 +35,36 @@ class Verification
   def complete
     return false unless valid? && valid?(:complete)
 
-    @model.send("verify_#{@type}!")
+    model.send("verify_#{type}!")
   end
 
   private
 
   def model_attribute_must_be_speficied
-    model_attribute = @model.send(@type)
+    model_attribute = model.send(type)
 
     errors.add(:base, :unspecified, base_error_options) unless model_attribute
   end
 
   def model_attribute_must_be_unverified
-    attribute_verified_at = @model.send("#{@type}_verified_at")
+    attribute_verified_at = model.send("#{type}_verified_at")
 
     errors.add(:base, :already_verified, base_error_options) if attribute_verified_at
   end
 
   def token_must_be_valid
-    model_token = @model.send("#{@type}_verification_token")
+    model_token = model.send("#{type}_verification_token")
 
-    if @token.blank? || @token.to_s != model_token.to_s || sent_at < 5.hours.ago
+    if token.blank? || token.to_s != model_token.to_s || sent_at < 5.hours.ago
       errors.add(:token, :invalid)
     end
   end
 
   def sent_at
-    @model.send("#{@type}_verification_sent_at")
+    model.send("#{type}_verification_sent_at")
   end
 
   def base_error_options
-    { target: @model.class.name.to_sym, type: @type }
+    { target: model.class.name.to_sym, type: type }
   end
 end

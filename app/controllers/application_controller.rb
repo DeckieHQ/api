@@ -24,27 +24,22 @@ class ApplicationController < ActionController::API
   end
 
   def check_parameters_for(resource_name)
-    if params['data'] &&
-       params['data']['attributes'] &&
-       params['data']['type'] == resource_name.to_s.pluralize
-      return
-    end
-    render_error_for(:bad_request)
+    parameters = Parameters.new(params, resource_name: resource_name.to_s.pluralize)
+
+    render_validation_errors(parameters, on: :data) unless parameters.valid?
   end
 
   def render_error_for(status)
-    code = Rack::Utils::SYMBOL_TO_STATUS_CODE[status]
-
-    errors = {
-      errors: [
-        { status: code, detail: I18n.t("failure.#{status}") }
-      ]
-    }
-    render json: errors, status: status
+    render json: {
+      errors: [{
+        status: Rack::Utils::SYMBOL_TO_STATUS_CODE[status],
+        detail: I18n.t("failure.#{status}")
+      }]
+    }, status: status
   end
 
-  def render_validation_errors(model)
-    errors = ValidationErrorsSerializer.serialize(model)
+  def render_validation_errors(model, on: :attributes)
+    errors = ValidationErrorsSerializer.new(model, on: on).serialize
 
     render json: errors, status: :unprocessable_entity
   end

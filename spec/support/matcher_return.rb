@@ -39,10 +39,11 @@ RSpec::Matchers.define :return_validation_errors do |resource_name, options|
   match do
     options  = options || {}
     resource = send(resource_name)
+    on       = options[:on] || :attributes
 
     resource.valid?(options[:context]) unless resource.errors.present?
 
-    expected_errors = ValidationErrorsSerializer.serialize(resource)
+    expected_errors = ValidationErrorsSerializer.new(resource, on: on).serialize
 
     response.code == '422' && json_response == expected_errors
   end
