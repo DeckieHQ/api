@@ -1,3 +1,6 @@
 class ProfileSerializer < ActiveModel::Serializer
-  attributes :nickname
+  attributes :nickname,
+             :display_name,
+             :short_description,
+             :description
 end

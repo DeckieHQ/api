@@ -11,7 +11,7 @@ RSpec.describe ProfileSerializer, :type => :serializer do
 
     it 'serializes the specified attributes' do
       expect(serialized.attributes).to have_serialized_attributes(
-        profile.slice(:nickname)
+        profile.slice(:nickname, :display_name, :short_description, :description)
       )
     end
   end

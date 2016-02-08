@@ -5,7 +5,7 @@ class User < ApplicationRecord
 
   has_secure_token :authentication_token
 
-  after_create :create_profile
+  after_create :build_profile
 
   acts_as_verifiable :email,
     delivery: UserMailer, token: -> { Token.friendly }
@@ -27,4 +27,10 @@ class User < ApplicationRecord
   }
   validates :phone_number, uniqueness: true, allow_nil: true
   validates_plausible_phone :phone_number
+
+  def build_profile
+    display_name = self.first_name + ' ' + self.last_name[0].capitalize
+
+    self.create_profile({ display_name: display_name })
+  end
 end
