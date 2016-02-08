@@ -1,5 +1,5 @@
 class User::SessionsController < Devise::SessionsController
-  before_action -> { check_root_for resource_name }
+  before_action -> { check_root_for :user }
 
   def create
     super do |user|
@@ -7,5 +7,11 @@ class User::SessionsController < Devise::SessionsController
 
       render json: response, status: :created and return
     end
+  end
+
+  protected
+
+  def check_root_for(root_name)
+    render_error_for(:bad_request) unless params[root_name]
   end
 end

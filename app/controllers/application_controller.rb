@@ -3,10 +3,14 @@ class ApplicationController < ActionController::API
 
   respond_to :json
 
+  def resource_attributes
+    params.require(:data).require(:attributes)
+  end
+
   protected
 
   def authenticate!(options={})
-    authenticate_token || render_unauthorized
+    authenticate_token || render_error_for(:unauthorized)
   end
 
   def authenticate_token
@@ -19,25 +23,24 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def check_root_for(root)
-    err = { error: I18n.t('failure.bad_request') }
+  def check_parameters_for(resource_type)
+    parameters = Parameters.new(params, resource_type: resource_type.to_s)
 
-    render json: err, status: :bad_request unless params[root]
+    render_validation_errors(parameters, on: :data) unless parameters.valid?
   end
 
-  def render_not_found
-    render json: { error: I18n.t('failure.not_found') }, status: :not_found
+  def render_error_for(status)
+    render json: {
+      errors: [{
+        status: Rack::Utils::SYMBOL_TO_STATUS_CODE[status],
+        detail: I18n.t("failure.#{status}")
+      }]
+    }, status: status
   end
 
-  def render_unauthorized
-    render json: { error: I18n.t('failure.unauthorized') }, status: :unauthorized
-  end
+  def render_validation_errors(model, on: :attributes)
+    errors = ValidationErrorsSerializer.new(model, on: on).serialize
 
-  def render_validation_errors(model)
-    errors = {
-      details:  model.errors.details,
-      messages: model.errors.messages
-    }
-    render json: { errors: errors }, status: :unprocessable_entity
+    render json: errors, status: :unprocessable_entity
   end
 end

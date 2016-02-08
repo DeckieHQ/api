@@ -1,12 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe 'Users verification', :type => :request do
-  let(:verification_params) {}
+RSpec.describe 'User verification', :type => :request do
+  let(:params) { Serialize.params(verification_params, type: :verifications) }
 
   before do
     SMSDeliveries.use_fake_provider
-
-    params = { verification: verification_params }
 
     put user_verifications_path, params: params, headers: json_headers
   end
@@ -26,11 +24,7 @@ RSpec.describe 'Users verification', :type => :request do
       Verification.new(verification_params, model: user)
     end
 
-    context 'without parameters root' do
-      let(:verification_params) {}
-
-      it { is_expected.to return_bad_request }
-    end
+    include_examples 'check parameters for', :verifications
 
     context 'with invalid type' do
       let(:verification_params) { { type: :invalid } }
@@ -70,12 +64,6 @@ RSpec.describe 'Users verification', :type => :request do
 
         context "when #{type} verification token has expired" do
           let(:user) { FactoryGirl.create(:"user_with_#{type}_verification_expired") }
-
-          it { expect_validation_errors_on_complete }
-        end
-
-        context "when #{type} verification token is blank" do
-          let(:user) { FactoryGirl.create(:user_with_phone_number) }
 
           it { expect_validation_errors_on_complete }
         end

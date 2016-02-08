@@ -1,7 +1,7 @@
 class User::VerificationsController < ApplicationController
   before_action :authenticate!
 
-  before_action -> { check_root_for :verification }
+  before_action -> { check_parameters_for :verifications }
 
   before_action :retrieve_verification
 
@@ -22,6 +22,10 @@ class User::VerificationsController < ApplicationController
   protected
 
   def retrieve_verification
-    @verification = Verification.new(params[:verification], model: current_user)
+    @verification = Verification.new(verification_params, model: current_user)
+  end
+
+  def verification_params
+    resource_attributes.permit(:type, :token)
   end
 end

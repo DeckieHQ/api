@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe 'Users sign in', :type => :request do
-  before do
-    post user_sign_in_path, params: { user: sign_in_params }, headers: json_headers
-  end
+RSpec.describe 'User sign in', :type => :request do
+  let(:params) { { user: user.slice(:email, :password) } }
 
-  let(:sign_in_params) { user.slice(:email, :password) }
+  before do
+    post user_sign_in_path, params: params, headers: json_headers
+  end
 
   context 'when user exists' do
     let(:user) { FactoryGirl.create(:user) }
@@ -36,8 +36,8 @@ RSpec.describe 'Users sign in', :type => :request do
   end
 
   context 'without parameters root' do
-    let(:sign_in_params) {}
+    let(:params) {}
 
-    it { is_expected.to return_bad_request }
+    it { is_expected.to return_status_code 400 }
   end
 end

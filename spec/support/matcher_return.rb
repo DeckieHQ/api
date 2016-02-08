@@ -7,13 +7,16 @@ RSpec::Matchers.define :return_no_content do
 end
 
 {
-  bad_request: '400',
-  not_found:   '404'
+  bad_request:  400,
+  unauthorized: 401,
+  not_found:    404
 }.each do |status, code|
   RSpec::Matchers.define :"return_#{status}" do
     match do
-      response.code == code &&
-      json_response == { error: I18n.t("failure.#{status}") }
+      response.code == code.to_s &&
+      json_response == { errors: [
+        { status: code, detail: I18n.t("failure.#{status}") }
+      ]}
     end
 
     failure_message { failure_message_for(status) }
@@ -36,20 +39,20 @@ RSpec::Matchers.define :return_validation_errors do |resource_name, options|
   match do
     options  = options || {}
     resource = send(resource_name)
+    on       = options[:on] || :attributes
 
     resource.valid?(options[:context]) unless resource.errors.present?
 
-    expected_errors =  {
-      errors: {
-        details:  resource.errors.details,
-        messages: resource.errors.messages
-      }
-    }.to_json
+    expected_errors = ValidationErrorsSerializer.new(resource, on: on).serialize
 
-    response.body == expected_errors
+    response.code == '422' && json_response == expected_errors
   end
 end
 
-RSpec::Matchers.define :return_validation_errors_on do |expected|
-  match { json_response[:errors][:details][expected].present? }
+RSpec::Matchers.define :return_validation_errors_on do |field|
+  match do
+    response.code == '422' && json_response[:errors].any? do |error|
+      error[:source][:pointer] == "/data/attributes/#{field}"
+    end
+  end
 end

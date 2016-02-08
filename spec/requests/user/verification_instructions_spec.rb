@@ -1,12 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe 'Users verification instructions', :type => :request do
-  let(:verification_params) {}
+RSpec.describe 'User verification instructions', :type => :request do
+  let(:params) { Serialize.params(verification_params, type: :verifications) }
 
   before do
     SMSDeliveries.use_fake_provider
-
-    params = { verification: verification_params }
 
     post user_verifications_path, params: params, headers: json_headers
   end
@@ -26,11 +24,7 @@ RSpec.describe 'Users verification instructions', :type => :request do
       Verification.new(verification_params, model: user)
     end
 
-    context 'without parameters root' do
-      let(:verification_params) {}
-
-      it { is_expected.to return_bad_request }
-    end
+    include_examples 'check parameters for', :verifications
 
     context 'with invalid type' do
       let(:verification_params) { { type: :invalid } }

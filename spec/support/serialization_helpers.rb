@@ -15,3 +15,16 @@ class Serialized
     )
   end
 end
+
+module Serialize
+  extend self
+
+  def params(attributes = {}, type:)
+    {
+      data: {
+        type: type,
+        attributes: attributes
+      }
+    }
+  end
+end

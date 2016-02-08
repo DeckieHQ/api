@@ -3,7 +3,7 @@ class User::RegistrationsController < Devise::RegistrationsController
 
   before_action :authenticate!, only: :show
 
-  before_action -> { check_root_for resource_name }, only: [:create, :update]
+  before_action -> { check_parameters_for :users }, only: [:create, :update]
 
   def show
     render json: current_user, status: :ok
@@ -35,13 +35,13 @@ class User::RegistrationsController < Devise::RegistrationsController
   protected
 
   def sign_up_params
-    params
-    .require(resource_name)
-    .permit(:email, :password, :first_name, :last_name, :birthday)
+    resource_attributes.permit(
+      :email, :password, :first_name, :last_name, :birthday
+    )
   end
 
   def account_update_params
-    params.require(resource_name).permit(
+    resource_attributes.permit(
       :email,      :password,   :current_password,
       :first_name, :last_name,  :birthday, :phone_number
     )

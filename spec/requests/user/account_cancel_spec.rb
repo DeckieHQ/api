@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Users account cancel', :type => :request do
+RSpec.describe 'User account cancel', :type => :request do
   before do
     delete user_path, headers: json_headers
   end

@@ -1,11 +1,14 @@
 require 'rails_helper'
 
-RSpec.describe 'Users sign up', :type => :request do
+RSpec.describe 'User sign up', :type => :request do
+  let(:params)         { Serialize.params(sign_up_params, type: :users) }
   let(:sign_up_params) { user.attributes.merge(password: user.password) }
 
   before do
-    post user_path, params: { user: sign_up_params }, headers: json_headers
+    post user_path, params: params, headers: json_headers
   end
+
+  include_examples 'check parameters for', :users
 
   context 'when attributes are valid' do
     let(:user)         { FactoryGirl.build(:user) }
@@ -27,13 +30,6 @@ RSpec.describe 'Users sign up', :type => :request do
   context 'when attributes are invalid' do
     let(:user) { FactoryGirl.build(:user, email: 'test@') }
 
-    it { is_expected.to return_status_code 422 }
     it { is_expected.to return_validation_errors :user }
-  end
-
-  context 'without parameters root' do
-    let(:sign_up_params) {}
-
-    it { is_expected.to return_bad_request }
   end
 end

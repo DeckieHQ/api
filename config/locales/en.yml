@@ -23,6 +23,7 @@ en:
   failure:
     unauthorized: 'Bad credentials.'
     not_found: 'Not found.'
+    bad_request: 'Bad request.'
   verifications:
     phone_number:
       message: 'To verify your phone number, please enter this code: %{code}.'
@@ -32,9 +33,15 @@ en:
   activemodel:
     errors:
       models:
+        parameters:
+          attributes:
+            base:
+              missing_data: "Missing `data` Member at document's top level."
+            type:
+              unmatch: 'Must be %{resource_type}.'
         verification:
           attributes:
             base:
-              unspecified: "%{target} doesn't have a %{type}. "
+              unspecified: "%{target} doesn't have a %{type}."
               unassigned: "%{target} %{type} is unassigned."
               already_verified: "%{target} %{type} is already verified."
