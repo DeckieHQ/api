@@ -1,7 +1,10 @@
 class CreateEventsAndSubscriptions < ActiveRecord::Migration[5.0]
   def up
     create_table(:events) do |t|
-      t.string :title
+      t.string :title, null: false
+
+      t.datetime :begin_at, null: false
+      t.datetime :end_at,   null: false
 
       t.timestamps null: false
 

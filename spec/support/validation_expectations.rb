@@ -1,14 +1,15 @@
 class ValidationExpectations
-  def initialize(instance, field, limit = nil)
+  def initialize(instance, field, options = {})
     @instance = instance
     @field    = field
-    @limit    = limit
+    @options  = options
   end
 
   protected
 
   def valid?(value)
     @instance[@field] = value
-    @instance.valid? || @instance.errors.details[@field].empty?
+
+    @instance.valid? || !@instance.errors.include?(@field)
   end
 end

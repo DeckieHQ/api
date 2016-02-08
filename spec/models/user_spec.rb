@@ -24,8 +24,8 @@ RSpec.describe User, :type => :model do
 
   it { is_expected.to validate_plausible_phone(:phone_number) }
 
-  it { is_expected.to validate_date_after(:birthday,  100.year.ago) }
-  it { is_expected.to validate_date_before(:birthday,  18.year.ago + 1.day) }
+  it { is_expected.to validate_date_after(:birthday,  { limit: 100.year.ago }) }
+  it { is_expected.to validate_date_before(:birthday, { limit: 18.year.ago + 1.day }) }
 
   it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en)) }
 
@@ -63,16 +63,14 @@ RSpec.describe User, :type => :model do
     end
 
     context 'when destroyed' do
+      let(:profile) { user.profile }
+
       before do
-        @profile = user.profile
-
         user.destroy
-
-        @profile.reload
       end
 
       it 'unlinks its profile' do
-        expect(@profile.user_id).to be_nil
+        expect(profile.reload).to have_attributes({ user_id: nil }) 
       end
     end
   end
