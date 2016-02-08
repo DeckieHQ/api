@@ -6,7 +6,7 @@ RSpec.describe 'User reset password instructions', :type => :request do
   let(:reset_password_params) { user.slice(:email) }
 
   before do
-    post user_reset_password_path, params: params, headers: json_headers
+    post user_password_path, params: params, headers: json_headers
   end
 
   after do

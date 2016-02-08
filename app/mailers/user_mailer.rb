@@ -3,7 +3,7 @@ class UserMailer < ApplicationMailer
 
   def reset_password_instructions(user, token, opts={})
     @reset_password_url = front_link_for(
-      action: :reset_password, path: '/edit',
+      action: :password, path: '/edit',
       params: { reset_password_token: token }
     )
     devise_mail(user, :reset_password_instructions)

@@ -21,7 +21,7 @@ RSpec.describe UserMailer do
 
     it 'assigns @reset_password_url' do
       expect(mail.body.encoded).to include(
-        user_reset_password_url << "/edit?reset_password_token=#{reset_password_token}"
+        user_password_url << "/edit?reset_password_token=#{reset_password_token}"
       )
     end
   end

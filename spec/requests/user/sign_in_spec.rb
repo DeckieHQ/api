@@ -4,7 +4,7 @@ RSpec.describe 'User sign in', :type => :request do
   let(:params) { { user: user.slice(:email, :password) } }
 
   before do
-    post user_sign_in_path, params: params, headers: json_headers
+    post sign_in_user_path, params: params, headers: json_headers
   end
 
   context 'when user exists' do
