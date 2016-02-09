@@ -27,7 +27,11 @@ class User < ApplicationRecord
     after:              Proc.new { 100.year.ago },
     before_or_equal_to: Proc.new {  18.year.ago }
   }
+<<<<<<< HEAD
   validates :culture, presence: true, inclusion: { in: %w(en) }
+=======
+  validates :phone_number, uniqueness: { case_sensitive: false }, allow_nil: true
+>>>>>>> 1cffcf0... test uniqueness on email/phone_number
   validates_plausible_phone :phone_number
 
   def build_profile
