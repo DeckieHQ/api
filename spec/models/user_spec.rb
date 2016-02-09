@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe User, :type => :model do
-  # Database
   [
     :email, :phone_number, :reset_password_token, :email_verification_token,
     :phone_number_verification_token
@@ -9,10 +8,8 @@ RSpec.describe User, :type => :model do
     it { is_expected.to have_db_index(attribute).unique(true) }
   end
 
-  # Relations
   it { is_expected.to have_one(:profile) }
 
-  # Validations
   [
     :first_name,  :last_name, :birthday, :email, :password, :culture
   ].each do |attribute|
@@ -70,7 +67,7 @@ RSpec.describe User, :type => :model do
       end
 
       it 'unlinks its profile' do
-        expect(profile.reload).to have_attributes({ user_id: nil }) 
+        expect(profile.reload).to have_attributes({ user_id: nil })
       end
     end
   end
