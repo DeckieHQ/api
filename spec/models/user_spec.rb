@@ -8,6 +8,9 @@ RSpec.describe User, :type => :model do
     it { is_expected.to have_db_index(attribute).unique(true) }
   end
 
+  subject { FactoryGirl.build(:user_with_phone_number) }
+
+
   it { is_expected.to have_one(:profile) }
 
   [
@@ -79,6 +82,6 @@ RSpec.describe User, :type => :model do
 
   include_examples 'acts as verifiable', :phone_number,
     deliveries: SMSDeliveries,
-    faker: -> { Faker::PhoneNumber.plausible },
+    faker: -> { Fake::PhoneNumber.plausible },
     token_type: :pin
 end

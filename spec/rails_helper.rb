@@ -7,7 +7,9 @@ require 'shoulda-matchers'
 require 'factory_girl_rails'
 require 'webmock/rspec'
 
-WebMock.disable_net_connect!(allow: 'codeclimate.com')
+WebMock.disable_net_connect!(allow: ['codeclimate.com', 'maps.googleapis.com'])
+
+Geocoder.configure(lookup: :test)
 
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
@@ -34,14 +36,3 @@ RSpec.configure do |config|
 
   config.infer_spec_type_from_file_location!
 end
-
-# Custom helper to add a generator for plausible phone numbers.
-module PhoneNumber
-  def plausible
-    phone_number = "0#{rand(1..7)}#{rand(10000000..99999999)}"
-
-    PhonyRails.normalize_number(phone_number, country_code: 'FR')
-  end
-end
-
-Faker::PhoneNumber.extend PhoneNumber

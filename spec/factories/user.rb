@@ -31,7 +31,7 @@ FactoryGirl.define do
     end
 
     factory :user_with_phone_number do
-      phone_number { Faker::PhoneNumber.plausible }
+      phone_number { Fake::PhoneNumber.plausible }
 
       factory :user_with_phone_number_verified do
         after(:create) { |user| user.verify_phone_number! }

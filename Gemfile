@@ -37,6 +37,10 @@ gem 'rest-client', '2.0.0.rc2'
 gem 'phony_rails', '~> 0.12'
 gem 'date_validator', '~> 0.9'
 
+# Geolocation
+gem 'geocoder', '~> 1.3'
+
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'
