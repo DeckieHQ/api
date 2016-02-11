@@ -24,17 +24,4 @@ module Fake
       %w(beginner intermediate advanced expert).sample
     end
   end
-
-  module Address
-    extend self
-
-    def full
-      street_address = Faker::Address.street_address
-      city           = Faker::Address.city
-      state_abbr     = Faker::Address.state_abbr
-      country        = Faker::Address.country
-      
-      "#{street_address}, #{city}, #{state_abbr}, #{country}"
-    end
-  end
 end

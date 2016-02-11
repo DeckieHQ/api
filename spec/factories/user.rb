@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :user do
     first_name { Faker::Name.first_name }
     last_name  { Faker::Name.last_name  }
-    birthday   { Faker::Date.between(100.years.ago, 18.years.ago) }
+    birthday   { Faker::Date.between(100.years.ago + 1.day, 18.years.ago) }
 
     culture 'en'
 
