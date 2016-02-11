@@ -90,9 +90,7 @@ RSpec.shared_examples 'acts as verifiable' do |attribute, options|
     context "when #{attribute} is verified" do
       subject(:model) { FactoryGirl.create(:"#{factory}_with_#{attribute}_verified") }
 
-      it 'returns true' do
-        expect(model.send(verified)).to be_truthy
-      end
+      it { expect(model.send(verified)).to be_truthy }
     end
 
     context "when #{attribute} is not verified" do

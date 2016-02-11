@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'User hosted event show', :type => :request do
-  let(:event) { FactoryGirl.create(:event_with_host) }
+  let(:event) { FactoryGirl.create(:event) }
 
   before do
     get user_hosted_event_path(event), headers: json_headers

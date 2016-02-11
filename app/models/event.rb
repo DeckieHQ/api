@@ -43,8 +43,8 @@ class Event < ApplicationRecord
     [street, postcode, city, state, country].compact.join(', ')
   end
 
-  def already_started?
-    begin_at <= Time.now
+  def closed?
+    errors.add(:base, :closed) if begin_at <= Time.now
   end
 
   protected

@@ -3,11 +3,11 @@ class User::HostedEventsController < ApplicationController
 
   before_action :authenticate!
 
-  before_action :verified_user!, only: :create
+  before_action :verified?, only: :create
 
   before_action :retrieve_event, only: [:show, :destroy]
 
-  before_action :event_not_started!, only: :destroy
+  before_action :event_closed?, only: :destroy
 
   before_action -> { check_parameters_for :events }, only: :create
 
@@ -37,19 +37,14 @@ class User::HostedEventsController < ApplicationController
     render_error_for(:not_found) unless @event
   end
 
-  def event_not_started!
-    return unless @event.already_started?
-
-    @event.errors.add(:base, :already_started)
-
-    render_validation_errors(@event)
+  def event_closed?
+    render_validation_errors(@event) if @event.closed?
   end
 
   def event_params
     resource_attributes.permit(
      :title, :category, :ambiance, :level, :capacity, :invite_only, :description,
-     :begin_at, :end_at, :street, :postcode, :city,
-     :state, :country
+     :begin_at, :end_at, :street, :postcode, :city, :state, :country
     )
   end
 end

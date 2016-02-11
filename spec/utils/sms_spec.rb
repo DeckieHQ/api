@@ -18,9 +18,7 @@ RSpec.describe SMS do
         SMSDeliveries.use_fake_provider
       end
 
-      it 'returns true' do
-        expect(sms.deliver_now).to be_truthy
-      end
+      it { expect(sms.deliver_now).to be_truthy }
 
       it 'sends an sms with given options' do
         sms.deliver_now

@@ -111,4 +111,26 @@ RSpec.describe Event, :type => :model do
       expect(event.attendees).to be_empty
     end
   end
+
+  describe '#closed?' do
+    subject(:event) { FactoryGirl.create(:event) }
+
+    it { expect(event.closed?).to be_falsy }
+
+    it 'has no error' do
+      expect(event.errors).to be_empty
+    end
+
+    context 'when event is closed' do
+      subject(:event) { FactoryGirl.create(:event_closed) }
+
+      it { expect(event.closed?).to be_truthy }
+
+      it 'has an error on base' do
+        event.closed?
+
+        expect(event.errors.added?(:base, :closed)).to be_truthy
+      end
+    end
+  end
 end

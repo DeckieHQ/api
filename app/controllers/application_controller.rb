@@ -23,7 +23,7 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def verified_user!
+  def verified?
     render_error_for(:forbidden) unless current_user.verified?
   end
 

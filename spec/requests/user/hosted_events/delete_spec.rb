@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'User hosted event delete', :type => :request do
-  let(:event) { FactoryGirl.create(:event_with_host) }
+  let(:event) { FactoryGirl.create(:event) }
 
   before do
     delete user_hosted_event_path(event), headers: json_headers
@@ -19,10 +19,10 @@ RSpec.describe 'User hosted event delete', :type => :request do
         expect(Event.find_by(id: event.id)).to be_nil
       end
 
-      context 'when event is already started' do
+      context 'when event is closed' do
         let(:event) do
-          FactoryGirl.create(:event_already_started).tap do |event|
-            event.errors.add(:base, :already_started)
+          FactoryGirl.create(:event_closed).tap do |event|
+            event.errors.add(:base, :closed)
           end
         end
 
@@ -36,7 +36,7 @@ RSpec.describe 'User hosted event delete', :type => :request do
 
     context "when event doesn't belong to the user" do
       let(:authenticate) { FactoryGirl.create(:user) }
-      
+
       it { is_expected.to return_not_found }
     end
   end

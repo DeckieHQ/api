@@ -10,8 +10,7 @@ FactoryGirl.define do
     password { Faker::Internet.password }
 
     factory :user_invalid do
-      email '.'
-      phone_number '.'
+      email nil
     end
 
     factory :user_with_email_verified do

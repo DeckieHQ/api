@@ -95,27 +95,21 @@ RSpec.describe User, :type => :model do
 
   describe '#verified?' do
     context 'when user email is not verified' do
-      let(:user) { FactoryGirl.create(:user_with_phone_number_verified) }
+      subject(:user) { FactoryGirl.create(:user_with_phone_number_verified) }
 
-      it 'returns false' do
-        expect(user).not_to be_verified
-      end
+      it { expect(user.verified?).to be_falsy }
     end
 
     context 'when user phone_number is not verified' do
       let(:user) { FactoryGirl.create(:user_with_email_verified) }
 
-      it 'returns false' do
-        expect(user).not_to be_verified
-      end
+      it { expect(user.verified?).to be_falsy }
     end
 
     context 'when user is verified' do
       let(:user) { FactoryGirl.create(:user_verified) }
 
-      it 'returns true' do
-        expect(user).to be_verified
-      end
+      it { expect(user.verified?).to be_truthy }
     end
   end
 end

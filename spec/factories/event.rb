@@ -22,23 +22,25 @@ FactoryGirl.define do
     state    { Faker::Address.state          }
     country  { Faker::Address.country        }
 
-    factory :event_with_host do
-      association :host, factory: :profile_verified
+    association :host, factory: :profile_verified
 
-      factory :event_already_started do
-        begin_at { Faker::Time.backward(5, :all) }
+    factory :event_closed do
+      begin_at { Faker::Time.backward(5, :all) }
 
-        to_create do |event|
-          event.save(validate: false)
-        end
+      to_create do |event|
+        event.save(validate: false)
+      end
+    end
+
+    factory :event_with_attendees do
+      transient { attendees_count 10 }
+
+      before(:create) do |event, evaluator|
+        event.capacity = evaluator.attendees_count
       end
 
-      factory :event_with_attendees do
-        transient { attendees_count 10 }
-
-        after(:create) do |event, evaluator|
-          create_list(:subscription, evaluator.attendees_count, event: event)
-        end
+      after(:create) do |event, evaluator|
+        create_list(:subscription, evaluator.attendees_count, event: event)
       end
     end
 
