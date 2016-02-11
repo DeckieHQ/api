@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'User hosted events infos', :type => :request do
+RSpec.describe 'User hosted event show', :type => :request do
   let(:event) { FactoryGirl.create(:event) }
 
   before do

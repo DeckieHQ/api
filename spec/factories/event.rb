@@ -25,7 +25,9 @@ FactoryGirl.define do
     factory :event_already_started do
       begin_at { Faker::Time.backward(5, :all) }
 
-      to_create { |event| event.save(validate: false) }
+      to_create do |event|
+        event.save(validate: false)
+      end
     end
 
     factory :event_with_invite_only do

@@ -92,7 +92,6 @@ RSpec.describe Event, :type => :model do
       end
     end
 
-
     context 'with another attribute' do
       it "doesn't change its location" do
         expect { event.update(title: Faker::Hipster.sentence) }

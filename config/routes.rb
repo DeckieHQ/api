@@ -12,7 +12,7 @@ Rails.application.routes.draw do
         resource  :profile,       only: [:show, :update]
         resource  :password,      only: [:create, :update]
         resource  :verifications, only: [:create, :update]
-        resources :hosted_events, only: [:show, :create]
+        resources :hosted_events, only: [:show, :create, :destroy]
       end
     end
   end

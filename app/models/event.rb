@@ -43,6 +43,10 @@ class Event < ApplicationRecord
     [street, postcode, city, state, country].compact.join(', ')
   end
 
+  def already_started?
+    begin_at <= Time.now
+  end
+
   protected
 
   def address_changed?
