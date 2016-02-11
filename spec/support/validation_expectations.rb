@@ -7,9 +7,11 @@ class ValidationExpectations
 
   protected
 
-  def valid?(value)
-    @instance[@field] = value
+  attr_reader :instance, :field, :options
 
-    @instance.valid? || !@instance.errors.include?(@field)
+  def valid?(value)
+    instance[field] = value
+
+    instance.valid? || !instance.errors.include?(field)
   end
 end

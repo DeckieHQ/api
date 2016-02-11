@@ -6,7 +6,7 @@ class User::RegistrationsController < Devise::RegistrationsController
   before_action -> { check_parameters_for :users }, only: [:create, :update]
 
   def show
-    render json: current_user, status: :ok
+    render json: current_user
   end
 
   def create
@@ -24,7 +24,7 @@ class User::RegistrationsController < Devise::RegistrationsController
       # user.errors).
       return render_validation_errors(user) unless user.errors.empty?
 
-      render json: user, status: :ok and return
+      render json: user and return
     end
   end
 

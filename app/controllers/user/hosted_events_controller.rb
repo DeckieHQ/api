@@ -12,7 +12,7 @@ class User::HostedEventsController < ApplicationController
   before_action -> { check_parameters_for :events }, only: [:create, :update]
 
   def show
-    render json: @event, status: :ok
+    render json: event
   end
 
   def create
@@ -24,27 +24,29 @@ class User::HostedEventsController < ApplicationController
   end
 
   def update
-    return render_validation_errors(@event) unless @event.update(event_params)
+    return render_validation_errors(event) unless event.update(event_params)
 
-    render json: @event, status: :ok
+    render json: event
   end
 
   def destroy
-    @event.destroy
+    event.destroy
 
     head :no_content
   end
 
   protected
 
+  attr_reader :event
+
   def retrieve_event
     @event = hosted_events.find_by(id: params[:id])
 
-    render_error_for(:not_found) unless @event
+    render_error_for(:not_found) unless event
   end
 
   def event_closed?
-    render_validation_errors(@event) if @event.closed?
+    render_validation_errors(event) if event.closed?
   end
 
   def event_params

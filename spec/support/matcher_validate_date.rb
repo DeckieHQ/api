@@ -17,15 +17,15 @@ class DateTimeExpectations < ValidationExpectations
   end
 
   def limit
-    limit_option = @options[:limit]
+    limit_option = options[:limit]
 
     return limit_option unless limit_option.is_a?(Symbol)
 
-    @instance.send("#{limit_option}=", fake_time)
+    instance.send("#{limit_option}=", fake_time)
   end
 
   def compare
-    1.send(@options[:on] || :day)
+    1.send(options[:on] || :day)
   end
 
   def fake_time

@@ -24,6 +24,10 @@ module SMSDeliveries
   def_delegators :@deliveries, :last, :clear, :empty?, :count
 
   def use_fake_provider(status: 200)
-    FakeSMSProvider.new(@deliveries, status: status)
+    FakeSMSProvider.new(deliveries, status: status)
   end
+
+  protected
+
+  attr_reader :deliveries
 end
