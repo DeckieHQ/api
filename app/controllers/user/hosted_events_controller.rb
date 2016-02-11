@@ -5,11 +5,11 @@ class User::HostedEventsController < ApplicationController
 
   before_action :verified?, only: :create
 
-  before_action :retrieve_event, only: [:show, :destroy]
+  before_action :retrieve_event, only: [:show, :update, :destroy]
 
-  before_action :event_closed?, only: :destroy
+  before_action :event_closed?, only: [:update, :destroy]
 
-  before_action -> { check_parameters_for :events }, only: :create
+  before_action -> { check_parameters_for :events }, only: [:create, :update]
 
   def show
     render json: @event, status: :ok
@@ -21,6 +21,12 @@ class User::HostedEventsController < ApplicationController
     return render_validation_errors(event) unless hosted_events << event
 
     render json: event, status: :created
+  end
+
+  def update
+    return render_validation_errors(@event) unless @event.update(event_params)
+
+    render json: @event, status: :ok
   end
 
   def destroy
