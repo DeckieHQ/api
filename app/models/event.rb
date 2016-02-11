@@ -7,6 +7,8 @@ class Event < ApplicationRecord
 
   validates :title, :street, presence: true, length: { maximum: 128 }
 
+  validates :description, length: { maximum: 8192 }
+
   validates :category, presence: true, inclusion: {
     in: %w(party board role-playing card dice miniature strategy cooperative video tile-based)
   }

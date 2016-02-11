@@ -11,6 +11,8 @@ RSpec.describe Event, :type => :model do
   it { is_expected.to validate_presence_of(:title) }
   it { is_expected.to validate_length_of(:title).is_at_most(128) }
 
+  it { is_expected.to validate_length_of(:description).is_at_most(8192) }
+
   it { is_expected.to validate_presence_of(:category) }
   it do
     is_expected.to validate_inclusion_of(:category).in_array(

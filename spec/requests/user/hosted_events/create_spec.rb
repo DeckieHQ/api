@@ -27,7 +27,7 @@ RSpec.describe 'User create hosted event', :type => :request do
 
         it { is_expected.to return_status_code 201 }
 
-        it 'creates a new hosted event with permited parameters' do
+        it 'creates a new event with permited parameters' do
           permited_params = event.slice(
             :title, :category, :ambiance, :level, :capacity, :invite_only,
             :description, :street, :postcode, :city, :state, :country
