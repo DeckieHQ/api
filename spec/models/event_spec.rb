@@ -99,4 +99,16 @@ RSpec.describe Event, :type => :model do
       end
     end
   end
+
+  context 'when destroyed' do
+    subject(:event) { FactoryGirl.create(:event_with_attendees) }
+
+    before do
+      event.destroy
+    end
+
+    it 'removes its attendees' do
+      expect(event.attendees).to be_empty
+    end
+  end
 end

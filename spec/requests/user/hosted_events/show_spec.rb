@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'User hosted event show', :type => :request do
-  let(:event) { FactoryGirl.create(:event) }
+  let(:event) { FactoryGirl.create(:event_with_host) }
 
   before do
     get user_hosted_event_path(event), headers: json_headers
@@ -10,11 +10,8 @@ RSpec.describe 'User hosted event show', :type => :request do
   it_behaves_like 'an action requiring authentication'
 
   context 'when user is authenticated' do
-    let(:user)         { FactoryGirl.create(:user_with_hosted_events) }
-    let(:authenticate) { user }
-
     context 'when event belongs to the user' do
-      let(:event) { user.hosted_events.last }
+      let(:authenticate) { event.host.user }
 
       it { is_expected.to return_status_code 200 }
 
@@ -24,6 +21,8 @@ RSpec.describe 'User hosted event show', :type => :request do
     end
 
     context "when event doesn't belong to the user" do
+      let(:authenticate) { FactoryGirl.create(:user) }
+
       it { is_expected.to return_not_found }
     end
   end
