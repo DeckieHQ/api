@@ -9,9 +9,10 @@ Rails.application.routes.draw do
       resource :user, controller: :registrations do
         post '/sign_in', to: 'sessions#create'
 
-        resource :password,      only: [:create, :update]
-        resource :verifications, only: [:create, :update]
-        resource :profile,       only: [:show, :update]
+        resource  :profile,       only: [:show, :update]
+        resource  :password,      only: [:create, :update]
+        resource  :verifications, only: [:create, :update]
+        resources :hosted_events, only: [:show]
       end
     end
   end

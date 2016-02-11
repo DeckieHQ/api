@@ -62,6 +62,10 @@ RSpec.describe User, :type => :model do
       })
     end
 
+    it 'has a shortcut to its profile hosted_events' do
+      expect(user.hosted_events).to eq(user.profile.hosted_events)
+    end
+
     context 'when destroyed' do
       let(:profile) { user.profile }
 
