@@ -19,6 +19,14 @@ FactoryGirl.define do
         user.verify_email!
         user.verify_phone_number!
       end
+
+      factory :user_with_hosted_events do
+        transient { events_count 10 }
+
+        after(:create) do |user, evaluator|
+          create_list(:event, evaluator.events_count, host: user.profile)
+        end
+      end
     end
 
     factory :user_with_email_verified do

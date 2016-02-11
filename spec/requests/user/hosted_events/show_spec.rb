@@ -10,15 +10,11 @@ RSpec.describe 'User hosted event show', :type => :request do
   it_behaves_like 'an action requiring authentication'
 
   context 'when user is authenticated' do
-    let(:user)         { FactoryGirl.create(:user) }
+    let(:user)         { FactoryGirl.create(:user_with_hosted_events) }
     let(:authenticate) { user }
 
     context 'when event belongs to the user' do
-      let(:event) do
-        FactoryGirl.build(:event).tap do |event|
-          user.hosted_events << event
-        end
-      end
+      let(:event) { user.hosted_events.last }
 
       it { is_expected.to return_status_code 200 }
 
