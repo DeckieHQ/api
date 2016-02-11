@@ -1,11 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe 'User profile update', :type => :request do
-  let(:profile_update)        { FactoryGirl.build(:profile) }
+  let(:params) { Serialize.params(profile_update_params, type: :profiles) }
+
   let(:profile_update_params) { profile_update.attributes }
+  let(:profile_update)        { FactoryGirl.build(:profile) }
 
   before do
-    put user_profile_path, params: { profile: profile_update_params }, headers: json_headers
+    put user_profile_path, params: params, headers: json_headers
   end
 
   it_behaves_like 'an action requiring authentication'
@@ -17,6 +19,8 @@ RSpec.describe 'User profile update', :type => :request do
     before do
       user.profile.reload
     end
+
+    include_examples 'check parameters for', :profiles
 
     context 'when attributes are valid' do
       it { is_expected.to return_status_code 200 }
@@ -37,12 +41,6 @@ RSpec.describe 'User profile update', :type => :request do
 
       it { is_expected.to return_status_code 422 }
       it { is_expected.to return_validation_errors :profile_update }
-    end
-
-    context 'without parameters root' do
-      let(:profile_update_params) {}
-
-      it { is_expected.to return_bad_request }
     end
   end
 end

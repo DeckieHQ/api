@@ -1,7 +1,7 @@
 class User::ProfilesController < ApplicationController
   before_action :authenticate!
 
-  before_action -> { check_root_for :profile }, only: :update
+  before_action -> { check_parameters_for :profiles }, only: :update
 
   before_action :retrieve_profile
 
@@ -27,8 +27,6 @@ class User::ProfilesController < ApplicationController
   end
 
   def profile_params
-    params.require(:profile).permit(
-      :nickname, :short_description, :description
-    )
+    resource_attributes.permit(:nickname, :short_description, :description)
   end
 end
