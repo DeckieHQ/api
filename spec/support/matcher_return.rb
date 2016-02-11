@@ -9,6 +9,7 @@ end
 {
   bad_request:  400,
   unauthorized: 401,
+  forbidden:    403,
   not_found:    404
 }.each do |status, code|
   RSpec::Matchers.define :"return_#{status}" do

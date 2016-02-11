@@ -5,6 +5,7 @@ RSpec.shared_examples 'acts as verifiable' do |attribute, options|
 
   generate_token        = :"generate_#{attribute}_verification_token!"
   verify                = :"verify_#{attribute}!"
+  verified              = :"#{attribute}_verified?"
   send_instructions     = :"send_#{attribute}_verification_instructions"
 
   verification_token    = "#{attribute}_verification_token"
@@ -82,6 +83,24 @@ RSpec.shared_examples 'acts as verifiable' do |attribute, options|
 
     it "set :#{verified_at} to current datetime" do
       expect(model.send(verified_at)).to equal_time(Time.now)
+    end
+  end
+
+  describe "##{verified}?" do
+    context "when #{attribute} is verified" do
+      subject(:model) { FactoryGirl.create(:"#{factory}_with_#{attribute}_verified") }
+
+      it 'returns true' do
+        expect(model.send(verified)).to be_truthy
+      end
+    end
+
+    context "when #{attribute} is not verified" do
+      subject(:model) { FactoryGirl.create(factory) }
+
+      it 'returns false' do
+        expect(model.send(verified)).to be_falsy
+      end
     end
   end
 

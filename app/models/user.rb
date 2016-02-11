@@ -46,4 +46,8 @@ class User < ApplicationRecord
   def display_name
     "#{first_name} #{last_name.capitalize.chr}"
   end
+
+  def verified?
+    email_verified? && phone_number_verified?
+  end
 end

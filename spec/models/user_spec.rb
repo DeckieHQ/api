@@ -66,6 +66,10 @@ RSpec.describe User, :type => :model do
       expect(user.hosted_events).to eq(user.profile.hosted_events)
     end
 
+    it 'is not verified' do
+      expect(user).not_to be_verified
+    end
+
     context 'when destroyed' do
       let(:profile) { user.profile }
 
@@ -88,4 +92,30 @@ RSpec.describe User, :type => :model do
     deliveries: SMSDeliveries,
     faker: -> { Fake::PhoneNumber.plausible },
     token_type: :pin
+
+  describe '#verified?' do
+    context 'when user email is not verified' do
+      let(:user) { FactoryGirl.create(:user_with_phone_number_verified) }
+
+      it 'returns false' do
+        expect(user).not_to be_verified
+      end
+    end
+
+    context 'when user phone_number is not verified' do
+      let(:user) { FactoryGirl.create(:user_with_email_verified) }
+
+      it 'returns false' do
+        expect(user).not_to be_verified
+      end
+    end
+
+    context 'when user is verified' do
+      let(:user) { FactoryGirl.create(:user_verified) }
+
+      it 'returns true' do
+        expect(user).to be_verified
+      end
+    end
+  end
 end

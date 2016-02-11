@@ -21,6 +21,10 @@ module Verifiable
         .deliver_now
       end
 
+      define_method :"#{attribute}_verified?" do
+        !self.send("#{attribute}_verified_at").nil?
+      end
+
       private
 
       define_method :"reset_#{attribute}_verification" do

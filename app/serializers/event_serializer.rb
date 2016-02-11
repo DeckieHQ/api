@@ -6,13 +6,13 @@ class EventSerializer < ActiveModel::Serializer
              :capacity,
              :invite_only,
              :description,
-             :begin_at
-             :end_at
-             :latitude
-             :longitude
-             :street
-             :postcode
-             :city
-             :state
+             :begin_at,
+             :end_at,
+             :latitude,
+             :longitude,
+             :street,
+             :postcode,
+             :city,
+             :state,
              :country
 end

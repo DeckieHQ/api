@@ -14,6 +14,13 @@ FactoryGirl.define do
       phone_number '.'
     end
 
+    factory :user_verified do
+      after(:create) do |user|
+        user.verify_email!
+        user.verify_phone_number!
+      end
+    end
+
     factory :user_with_email_verified do
       after(:create) { |user| user.verify_email! }
     end

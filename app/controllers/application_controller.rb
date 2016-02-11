@@ -23,6 +23,10 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def verified_user!
+    render_error_for(:forbidden) unless current_user.verified?
+  end
+
   def check_parameters_for(resource_type)
     parameters = Parameters.new(params, resource_type: resource_type.to_s)
 
