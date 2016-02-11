@@ -29,8 +29,6 @@ class User < ApplicationRecord
   validates_plausible_phone :phone_number
 
   def build_profile
-    display_name = self.first_name + ' ' + self.last_name[0].capitalize
-
-    self.create_profile({ display_name: display_name })
+    create_profile(display_name: "#{first_name} #{last_name.capitalize.chr}")
   end
 end

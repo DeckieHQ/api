@@ -37,7 +37,11 @@ RSpec.describe User, :type => :model do
     end
 
     it 'has a profile' do
-      expect(user.profile).to be_present
+      expected_attributes = {
+        display_name: "#{user.first_name} #{user.last_name.capitalize[0]}"
+      }
+      p expected_attributes
+      expect(user.profile).to have_attributes expected_attributes
     end
 
     context 'when destroyed' do
