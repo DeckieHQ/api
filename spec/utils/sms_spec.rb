@@ -27,8 +27,6 @@ RSpec.describe SMS do
 
         expect(last_delivered.options).to eql(options)
       end
-
-
     end
 
     context 'when provider call fails with a bad request' do

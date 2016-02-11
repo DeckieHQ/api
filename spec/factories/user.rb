@@ -55,10 +55,14 @@ FactoryGirl.define do
         end
 
         factory :user_with_hosted_events do
-          transient { events_count 10 }
+          transient do
+            events_count 5
+            closed_count 2
+          end
 
-          after(:create) do |user, evaluator|
-            create_list(:event, evaluator.events_count, host: user.profile)
+          after(:create) do |user, e|
+            create_list(:event, e.events_count - e.closed_count, host: user.profile)
+            create_list(:event_closed, e.closed_count, host: user.profile)
           end
         end
       end

@@ -11,6 +11,8 @@ class User < ApplicationRecord
 
   after_update :update_profile, if: -> { first_name_changed? || last_name_changed? }
 
+  before_destroy :remove_opened_events
+
   acts_as_verifiable :email,
     delivery: UserMailer, token: -> { Token.friendly }
 
@@ -49,5 +51,11 @@ class User < ApplicationRecord
 
   def verified?
     email_verified? && phone_number_verified?
+  end
+
+  protected
+
+  def remove_opened_events
+    hosted_events.opened.destroy_all
   end
 end

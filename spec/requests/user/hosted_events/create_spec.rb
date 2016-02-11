@@ -34,8 +34,8 @@ RSpec.describe 'User create hosted event', :type => :request do
           )
           expect(created_event).to have_attributes(permited_params)
 
-          expect(created_event.begin_at).to be_within(1.second).of(event.begin_at)
-          expect(created_event.end_at).to   be_within(1.second).of(event.end_at)
+          expect(created_event.begin_at).to equal_time(event.begin_at)
+          expect(created_event.end_at).to   equal_time(event.end_at)
         end
 
         it 'returns the event attributes' do

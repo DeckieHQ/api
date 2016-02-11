@@ -39,6 +39,8 @@ class Event < ApplicationRecord
 
   before_save :geocode, if: :address_changed?
 
+  scope :opened, -> { where('begin_at <= ?', Time.now) }
+
   def address
     [street, postcode, city, state, country].compact.join(', ')
   end
