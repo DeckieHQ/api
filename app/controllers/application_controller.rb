@@ -24,7 +24,7 @@ class ApplicationController < ActionController::API
   end
 
   def verified?
-    render_error_for(:forbidden) unless current_user.verified?
+    render_validation_errors(current_user) unless current_user.verified?
   end
 
   def check_parameters_for(resource_type)

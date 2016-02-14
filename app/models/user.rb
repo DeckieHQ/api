@@ -50,7 +50,10 @@ class User < ApplicationRecord
   end
 
   def verified?
-    email_verified? && phone_number_verified?
+    unless verified = email_verified? && phone_number_verified?
+      errors.add(:base, :unverified)
+    end
+    verified
   end
 
   protected

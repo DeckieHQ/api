@@ -30,6 +30,17 @@ en:
     email:
       subject: 'Email Verification'
 
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            base:
+              unverified: 'User must be verified.'
+        event:
+          attributes:
+            base:
+              closed: 'Event is closed.'
   activemodel:
     errors:
       models:
@@ -45,7 +56,3 @@ en:
               unspecified: "%{target} doesn't have a %{type}."
               unassigned: "%{target} %{type} is unassigned."
               already_verified: "%{target} %{type} is already verified."
-        event:
-          attributes:
-            base:
-              closed: 'Event is closed.'

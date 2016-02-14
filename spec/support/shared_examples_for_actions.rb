@@ -28,6 +28,10 @@ RSpec.shared_examples 'an action requiring verification' do
   context 'when user is not verified' do
     let(:user) { FactoryGirl.create(:user) }
 
-    it { is_expected.to return_forbidden }
+    it do
+      user.errors.add(:base, :unverified)
+
+      is_expected.to return_validation_errors :user
+    end
   end
 end
