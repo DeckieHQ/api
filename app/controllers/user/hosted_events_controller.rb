@@ -1,20 +1,19 @@
 class User::HostedEventsController < ApplicationController
+
   delegate :hosted_events, to: :current_user
 
   before_action :authenticate!
 
-  before_action :verified?, only: :create
-
-  before_action :fetch_event, only: [:show, :update, :destroy]
+  before_action :verified!, only: :create
 
   before_action :event_closed?, only: [:update, :destroy]
 
   before_action -> { check_parameters_for :events }, only: [:create, :update]
 
-  before_action :fetch_pagination, only: :index
-
   def index
-    render json: hosted_events.paginate(page.params)
+    return render_pagination_errors unless current_page.valid?
+
+    render json: hosted_events.paginate(current_page.params)
   end
 
   def show
@@ -43,16 +42,8 @@ class User::HostedEventsController < ApplicationController
 
   protected
 
-  attr_reader :event
-
-  def fetch_event
-    @event = hosted_events.find_by(id: params[:id])
-
-    render_error_for(:not_found) unless event
-  end
-
-  def event_closed?
-    render_validation_errors(event) if event.closed?
+  def event
+    @event ||= hosted_events.find(params[:id])
   end
 
   def event_params
@@ -60,5 +51,9 @@ class User::HostedEventsController < ApplicationController
      :title, :category, :ambiance, :level, :capacity, :invite_only, :description,
      :begin_at, :end_at, :street, :postcode, :city, :state, :country
     )
+  end
+
+  def event_closed?
+    render_validation_errors(event) if event.closed?
   end
 end

@@ -3,16 +3,12 @@ class ApplicationController < ActionController::API
 
   respond_to :json
 
-  protected
+  rescue_from ActiveRecord::RecordNotFound, with: -> { render_error_for(:not_found) }
 
-  attr_reader :page
+  protected
 
   def resource_attributes
     params.require(:data).require(:attributes)
-  end
-
-  def page
-    @page ||= Page.new(params[:page] || { number: 1, size: 10 })
   end
 
   def authenticate!(options={})
@@ -29,18 +25,22 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def verified?
-    render_validation_errors(current_user) unless current_user.verified?
-  end
-
-  def fetch_pagination
-    render_validation_errors(page, on: :page) unless page.valid?
+  def verified!
+    current_user.verified? || render_validation_errors(current_user)
   end
 
   def check_parameters_for(resource_type)
     parameters = Parameters.new(params, resource_type: resource_type.to_s)
 
     render_validation_errors(parameters, on: :data) unless parameters.valid?
+  end
+
+  def current_page
+    @current_page ||= Page.new(params[:page] || { number: 1, size: 10 })
+  end
+
+  def render_pagination_errors
+    render_validation_errors(current_page, on: :page)
   end
 
   def render_error_for(status)
