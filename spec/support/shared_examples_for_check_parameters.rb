@@ -1,5 +1,3 @@
-require 'set'
-
 RSpec.shared_examples 'check parameters for' do |type|
   let(:parameters) { Parameters.new(params || {}, resource_type: type.to_s) }
 

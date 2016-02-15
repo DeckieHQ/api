@@ -65,5 +65,18 @@ RSpec.describe ValidationErrorsSerializer, :type => :serializer do
         end
       end
     end
+
+    context 'on page' do
+      let(:model) { Page.new(number: -1, size: 60).tap(&:valid?) }
+      let(:on)    { :page }
+
+      it_behaves_like 'a serialized validation error'
+
+      context 'with any field error' do
+        it 'has a source parameter to the URI query parameter error' do
+          expect(error[:source][:parameter]).to eq "page[#{@field}]"
+        end
+      end
+    end
   end
 end

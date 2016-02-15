@@ -23,15 +23,22 @@ class ValidationErrorsSerializer
           status: 422,
           code: errors[:error].to_s,
           detail: object.errors[field][index],
-          source: { pointer: pointer_for(field) }
+          source: source_for(field)
         }
       end
     end.flatten
   end
 
-  def pointer_for(field)
-    return '' if field == :base
+  def source_for(field)
+    return { pointer: '' } if field == :base
 
-    on == :data ? "/data/#{field}" : "/data/attributes/#{field}"
+    case on
+    when :data
+      { pointer: "/data/#{field}" }
+    when :attributes
+      { pointer: "/data/attributes/#{field}" }
+    when :page, :sort, :filter
+      { parameter: "#{on}[#{field}]" }
+    end
   end
 end

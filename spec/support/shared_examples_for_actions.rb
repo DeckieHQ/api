@@ -1,5 +1,3 @@
-require 'set'
-
 RSpec.shared_examples 'an action requiring authentication' do
   let(:params) {}
 

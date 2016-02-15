@@ -3,11 +3,17 @@ class ApplicationController < ActionController::API
 
   respond_to :json
 
+  protected
+
+  attr_reader :page
+
   def resource_attributes
     params.require(:data).require(:attributes)
   end
 
-  protected
+  def page
+    @page ||= Page.new(params[:page] || { number: 1, size: 10 })
+  end
 
   def authenticate!(options={})
     authenticate_token || render_error_for(:unauthorized)
@@ -25,6 +31,10 @@ class ApplicationController < ActionController::API
 
   def verified?
     render_validation_errors(current_user) unless current_user.verified?
+  end
+
+  def fetch_pagination
+    render_validation_errors(page, on: :page) unless page.valid?
   end
 
   def check_parameters_for(resource_type)

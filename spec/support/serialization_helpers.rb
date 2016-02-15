@@ -27,4 +27,12 @@ module Serialize
       }
     }
   end
+
+  def query(page: nil)
+    query = {}
+
+    if page
+      query.merge!({ page: { number: page.number, size: page.size } })
+    end
+  end
 end

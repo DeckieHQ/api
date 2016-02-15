@@ -1,5 +1,3 @@
-require 'set'
-
 RSpec.shared_examples 'fails to send verification for' do |attribute|
   it { expect(sent).to be_falsy }
 

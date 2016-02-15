@@ -5,11 +5,17 @@ class User::HostedEventsController < ApplicationController
 
   before_action :verified?, only: :create
 
-  before_action :retrieve_event, only: [:show, :update, :destroy]
+  before_action :fetch_event, only: [:show, :update, :destroy]
 
   before_action :event_closed?, only: [:update, :destroy]
 
   before_action -> { check_parameters_for :events }, only: [:create, :update]
+
+  before_action :fetch_pagination, only: :index
+
+  def index
+    render json: hosted_events.paginate(page.params)
+  end
 
   def show
     render json: event
@@ -39,7 +45,7 @@ class User::HostedEventsController < ApplicationController
 
   attr_reader :event
 
-  def retrieve_event
+  def fetch_event
     @event = hosted_events.find_by(id: params[:id])
 
     render_error_for(:not_found) unless event

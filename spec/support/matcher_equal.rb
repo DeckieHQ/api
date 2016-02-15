@@ -6,9 +6,23 @@ RSpec::Matchers.define :equal_time do |expected|
   end
 end
 
-RSpec::Matchers.define :equal_serialized do |expected|
+class SerializationContext
+  attr_reader :request_url, :query_parameters
+
+  def initialize(request)
+    @request_url      = request.original_url[/\A[^?]+/]
+    @query_parameters = request.query_parameters
+  end
+end
+
+RSpec::Matchers.define :equal_serialized do |object|
   match do |actual|
-    actual == ActiveModel::SerializableResource.new(expected).to_json
+    resource = ActiveModel::SerializableResource.new(object)
+
+    expected = resource.to_json({
+      serialization_context: SerializationContext.new(request)
+    })
+    actual == expected
   end
 end
 

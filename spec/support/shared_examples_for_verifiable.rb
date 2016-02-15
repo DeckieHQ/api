@@ -1,5 +1,3 @@
-require 'set'
-
 RSpec.shared_examples 'acts as verifiable' do |attribute, options|
   factory               = described_class.name.downcase
 

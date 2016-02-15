@@ -1,0 +1,23 @@
+require 'rails_helper'
+
+RSpec.describe 'User hosted event list', :type => :request do
+  before do
+    get user_hosted_events_path, params: params, headers: json_headers
+  end
+
+  it_behaves_like 'an action requiring authentication'
+
+  context 'when user is authenticated' do
+    let(:user) do
+      events_count = Faker::Number.between(4, 15)
+
+      FactoryGirl.create(:user_with_hosted_events, events_count: events_count)
+    end
+
+    let(:authenticate) { user }
+
+    let(:params) { Serialize.query(page: page) }
+
+    it_behaves_like 'an action with pagination', :user, :hosted_events
+  end
+end
