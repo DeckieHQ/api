@@ -13,9 +13,10 @@ class User::HostedEventsController < ApplicationController
   def index
     return render_pagination_errors unless current_page.valid?
 
-    events = hosted_events.filter(filtering_params).paginate(current_page.params)
-
-    render json: events
+    render json: hosted_events
+      .filter(filtering_params)
+      .order(begin_at: :asc)
+      .paginate(current_page.params)
   end
 
   def show
