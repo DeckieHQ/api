@@ -15,7 +15,6 @@ class User::HostedEventsController < ApplicationController
 
     render json: hosted_events
       .filter(filtering_params)
-      .order(begin_at: :asc)
       .paginate(current_page.params)
   end
 

@@ -1,7 +1,5 @@
 RSpec.shared_examples 'an action with pagination' do |owner_name, collection_name, options|
-  order = options[:order] || { id: :desc }
-
-  let(:collection) { send(owner_name).send(collection_name).order(order) }
+  let(:collection) { send(owner_name).send(collection_name) }
 
   let(:paginated_collection) do
     collection.paginate((page || FactoryGirl.build(:page_default)).params)

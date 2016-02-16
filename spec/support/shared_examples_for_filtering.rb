@@ -1,11 +1,9 @@
 RSpec.shared_examples 'an action with filtering' do |owner_name, collection_name, options|
   filter_with = options[:with]
 
-  order = options[:order] || { id: :desc}
-
   let(:page) { FactoryGirl.build(:page_default) }
 
-  let(:collection) { send(owner_name).send(collection_name).order(order) }
+  let(:collection) { send(owner_name).send(collection_name) }
 
   let(:complete_collection) { collection.paginate(page.params) }
 
