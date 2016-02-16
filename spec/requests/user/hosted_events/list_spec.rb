@@ -19,5 +19,8 @@ RSpec.describe 'User hosted event list', :type => :request do
     let(:params) { Serialize.query(page: page) }
 
     it_behaves_like 'an action with pagination', :user, :hosted_events
+    it_behaves_like 'an action with filtering',  :user, :hosted_events, with: {
+      opened: [true, false, nil, 1, 0]
+    }
   end
 end

@@ -141,4 +141,44 @@ RSpec.describe Event, :type => :model do
       end
     end
   end
+
+  describe '.opened' do
+    let(:events) { Event.all.opened }
+
+    before do
+      FactoryGirl.create_list(:event,        Faker::Number.between(1, 4))
+      FactoryGirl.create_list(:event_closed, Faker::Number.between(1, 4))
+    end
+
+    it 'returns the opened events' do
+      expect_opened_events(true)
+    end
+
+    ['true', true, 1].each do |value|
+      context "when parameter equals #{value}" do
+        let(:events) { Event.all.opened(value) }
+
+        it 'returns the opened events' do
+          expect_opened_events(true)
+        end
+      end
+    end
+
+    ['false', false, 0, 'whatever'].each do |value|
+      context "when parameter equals #{value}" do
+        let(:events) { Event.all.opened(value) }
+
+        it 'returns the closed events' do
+          expect_opened_events(false)
+        end
+      end
+    end
+
+    def expect_opened_events(opened)
+      results = events.pluck(:begin_at).keep_if do |begin_at|
+        opened ? begin_at > Time.now : begin_at <= Time.now
+      end
+      expect(results).to_not be_empty
+    end
+  end
 end

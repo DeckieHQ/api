@@ -13,7 +13,9 @@ class User::HostedEventsController < ApplicationController
   def index
     return render_pagination_errors unless current_page.valid?
 
-    render json: hosted_events.paginate(current_page.params)
+    events = hosted_events.filter(filtering_params).paginate(current_page.params)
+
+    render json: events
   end
 
   def show
@@ -51,6 +53,10 @@ class User::HostedEventsController < ApplicationController
      :title, :category, :ambiance, :level, :capacity, :invite_only, :description,
      :begin_at, :end_at, :street, :postcode, :city, :state, :country
     )
+  end
+
+  def filtering_params
+    params.fetch(:filters, {}).slice(:opened)
   end
 
   def event_closed?

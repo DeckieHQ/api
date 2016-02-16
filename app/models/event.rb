@@ -1,4 +1,6 @@
 class Event < ApplicationRecord
+  include Filterable
+
   belongs_to :host, class_name: 'Profile', foreign_key: 'profile_id'
 
   has_many :subscriptions, dependent: :destroy
@@ -41,7 +43,11 @@ class Event < ApplicationRecord
 
   before_save :geocode, if: :address_changed?
 
-  scope :opened, -> { where('begin_at <= ?', Time.now) }
+  def self.opened(opened = true)
+    sign = opened.to_b ? '>' : '<='
+
+    where("begin_at #{sign} ?", Time.now)
+  end
 
   def address
     [street, postcode, city, state, country].compact.join(', ')

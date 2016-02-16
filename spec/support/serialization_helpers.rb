@@ -28,11 +28,14 @@ module Serialize
     }
   end
 
-  def query(page: nil)
+  def query(page: nil, filters: nil)
     query = {}
-
     if page
-      query.merge!({ page: { number: page.number, size: page.size } })
+      query[:page] = { number: page.number, size: page.size }
     end
+    if filters
+      query[:filters] = filters
+    end
+    query
   end
 end

@@ -43,6 +43,9 @@ gem 'geocoder', '~> 1.3'
 # Pagination
 gem 'will_paginate', '~> 3.1'
 
+# Utility
+gem 'wannabe_bool', '~> 0.5.0'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'
