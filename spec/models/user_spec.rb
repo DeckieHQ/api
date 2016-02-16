@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe User, :type => :model do
   # Database
   [
-    :email,  :phone_number, :reset_password_token, :email_verification_token,
+    :email, :phone_number, :reset_password_token, :email_verification_token,
     :phone_number_verification_token
   ].each do |attribute|
     it { is_expected.to have_db_index(attribute).unique(true) }
@@ -14,7 +14,7 @@ RSpec.describe User, :type => :model do
 
   # Validations
   [
-    :first_name,  :last_name, :birthday, :email, :password
+    :first_name,  :last_name, :birthday, :email, :password, :culture
   ].each do |attribute|
     it { is_expected.to validate_presence_of(attribute) }
   end
@@ -26,6 +26,8 @@ RSpec.describe User, :type => :model do
 
   it { is_expected.to validate_date_after(:birthday,  100.year.ago) }
   it { is_expected.to validate_date_before(:birthday,  18.year.ago + 1.day) }
+
+  it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en)) }
 
   context 'when created' do
     subject(:user) { FactoryGirl.create(:user) }

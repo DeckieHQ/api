@@ -25,5 +25,6 @@ class User < ApplicationRecord
     after:              Proc.new { 100.year.ago },
     before_or_equal_to: Proc.new {  18.year.ago }
   }
+  validates :culture, presence: true, inclusion: { in: %w(en) }
   validates_plausible_phone :phone_number
 end

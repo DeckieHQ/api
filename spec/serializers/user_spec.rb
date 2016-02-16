@@ -11,7 +11,7 @@ RSpec.describe UserSerializer, :type => :serializer do
 
     it 'serializes the specified attributes' do
       expect(serialized.attributes).to have_serialized_attributes(
-        user.slice(:first_name, :last_name, :birthday, :email, :phone_number)
+        user.slice(:first_name, :last_name, :birthday, :email, :phone_number, :culture)
       )
     end
   end

@@ -6,6 +6,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :last_name,  null: false
       t.date   :birthday,   null: false
       t.string :phone_number
+      t.string :culture,    null: false
 
       ## Database authenticatable
       t.string :email,              null: false, default: ""
