@@ -1,10 +1,6 @@
 require 'rails_helper'
 
 RSpec.shared_examples 'a serialized validation error' do
-  it 'has a 422 status' do
-    expect(error[:status]).to eq 422
-  end
-
   it 'has the model validation error code' do
     expected_code = @errors.last[:error].to_s
 
@@ -46,6 +42,10 @@ RSpec.describe ValidationErrorsSerializer, :type => :serializer do
 
         it_behaves_like 'a serialized validation error'
 
+        it 'has a :unprocessable_entity status' do
+          expect(error[:status]).to eq 422
+        end
+
         context 'with any field error' do
           it 'has a source pointer to the attribute field error' do
             expect(error[:source][:pointer]).to eq "/data/attributes/#{@field}"
@@ -58,23 +58,33 @@ RSpec.describe ValidationErrorsSerializer, :type => :serializer do
 
         it_behaves_like 'a serialized validation error'
 
+        it 'has a :bad_request status' do
+          expect(error[:status]).to eq 400
+        end
+
         context 'with any field error' do
           it 'has a source pointer to the data field error' do
             expect(error[:source][:pointer]).to eq "/data/#{@field}"
           end
         end
       end
-    end
 
-    context 'on page' do
-      let(:model) { Page.new(number: -1, size: 60).tap(&:valid?) }
-      let(:on)    { :page }
+      [:page, :sort, :filter].each do |type|
+        context "on #{type}" do
+          let(:model) { Page.new(number: -1, size: 60).tap(&:valid?) }
+          let(:on)    { type }
 
-      it_behaves_like 'a serialized validation error'
+          it_behaves_like 'a serialized validation error'
 
-      context 'with any field error' do
-        it 'has a source parameter to the URI query parameter error' do
-          expect(error[:source][:parameter]).to eq "page[#{@field}]"
+          it 'has a :bad_request status' do
+            expect(error[:status]).to eq 400
+          end
+
+          context 'with any field error' do
+            it 'has a source parameter to the URI query parameter error' do
+              expect(error[:source][:parameter]).to eq "#{type}[#{@field}]"
+            end
+          end
         end
       end
     end

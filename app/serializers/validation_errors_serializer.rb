@@ -20,8 +20,8 @@ class ValidationErrorsSerializer
     object.errors.details.map do |field, field_errors|
       field_errors.each_with_index.map do |errors, index|
         {
-          status: 422,
-          code: errors[:error].to_s,
+          status: status,
+          code:   errors[:error].to_s,
           detail: object.errors[field][index],
           source: source_for(field)
         }
@@ -40,5 +40,9 @@ class ValidationErrorsSerializer
     when :page, :sort, :filter
       { parameter: "#{on}[#{field}]" }
     end
+  end
+
+  def status
+    on == :attributes ? 422 : 400
   end
 end
