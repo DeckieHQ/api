@@ -7,6 +7,8 @@ class User < ApplicationRecord
 
   after_create :build_profile
 
+  after_update :update_profile, if: -> { first_name_changed? || last_name_changed? }
+
   acts_as_verifiable :email,
     delivery: UserMailer, token: -> { Token.friendly }
 
@@ -29,6 +31,16 @@ class User < ApplicationRecord
   validates_plausible_phone :phone_number
 
   def build_profile
-    create_profile(display_name: "#{first_name} #{last_name.capitalize.chr}")
+    create_profile(display_name: display_name)
+  end
+
+  def update_profile
+    profile.update(display_name: display_name)
+  end
+
+  protected
+
+  def display_name
+    "#{first_name} #{last_name.capitalize.chr}"
   end
 end

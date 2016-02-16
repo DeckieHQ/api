@@ -4,21 +4,17 @@ class User::ProfilesController < ApplicationController
   before_action -> { check_parameters_for :profiles }, only: :update
 
   def show
-    render_profile
+    render json: profile
   end
 
   def update
     unless profile.update(profile_params)
       return render_validation_errors(profile)
     end
-    render_profile
+    render json: profile
   end
 
   protected
-
-  def render_profile
-    render json: profile, status: :ok
-  end
 
   def profile
     @profile ||= current_user.profile
