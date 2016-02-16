@@ -46,7 +46,7 @@ RSpec.describe User, :type => :model do
       [:first_name, :last_name].each do |attribute|
         context "with #{attribute}" do
           before do
-            user.update({ attribute => user_update.send(attribute) })
+            user.update(attribute => user_update.send(attribute))
           end
 
           it 'updates its profile' do
