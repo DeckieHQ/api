@@ -20,7 +20,7 @@ RSpec.shared_examples 'acts as verifiable' do |attribute, options|
 
   context "when updating the #{attribute}" do
     before do
-      model.update({ :"#{attribute}" => options[:faker].call })
+      model.update(attribute => options[:faker].call)
     end
 
     context "when #{attribute} is already verified" do

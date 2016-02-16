@@ -83,11 +83,9 @@ RSpec.describe Event, :type => :model do
         before do
           value = FactoryGirl.build(:event).send(field)
 
-          event.send("#{field}=", value)
+          event.update(field => value)
 
           GeoLocation.register(event)
-
-          event.save
         end
 
         it { is_expected.to have_coordinates_of_address }
