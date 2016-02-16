@@ -17,9 +17,14 @@ RSpec.describe 'User sign up', :type => :request do
     it { is_expected.to return_status_code 201 }
 
     it 'creates a new user with permited parameters' do
-      permited_params = user.slice(:first_name, :last_name, :birthday)
-
+      permited_params = user.slice(
+        :first_name, :last_name, :birthday, :phone_number, :culture
+      )
       expect(created_user).to have_attributes(permited_params)
+    end
+
+    it 'creates the user with specified password' do
+      expect(created_user.valid_password?(user.password)).to be_truthy
     end
 
     it 'returns the user attributes' do

@@ -35,15 +35,14 @@ class User::RegistrationsController < Devise::RegistrationsController
   protected
 
   def sign_up_params
-    resource_attributes.permit(
-      :email, :password, :first_name, :last_name, :birthday
-    )
+    resource_attributes.permit(shared_attributes)
   end
 
   def account_update_params
-    resource_attributes.permit(
-      :email,      :password,   :current_password,
-      :first_name, :last_name,  :birthday, :phone_number
-    )
+    resource_attributes.permit(shared_attributes.push(:current_password))
+  end
+
+  def shared_attributes
+    [:email, :password, :first_name, :last_name, :birthday, :phone_number, :culture]
   end
 end

@@ -3,5 +3,6 @@ class UserSerializer < ActiveModel::Serializer
              :last_name,
              :birthday,
              :email,
-             :phone_number
+             :phone_number,
+             :culture
 end
