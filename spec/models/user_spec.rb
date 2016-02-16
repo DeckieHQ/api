@@ -2,27 +2,25 @@ require 'rails_helper'
 
 RSpec.describe User, :type => :model do
   # Database
-  it { is_expected.to have_db_index(:email).unique(true) }
-  it { is_expected.to have_db_index(:phone_number).unique(true) }
-  it { is_expected.to have_db_index(:reset_password_token).unique(true) }
-  it { is_expected.to have_db_index(:email_verification_token).unique(true) }
-  it { is_expected.to have_db_index(:phone_number_verification_token).unique(true) }
+  [
+    :email,  :phone_number, :reset_password_token, :email_verification_token,
+    :phone_number_verification_token
+  ].each do |attribute|
+    it { is_expected.to have_db_index(attribute).unique(true) }
+  end
 
   # Relations
   it { is_expected.to have_one(:profile) }
 
   # Validations
-  it { is_expected.to validate_presence_of(:first_name) }
+  [
+    :first_name,  :last_name, :birthday, :email, :password
+  ].each do |attribute|
+    it { is_expected.to validate_presence_of(attribute) }
+  end
+
   it { is_expected.to validate_length_of(:first_name).is_at_most(64) }
-
-  it { is_expected.to validate_presence_of(:last_name) }
   it { is_expected.to validate_length_of(:last_name).is_at_most(64) }
-
-  it { is_expected.to validate_presence_of(:birthday) }
-
-  it { is_expected.to validate_presence_of(:email) }
-
-  it { is_expected.to validate_presence_of(:password) }
 
   it { is_expected.to validate_plausible_phone(:phone_number) }
 
