@@ -37,8 +37,6 @@ class Event < ApplicationRecord
 
   validates :state, length: { maximum: 64 }
 
-  validates :terms_of_service, acceptance: true
-
   geocoded_by :address
 
   before_save :geocode, if: :address_changed?
