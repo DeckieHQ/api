@@ -37,7 +37,29 @@ RSpec.describe User, :type => :model do
     end
 
     it 'has a profile' do
-      expect(user.profile).to be_present
+      expect_profile_propagation
+    end
+
+    context 'when updated' do
+      let(:user_update) { FactoryGirl.build(:user) }
+
+      [:first_name, :last_name].each do |attribute|
+        context "with #{attribute}" do
+          before do
+            user.update(attribute => user_update.send(attribute))
+          end
+
+          it 'updates its profile' do
+            expect_profile_propagation
+          end
+        end
+      end
+    end
+
+    def expect_profile_propagation
+      expect(user.profile).to have_attributes({
+        display_name: "#{user.first_name} #{user.last_name.capitalize[0]}"
+      })
     end
 
     context 'when destroyed' do

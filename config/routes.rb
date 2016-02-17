@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
         resource :password,      only: [:create, :update]
         resource :verifications, only: [:create, :update]
+        resource :profile,       only: [:show, :update]
       end
     end
   end
