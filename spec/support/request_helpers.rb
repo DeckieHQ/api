@@ -12,7 +12,10 @@ module Request
           'Authorization': "Token token=#{authenticate.authentication_token}"
         }
       end
-      headers.merge({ 'Accept': 'application/json' })
+      headers.merge({
+        'Accept':      'application/vnd.api+json',
+        'ContentType': 'application/vnd.api+json'
+      })
     end
   end
 end
