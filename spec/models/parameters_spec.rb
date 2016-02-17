@@ -13,11 +13,13 @@ RSpec.describe Parameters, :type => :model do
     parameters.validate
   end
 
-  context 'when data is missing' do
-    let(:data) {}
+  [nil, 'not a hash'].each do |value|
+    context "when data is #{value}" do
+      let(:data) { value }
 
-    it 'has a validation error on base' do
-      expect(parameters.errors.added?(:base, :missing_data)).to be_truthy
+      it 'has a validation error on base' do
+        expect(parameters.errors.added?(:base, :missing_data)).to be_truthy
+      end
     end
   end
 
@@ -38,6 +40,18 @@ RSpec.describe Parameters, :type => :model do
       expect(
         parameters.errors.added?(:type, :unmatch, { resource_type: type })
       ).to be_truthy
+    end
+  end
+
+  [nil, 'not a hash'].each do |value|
+    context "when data attributes is #{value}" do
+      let(:data) { { type: type, attributes: value } }
+
+      it 'has a validation error on attributes' do
+        expect(
+          parameters.errors.added?(:attributes, :invalid)
+        ).to be_truthy
+      end
     end
   end
 end

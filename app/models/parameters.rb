@@ -10,13 +10,15 @@ class Parameters
 
   validate :type_matches_resource_type,  if: :has_data?
 
+  validate :attributes_is_a_hash, if: :has_data?
+
   def initialize(params, resource_type:)
     @params        = params
     @resource_type = resource_type
   end
 
   def has_data?
-    !@params[:data].nil?
+    @params[:data].is_a?(Hash)
   end
 
   def type
@@ -37,5 +39,9 @@ class Parameters
     if type != resource_type
       errors.add(:type, :unmatch, { resource_type: resource_type })
     end
+  end
+
+  def attributes_is_a_hash
+    errors.add(:attributes, :invalid) unless attributes.is_a?(Hash)
   end
 end
