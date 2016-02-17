@@ -50,6 +50,14 @@ en:
               missing_data: "Missing `data` Member at document's top level."
             type:
               unmatch: 'Must be %{resource_type}.'
+        sort:
+          attributes:
+            base:
+              unsupported: 'Unsupported sort. Must be in %{accept}'
+        filters:
+          attributes:
+            base:
+              unsupported: 'Unsupported filters. Must be in %{accept}'
         verification:
           attributes:
             base:

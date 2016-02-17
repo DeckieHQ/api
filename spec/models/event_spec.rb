@@ -147,7 +147,7 @@ RSpec.describe Event, :type => :model do
       end
     end
 
-    ['false', false, 0, 'whatever'].each do |value|
+    ['false', false, 0, 'whatever', { is_a: :hash }].each do |value|
       context "when parameter equals #{value}" do
         let(:events) { Event.all.opened(value) }
 

@@ -2,7 +2,7 @@
 #
 # See: http://jsonapi.org/format/#errors
 #
-class ValidationErrorsSerializer
+class ErrorsSerializer
   def initialize(object, on:)
     @object = object
     @on     = on

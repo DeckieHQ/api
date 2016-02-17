@@ -29,20 +29,6 @@ class ApplicationController < ActionController::API
     current_user.verified? || render_validation_errors(current_user)
   end
 
-  def check_parameters_for(resource_type)
-    parameters = Parameters.new(params, resource_type: resource_type.to_s)
-
-    render_validation_errors(parameters, on: :data) unless parameters.valid?
-  end
-
-  def current_page
-    @current_page ||= Page.new(params[:page] || { number: 1, size: 10 })
-  end
-
-  def render_pagination_errors
-    render_validation_errors(current_page, on: :page)
-  end
-
   def render_error_for(status)
     render json: {
       errors: [{
@@ -52,9 +38,19 @@ class ApplicationController < ActionController::API
     }, status: status
   end
 
+  def check_parameters_for(resource_type)
+    parameters = Parameters.new(params.to_unsafe_h, resource_type: resource_type.to_s)
+
+    render_validation_errors(parameters, on: :data) unless parameters.valid?
+  end
+
   def render_validation_errors(model, on: :attributes)
-    errors = ValidationErrorsSerializer.new(model, on: on).serialize
+    errors = ErrorsSerializer.new(model, on: on).serialize
 
     render json: errors, status: :unprocessable_entity
+  end
+
+  def render_search_errors(search)
+    render_error_for(:bad_request)
   end
 end

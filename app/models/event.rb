@@ -42,7 +42,7 @@ class Event < ApplicationRecord
   before_save :geocode, if: :address_changed?
 
   def self.opened(opened = true)
-    sign = opened.to_b ? '>' : '<='
+    sign = opened.to_s.to_b ? '>' : '<='
 
     where("begin_at #{sign} ?", Time.now)
   end

@@ -24,12 +24,12 @@ RSpec.shared_examples 'a serialized validation error' do
   end
 end
 
-RSpec.describe ValidationErrorsSerializer, :type => :serializer do
+RSpec.describe ErrorsSerializer, :type => :serializer do
   let(:model) { User.new.tap(&:valid?) }
 
   describe '#serialize' do
     let(:error) do
-      ValidationErrorsSerializer.new(model, on: on).serialize[:errors].last
+      ErrorsSerializer.new(model, on: on).serialize[:errors].last
     end
 
     before do

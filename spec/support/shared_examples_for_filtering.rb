@@ -20,13 +20,9 @@ RSpec.shared_examples 'an action with filtering' do |owner_name, collection_name
   end
 
   context 'with an invalid filter' do
-    let(:filters) { { lol: 1 } }
+    let(:filters) { Filters.new({ lol: 1 }, accept: []) }
 
-    it { is_expected.to return_status_code 200 }
-
-    it "ignores the filter" do
-      expect(response.body).to equal_serialized(complete_collection)
-    end
+    it { is_expected.to return_search_errors :filters }
   end
 
   filter_with.each do |filter, values|

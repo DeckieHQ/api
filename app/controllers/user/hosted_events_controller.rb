@@ -11,11 +11,11 @@ class User::HostedEventsController < ApplicationController
   before_action -> { check_parameters_for :events }, only: [:create, :update]
 
   def index
-    return render_pagination_errors unless current_page.valid?
+    search = Search.new(params, sort: [:begin_at, :start_at], filters: [:opened])
 
-    render json: hosted_events
-      .filter(filtering_params)
-      .paginate(current_page.params)
+    return render_search_errors(search) unless search.valid?
+
+    render json: search.apply(hosted_events)
   end
 
   def show
@@ -53,10 +53,6 @@ class User::HostedEventsController < ApplicationController
      :title, :category, :ambiance, :level, :capacity, :invite_only, :description,
      :begin_at, :end_at, :street, :postcode, :city, :state, :country
     )
-  end
-
-  def filtering_params
-    params.fetch(:filters, {}).slice(:opened)
   end
 
   def event_closed?

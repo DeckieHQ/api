@@ -44,9 +44,15 @@ RSpec::Matchers.define :return_validation_errors do |resource_name, options|
 
     resource.valid?(options[:context]) unless resource.errors.present?
 
-    expected_errors = ValidationErrorsSerializer.new(resource, on: on).serialize
+    expected_errors = ErrorsSerializer.new(resource, on: on).serialize
 
     response.code == '422' && json_response == expected_errors
+  end
+end
+
+RSpec::Matchers.define :return_search_errors do |resource_name|
+  match do
+    response.code == '400'
   end
 end
 
