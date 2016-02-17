@@ -25,7 +25,7 @@ module Serialize
         type: type,
         attributes: attributes
       }
-    }
+    }.to_json
   end
 
   def query(page: nil, filters: nil)
