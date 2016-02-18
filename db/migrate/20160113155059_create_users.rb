@@ -13,7 +13,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :encrypted_password, null: false, default: ""
 
       ## Token Authentication
-      t.string :authentication_token, null: false, default: ""
+      t.string :authentication_token, null: false
 
       ## Recoverable
       t.string   :reset_password_token

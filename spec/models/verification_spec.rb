@@ -13,6 +13,7 @@ RSpec.describe Verification, :type => :model do
 
     describe '#send_instructions' do
       let(:user_send_instructions?) { true }
+      let(:sent) { verification.send_instructions }
 
       before do
         allow(user).to receive(:"generate_#{attribute}_verification_token!")
@@ -20,7 +21,7 @@ RSpec.describe Verification, :type => :model do
         allow(user).to receive(:"send_#{attribute}_verification_instructions")
           .and_return(user_send_instructions?)
 
-        @success = verification.send_instructions
+        sent
       end
 
       context 'when type is invalid' do
@@ -49,9 +50,7 @@ RSpec.describe Verification, :type => :model do
         context "when #{attribute} is unassigned" do
           let(:user_send_instructions?) { false }
 
-          it 'returns false' do
-            expect(@success).to be_falsy
-          end
+          it { expect(sent).to be_falsy }
 
           it { expect_validation_error_on(:base, :unassigned, base_options) }
         end
@@ -65,9 +64,7 @@ RSpec.describe Verification, :type => :model do
         end
 
         context 'when everything is valid' do
-          it 'returns true' do
-            expect(@success).to be_truthy
-          end
+          it { expect(sent).to be_truthy }
 
           it "generate an #{attribute} verification token for the model" do
             expect(verification.model).to have_received(:"generate_#{attribute}_verification_token!")
@@ -85,10 +82,12 @@ RSpec.describe Verification, :type => :model do
     end
 
     describe '#complete' do
+      let(:completed) { verification.complete }
+
       before do
         allow(user).to receive(:"verify_#{attribute}!").and_return(true)
 
-        @success = verification.complete
+        completed
       end
 
       context 'when type is invalid' do
@@ -150,9 +149,7 @@ RSpec.describe Verification, :type => :model do
           let(:user)  { FactoryGirl.create(:"user_with_#{attribute}_verification") }
           let(:token) { user.send("#{attribute}_verification_token") }
 
-          it 'returns true' do
-            expect(@success).to be_truthy
-          end
+          it { expect(completed).to be_truthy }
 
           it "verifies the model #{attribute}"  do
             expect(verification.model).to have_received(:"verify_#{attribute}!")

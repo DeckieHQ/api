@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'User sign in', :type => :request do
-  let(:params) { { user: user.slice(:email, :password) } }
+  let(:params) { { user: user.slice(:email, :password) }.to_json }
 
   before do
     post sign_in_user_path, params: params, headers: json_headers

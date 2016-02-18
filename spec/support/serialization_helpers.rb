@@ -25,6 +25,20 @@ module Serialize
         type: type,
         attributes: attributes
       }
-    }
+    }.to_json
+  end
+
+  def query(page: nil, filters: nil, sort: nil)
+    query = {}
+    if page
+      query[:page] = { number: page.number, size: page.size }
+    end
+    if filters
+      query[:filters] = filters
+    end
+    if sort
+      query[:sort] = sort
+    end
+    query
   end
 end

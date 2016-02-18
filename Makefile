@@ -10,6 +10,8 @@ build:
 	$(compose) build web
 
 migrations: build
+	# Wait for the db container
+	$(compose) run web sleep 1
 	$(compose) run web bundle exec rake db:migrate
 	$(compose) run web bundle exec rake db:seed
 

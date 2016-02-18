@@ -3,11 +3,13 @@ class ApplicationController < ActionController::API
 
   respond_to :json
 
+  rescue_from ActiveRecord::RecordNotFound, with: -> { render_error_for(:not_found) }
+
+  protected
+
   def resource_attributes
     params.require(:data).require(:attributes)
   end
-
-  protected
 
   def authenticate!(options={})
     authenticate_token || render_error_for(:unauthorized)
@@ -23,10 +25,29 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def verified!
+    current_user.verified? || render_validation_errors(current_user)
+  end
+
   def check_parameters_for(resource_type)
-    parameters = Parameters.new(params, resource_type: resource_type.to_s)
+    parameters = Parameters.new(params.to_unsafe_h, resource_type: resource_type.to_s)
 
     render_validation_errors(parameters, on: :data) unless parameters.valid?
+  end
+
+  def render_validation_errors(model, on: :attributes)
+    errors = ErrorsSerializer.new(model.errors, on: on).serialize
+
+    render json: errors, status: :unprocessable_entity
+  end
+
+  def render_search_errors(search)
+    errors = [:page, :sort, :filters].inject([]) do |errors, type|
+      errors.concat(
+        ErrorsSerializer.new(search.errors[type], on: type).serialize[:errors]
+      )
+    end
+    render json: { errors: errors }, status: :bad_request
   end
 
   def render_error_for(status)
@@ -36,11 +57,5 @@ class ApplicationController < ActionController::API
         detail: I18n.t("failure.#{status}")
       }]
     }, status: status
-  end
-
-  def render_validation_errors(model, on: :attributes)
-    errors = ValidationErrorsSerializer.new(model, on: on).serialize
-
-    render json: errors, status: :unprocessable_entity
   end
 end

@@ -18,9 +18,7 @@ RSpec.describe SMS do
         SMSDeliveries.use_fake_provider
       end
 
-      it 'returns true' do
-        expect(sms.deliver_now).to be_truthy
-      end
+      it { expect(sms.deliver_now).to be_truthy }
 
       it 'sends an sms with given options' do
         sms.deliver_now
@@ -29,8 +27,6 @@ RSpec.describe SMS do
 
         expect(last_delivered.options).to eql(options)
       end
-
-
     end
 
     context 'when provider call fails with a bad request' do

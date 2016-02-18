@@ -1,9 +1,5 @@
-require 'set'
-
 RSpec.shared_examples 'fails to send verification for' do |attribute|
-  it 'returns false' do
-    expect(@success).to be_falsy
-  end
+  it { expect(sent).to be_falsy }
 
   it "doesn't generate an #{attribute} verification token for the model" do
     expect(verification.model).not_to have_received(:"generate_#{attribute}_verification_token!")
@@ -15,9 +11,7 @@ RSpec.shared_examples 'fails to send verification for' do |attribute|
 end
 
 RSpec.shared_examples 'fails to complete verification for' do |attribute|
-  it 'returns false' do
-    expect(@success).to be_falsy
-  end
+  it { expect(completed).to be_falsy }
 
   it "doesn't verify the model #{attribute}" do
     expect(verification.model).not_to have_received(:"verify_#{attribute}!")

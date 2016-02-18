@@ -1,29 +1,42 @@
-require 'set'
-
 RSpec.shared_examples 'check parameters for' do |type|
-  let(:parameters) { Parameters.new(params || {}, resource_type: type.to_s) }
+  describe "it checks parameters for #{type}" do
+    let(:parameters) { Parameters.new(options || {}, resource_type: type) }
+    let(:params)     { options.to_json }
 
-  context 'with empty parameters' do
-    let(:params) {}
+    context 'with empty parameters' do
+      let(:options) {}
 
-    it { is_expected.to return_validation_errors :parameters, { on: :data } }
-  end
+      it { is_expected.to return_validation_errors :parameters, on: :data }
+    end
 
-  context 'with empty data' do
-    let(:params) { { data: nil } }
+    context 'with empty data' do
+      let(:options) { { data: nil } }
 
-    it { is_expected.to return_validation_errors :parameters, { on: :data } }
-  end
+      it { is_expected.to return_validation_errors :parameters, on: :data }
+    end
 
-  context 'with unexpected data type' do
-    let(:params) { { data: { type: '.', attributes: {} } } }
+    context 'with invalid data' do
+      let(:options) { { data: '' } }
 
-    it { is_expected.to return_validation_errors :parameters, { on: :data } }
-  end
+      it { is_expected.to return_validation_errors :parameters, on: :data }
+    end
 
-  context 'with empty data type and attributes' do
-    let(:params) { { data: { type: nil, attributes: nil } } }
+    context 'with unexpected data type' do
+      let(:options) { { data: { type: '.', attributes: { test: '' } } } }
 
-    it { is_expected.to return_validation_errors :parameters, { on: :data } }
+      it { is_expected.to return_validation_errors :parameters, on: :data }
+    end
+
+    context 'with empty data type' do
+      let(:options) { { data: { type: nil, attributes: { test: '' } } } }
+
+      it { is_expected.to return_validation_errors :parameters, on: :data }
+    end
+
+    context 'with invalid data attributes' do
+      let(:options) { { data: { type: type, attributes: 'test' } } }
+
+      it { is_expected.to return_validation_errors :parameters, on: :data }
+    end
   end
 end

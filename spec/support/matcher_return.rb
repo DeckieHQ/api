@@ -9,6 +9,7 @@ end
 {
   bad_request:  400,
   unauthorized: 401,
+  forbidden:    403,
   not_found:    404
 }.each do |status, code|
   RSpec::Matchers.define :"return_#{status}" do
@@ -35,17 +36,27 @@ RSpec::Matchers.define :return_status_code do |expected|
   end
 end
 
+def returned_errors?(resource_name, options)
+  options  = options || {}
+  resource = send(resource_name)
+  on       = options[:on] || :attributes
+
+  resource.valid?(options[:context]) unless resource.errors.present?
+
+  expected_errors = ErrorsSerializer.new(resource.errors, on: on).serialize
+
+  json_response == expected_errors
+end
+
 RSpec::Matchers.define :return_validation_errors do |resource_name, options|
   match do
-    options  = options || {}
-    resource = send(resource_name)
-    on       = options[:on] || :attributes
+    response.code == '422' && returned_errors?(resource_name, options)
+  end
+end
 
-    resource.valid?(options[:context]) unless resource.errors.present?
-
-    expected_errors = ValidationErrorsSerializer.new(resource, on: on).serialize
-
-    response.code == '422' && json_response == expected_errors
+RSpec::Matchers.define :return_search_errors do |resource_name, options|
+  match do
+    response.code == '400' && returned_errors?(resource_name, options)
   end
 end
 

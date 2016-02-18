@@ -1,5 +1,3 @@
-require 'set'
-
 RSpec.shared_examples 'an action requiring authentication' do
   let(:params) {}
 
@@ -16,8 +14,22 @@ RSpec.shared_examples 'an action requiring authentication' do
       end
     end
 
-    let(:authenticated) { true }
+    let(:authenticated) { user }
 
     it { is_expected.to return_unauthorized }
+  end
+end
+
+RSpec.shared_examples 'an action requiring verification' do
+  let(:params) {}
+
+  context 'when user is not verified' do
+    let(:user) { FactoryGirl.create(:user) }
+
+    it do
+      user.errors.add(:base, :unverified)
+
+      is_expected.to return_validation_errors :user
+    end
   end
 end

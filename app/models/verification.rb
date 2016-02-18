@@ -16,7 +16,7 @@ class Verification
   def initialize(attributes = {}, model: nil)
     # Allow type to be set with a symbol for conveniency.
     @type  = (attributes[:type]  || '').to_s
-    @token =  attributes[:token] || ''
+    @token = (attributes[:token] || '').to_s
     @model = model
   end
 
@@ -55,7 +55,7 @@ class Verification
   def token_must_be_valid
     model_token = model.send("#{type}_verification_token")
 
-    if token.blank? || token.to_s != model_token.to_s || sent_at < 5.hours.ago
+    if token.blank? || token != model_token.to_s || sent_at < 5.hours.ago
       errors.add(:token, :invalid)
     end
   end

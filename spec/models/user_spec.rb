@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe User, :type => :model do
-  # Database
   [
     :email, :phone_number, :reset_password_token, :email_verification_token,
     :phone_number_verification_token
@@ -9,10 +8,11 @@ RSpec.describe User, :type => :model do
     it { is_expected.to have_db_index(attribute).unique(true) }
   end
 
-  # Relations
+  subject { FactoryGirl.build(:user_with_phone_number) }
+
+
   it { is_expected.to have_one(:profile) }
 
-  # Validations
   [
     :first_name,  :last_name, :birthday, :email, :password, :culture
   ].each do |attribute|
@@ -24,8 +24,8 @@ RSpec.describe User, :type => :model do
 
   it { is_expected.to validate_plausible_phone(:phone_number) }
 
-  it { is_expected.to validate_date_after(:birthday,  100.year.ago) }
-  it { is_expected.to validate_date_before(:birthday,  18.year.ago + 1.day) }
+  it { is_expected.to validate_date_after(:birthday,  { limit: 100.year.ago }) }
+  it { is_expected.to validate_date_before(:birthday, { limit: 18.year.ago + 1.day }) }
 
   it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en)) }
 
@@ -62,17 +62,33 @@ RSpec.describe User, :type => :model do
       })
     end
 
+    it 'has a shortcut to its profile hosted_events' do
+      expect(user.hosted_events).to eq(user.profile.hosted_events)
+    end
+
+    it 'is not verified' do
+      expect(user).not_to be_verified
+    end
+
     context 'when destroyed' do
+      subject(:user) { FactoryGirl.create(:user_with_hosted_events) }
+
+      let(:profile) { user.profile }
+
       before do
-        @profile = user.profile
-
         user.destroy
-
-        @profile.reload
       end
 
       it 'unlinks its profile' do
-        expect(@profile.user_id).to be_nil
+        expect(profile.reload).to have_attributes({ user_id: nil })
+      end
+
+      it 'removes its opened events' do
+        expect(user.hosted_events.opened).to be_empty
+      end
+
+      it "doesn't remove its closed events" do
+        expect(user.hosted_events).to_not be_empty
       end
     end
   end
@@ -84,6 +100,36 @@ RSpec.describe User, :type => :model do
 
   include_examples 'acts as verifiable', :phone_number,
     deliveries: SMSDeliveries,
-    faker: -> { Faker::PhoneNumber.plausible },
+    faker: -> { Fake::PhoneNumber.plausible },
     token_type: :pin
+
+  describe '#verified?' do
+    let(:verified?) { user.verified? }
+
+    before do
+      verified?
+    end
+
+    [:email, :phone_number].each do |attribute|
+      context "when user #{attribute} is not verified" do
+        subject(:user) { FactoryGirl.create(:"user_with_#{attribute}_verified") }
+
+        it { expect(verified?).to be_falsy }
+
+        it 'has an error on base' do
+          expect(user.errors.added?(:base, :unverified)).to be_truthy
+        end
+      end
+    end
+
+    context 'when user is verified' do
+      subject(:user) { FactoryGirl.create(:user_verified) }
+
+      it { expect(verified?).to be_truthy }
+
+      it 'has no error' do
+        expect(user.errors).to be_empty
+      end
+    end
+  end
 end

@@ -13,8 +13,8 @@ module Request
         }
       end
       headers.merge({
-        'Accept':      'application/vnd.api+json',
-        'ContentType': 'application/vnd.api+json'
+        'Accept':       'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json'
       })
     end
   end

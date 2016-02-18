@@ -1,5 +1,3 @@
-require 'set'
-
 EMAIL_DOMAIN_NAME = 'deckie.io'
 
 RSpec.shared_examples 'renders the email headers with' do |options|

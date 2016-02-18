@@ -6,7 +6,7 @@ ruby '2.2.3'
 gem 'rails', '>= 5.0.0.beta1', '< 5.1'
 
 # JSON Serializers
-gem 'active_model_serializers', '0.10.0.rc3'
+gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers'
 
 # Use postgresql as ActiveRecord database
 gem 'pg', '~> 0.18'
@@ -37,6 +37,15 @@ gem 'rest-client', '2.0.0.rc2'
 gem 'phony_rails', '~> 0.12'
 gem 'date_validator', '~> 0.9'
 
+# Geolocation
+gem 'geocoder', '~> 1.3'
+
+# Pagination
+gem 'will_paginate', '~> 3.1'
+
+# Utility
+gem 'wannabe_bool', '~> 0.5.0'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'
@@ -51,12 +60,11 @@ end
 
 group :test do
   gem 'codeclimate-test-reporter', '~> 0.4', require: nil
-  gem 'shoulda-matchers', '~> 3.0'
+  gem 'shoulda-matchers', '~> 3.1'
   gem 'factory_girl_rails', '~> 4.5'
   gem 'webmock', '~> 1.22'
   gem 'faker', '~> 1.6'
 end
-
 
 group :production do
   gem 'rails_stdout_logging', '~> 0.0'
