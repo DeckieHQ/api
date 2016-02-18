@@ -24,9 +24,7 @@ class Event < ApplicationRecord
   validates :capacity, presence: true, numericality: {
     greater_than: 0, less_than: 1000
   }
-  validates :invite_only, inclusion: {
-    in: [true, false]
-  }
+  validates :auto_accept, inclusion: { in: [true, false] }
 
   validates :begin_at, presence: true, date: { after: Proc.new { Time.now } }
   validates :end_at, date: { after: :begin_at }, allow_nil: true

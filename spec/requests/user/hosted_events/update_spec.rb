@@ -33,7 +33,7 @@ RSpec.describe 'User hosted event update', :type => :request do
 
       it 'updates the event with permited params' do
         permited_params = event_update.slice(
-          :title, :category, :ambiance, :level, :capacity, :invite_only,
+          :title, :category, :ambiance, :level, :capacity, :auto_accept,
           :description, :street, :postcode, :city, :state, :country
         )
         expect(event).to have_attributes(permited_params)

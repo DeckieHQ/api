@@ -8,7 +8,7 @@ class CreateEventsAndSubscriptions < ActiveRecord::Migration[5.0]
 
       t.integer :capacity, null: false
 
-      t.boolean :invite_only, null: false, default: false
+      t.boolean :auto_accept, null: false, default: false
 
       t.text :description
 

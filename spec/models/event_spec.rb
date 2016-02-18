@@ -41,6 +41,8 @@ RSpec.describe Event, :type => :model do
       is_expected.to validate_date_after(:end_at, { limit: :begin_at , on: :second })
     end
 
+    it { is_expected.to_not allow_value(nil).for(:auto_accept) }
+
     {
       title:       128,
       description: 8192,

@@ -50,7 +50,7 @@ class User::HostedEventsController < ApplicationController
 
   def event_params
     resource_attributes.permit(
-     :title, :category, :ambiance, :level, :capacity, :invite_only, :description,
+     :title, :category, :ambiance, :level, :capacity, :auto_accept, :description,
      :begin_at, :end_at, :street, :postcode, :city, :state, :country
     )
   end

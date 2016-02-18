@@ -22,6 +22,8 @@ FactoryGirl.define do
     state    { Faker::Address.state          }
     country  { Faker::Address.country        }
 
+    auto_accept false
+
     association :host, factory: :profile_verified
 
     factory :event_closed do
