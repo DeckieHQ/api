@@ -11,7 +11,7 @@ class User < ApplicationRecord
 
   after_update :update_profile, if: -> { first_name_changed? || last_name_changed? }
 
-  before_destroy :remove_opened_events
+  before_destroy :destroy_opened_events
 
   acts_as_verifiable :email,
     delivery: UserMailer, token: -> { Token.friendly }
@@ -35,20 +35,6 @@ class User < ApplicationRecord
 
   validates_plausible_phone :phone_number
 
-  def build_profile
-    create_profile(display_name: display_name)
-  end
-
-  def update_profile
-    profile.update(display_name: display_name)
-  end
-
-  protected
-
-  def display_name
-    "#{first_name} #{last_name.capitalize.chr}"
-  end
-
   def verified?
     unless verified = email_verified? && phone_number_verified?
       errors.add(:base, :unverified)
@@ -58,7 +44,19 @@ class User < ApplicationRecord
 
   protected
 
-  def remove_opened_events
+  def build_profile
+    create_profile(display_name: display_name)
+  end
+
+  def update_profile
+    profile.update(display_name: display_name)
+  end
+
+  def destroy_opened_events
     hosted_events.opened.destroy_all
+  end
+
+  def display_name
+    "#{first_name} #{last_name.capitalize.chr}"
   end
 end
