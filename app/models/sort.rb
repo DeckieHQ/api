@@ -1,8 +1,8 @@
 class Sort < SearchOption
   def params
     @params ||= attributes.to_s.split(',').map do |attribute|
-      if attribute.chr == '-'
-        attribute.slice!(0) if attribute.length > 1
+      if attribute.chr == '-' && attribute.length > 1
+        attribute.slice!(0)
 
         order = :desc
       else

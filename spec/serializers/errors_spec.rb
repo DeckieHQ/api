@@ -29,7 +29,7 @@ RSpec.describe ErrorsSerializer, :type => :serializer do
 
   describe '#serialize' do
     let(:error) do
-      ErrorsSerializer.new(model, on: on).serialize[:errors].last
+      ErrorsSerializer.new(model.errors, on: on).serialize[:errors].last
     end
 
     before do

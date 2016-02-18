@@ -29,15 +29,6 @@ class ApplicationController < ActionController::API
     current_user.verified? || render_validation_errors(current_user)
   end
 
-  def render_error_for(status)
-    render json: {
-      errors: [{
-        status: Rack::Utils::SYMBOL_TO_STATUS_CODE[status],
-        detail: I18n.t("failure.#{status}")
-      }]
-    }, status: status
-  end
-
   def check_parameters_for(resource_type)
     parameters = Parameters.new(params.to_unsafe_h, resource_type: resource_type.to_s)
 
@@ -45,12 +36,26 @@ class ApplicationController < ActionController::API
   end
 
   def render_validation_errors(model, on: :attributes)
-    errors = ErrorsSerializer.new(model, on: on).serialize
+    errors = ErrorsSerializer.new(model.errors, on: on).serialize
 
     render json: errors, status: :unprocessable_entity
   end
 
   def render_search_errors(search)
-    render_error_for(:bad_request)
+    errors = [:page, :sort, :filters].inject([]) do |errors, type|
+      errors.concat(
+        ErrorsSerializer.new(search.errors[type], on: type).serialize[:errors]
+      )
+    end
+    render json: { errors: errors }, status: :bad_request
+  end
+
+  def render_error_for(status)
+    render json: {
+      errors: [{
+        status: Rack::Utils::SYMBOL_TO_STATUS_CODE[status],
+        detail: I18n.t("failure.#{status}")
+      }]
+    }, status: status
   end
 end

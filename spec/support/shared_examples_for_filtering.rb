@@ -1,5 +1,6 @@
 RSpec.shared_examples 'an action with filtering' do |owner_name, collection_name, options|
-  filter_with = options[:with]
+  try    = options[:try]
+  accept = options[:accept]
 
   let(:page) { FactoryGirl.build(:page_default) }
 
@@ -20,14 +21,13 @@ RSpec.shared_examples 'an action with filtering' do |owner_name, collection_name
   end
 
   context 'with an invalid filter' do
-    let(:filters) { Filters.new({ lol: 1 }, accept: []) }
+    let(:filters) { Filters.new({ lol: 1 }, accept: accept) }
 
-    it { is_expected.to return_search_errors :filters }
+    it { is_expected.to return_search_errors :filters, on: :filters }
   end
 
-  filter_with.each do |filter, values|
+  try.each do |filter, values|
     values.each do |value|
-
       context "when filtering with #{filter} = #{value}" do
         let(:filters) { { filter => value } }
 
@@ -39,7 +39,6 @@ RSpec.shared_examples 'an action with filtering' do |owner_name, collection_name
           )
         end
       end
-
     end
   end
 end

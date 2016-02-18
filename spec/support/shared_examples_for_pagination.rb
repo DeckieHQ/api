@@ -31,7 +31,7 @@ RSpec.shared_examples 'an action with pagination' do |owner_name, collection_nam
   context 'with invalid pagination parameters' do
     let(:page) { FactoryGirl.build(:page_invalid) }
 
-    it { is_expected.to return_search_errors :page }
+    it { is_expected.to return_search_errors :page, on: :page }
   end
 
   context 'with unexisting page' do

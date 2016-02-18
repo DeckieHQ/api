@@ -3,8 +3,8 @@
 # See: http://jsonapi.org/format/#errors
 #
 class ErrorsSerializer
-  def initialize(object, on:)
-    @object = object
+  def initialize(errors, on:)
+    @errors = errors
     @on     = on
   end
 
@@ -14,15 +14,15 @@ class ErrorsSerializer
 
   protected
 
-  attr_reader :object, :on
+  attr_reader :errors, :on
 
   def serialized_errors
-    object.errors.details.map do |field, field_errors|
-      field_errors.each_with_index.map do |errors, index|
+    errors.details.map do |field, field_errors|
+      field_errors.each_with_index.map do |details, index|
         {
           status: status,
-          code:   errors[:error].to_s,
-          detail: object.errors[field][index],
+          code:   details[:error].to_s,
+          detail: errors[field][index],
           source: source_for(field)
         }
       end

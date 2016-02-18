@@ -8,7 +8,7 @@ RSpec.describe Sort, :type => :model do
       'id':               [{ id: :asc }],
       '-count':           [{ count: :desc }],
       'begin_at,-end_at': [{ begin_at: :asc }, { end_at: :desc }],
-      'a,,-':             [{ a: :asc }, { '': :asc }, { '-': :desc }]
+      'a,,-':             [{ a: :asc }, { '': :asc }, { '-': :asc }]
     }.each do |combination, expected|
       context "with attributes = '#{combination}'" do
         let(:attributes) { combination }

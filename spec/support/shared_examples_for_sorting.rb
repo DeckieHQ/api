@@ -16,7 +16,7 @@ RSpec.shared_examples 'an action with sorting' do |owner_name, collection_name, 
   context 'with an invalid sort' do
     let(:sort_attributes) { { is: :not_a_string } }
 
-    it { is_expected.to return_search_errors :sort }
+    it { is_expected.to return_search_errors :sort, on: :sort }
   end
 
   context 'with supported sort' do
