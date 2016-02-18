@@ -12,21 +12,9 @@ RSpec.shared_examples 'a serialized validation error' do
 
     expect(error[:detail]).to eq expected_detail
   end
-
-  context 'with base error' do
-    before do
-      model.errors.add(:base, :invalid)
-    end
-
-    it 'has an empty source pointer' do
-      expect(error[:source][:pointer]).to be_blank
-    end
-  end
 end
 
 RSpec.describe ErrorsSerializer, :type => :serializer do
-  let(:model) { User.new.tap(&:valid?) }
-
   describe '#serialize' do
     let(:error) do
       ErrorsSerializer.new(model.errors, on: on).serialize[:errors].last
@@ -37,34 +25,36 @@ RSpec.describe ErrorsSerializer, :type => :serializer do
     end
 
     describe 'each error' do
-      context 'on attributes' do
-        let(:on) { :attributes }
+      let(:model) { User.new.tap(&:valid?) }
 
-        it_behaves_like 'a serialized validation error'
+      [:data, :attributes].each do |type|
+        context "on #{type}" do
+          let(:model) { User.new.tap(&:valid?) }
 
-        it 'has a :unprocessable_entity status' do
-          expect(error[:status]).to eq 422
-        end
+          let(:on) { type }
 
-        context 'with any field error' do
-          it 'has a source pointer to the attribute field error' do
-            expect(error[:source][:pointer]).to eq "/data/attributes/#{@field}"
+          it_behaves_like 'a serialized validation error'
+
+          it 'has a :bad_request status' do
+            expect(error[:status]).to eq 422
           end
-        end
-      end
 
-      context 'on data' do
-        let(:on) { :data }
+          context 'with any field error' do
+            it 'has a source pointer to the data field' do
+              prefix = type == :attributes ? '/data' : ''
 
-        it_behaves_like 'a serialized validation error'
+              expect(error[:source][:pointer]).to eq("#{prefix}/#{type}/#{@field}")
+            end
+          end
 
-        it 'has a :bad_request status' do
-          expect(error[:status]).to eq 400
-        end
+          context 'with base error' do
+            before do
+              model.errors.add(:base, :invalid)
+            end
 
-        context 'with any field error' do
-          it 'has a source pointer to the data field error' do
-            expect(error[:source][:pointer]).to eq "/data/#{@field}"
+            it 'has an empty source pointer' do
+              expect(error[:source][:pointer]).to be_blank
+            end
           end
         end
       end
@@ -81,8 +71,18 @@ RSpec.describe ErrorsSerializer, :type => :serializer do
           end
 
           context 'with any field error' do
-            it 'has a source parameter to the URI query parameter error' do
+            it 'has a source parameter to the URI query parameter' do
               expect(error[:source][:parameter]).to eq "#{type}[#{@field}]"
+            end
+          end
+
+          context 'with base error' do
+            before do
+              model.errors.add(:base, :invalid)
+            end
+
+            it 'has an source parameter to the URI query parameter top-level' do
+              expect(error[:source][:parameter]).to eq(type.to_s)
             end
           end
         end

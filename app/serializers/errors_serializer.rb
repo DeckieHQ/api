@@ -20,9 +20,9 @@ class ErrorsSerializer
     errors.details.map do |field, field_errors|
       field_errors.each_with_index.map do |details, index|
         {
-          status: status,
           code:   details[:error].to_s,
           detail: errors[field][index],
+          status: status,
           source: source_for(field)
         }
       end
@@ -30,7 +30,7 @@ class ErrorsSerializer
   end
 
   def source_for(field)
-    return { pointer: '' } if field == :base
+    return source_for_base if field == :base
 
     case on
     when :data
@@ -42,7 +42,16 @@ class ErrorsSerializer
     end
   end
 
+  def source_for_base
+    case on
+    when :data, :attributes
+      { pointer: '' }
+    when :page, :sort, :filter
+      { parameter: on.to_s }
+    end
+  end
+
   def status
-    on == :attributes ? 422 : 400
+    [:data, :attributes].include?(on) ? 422 : 400
   end
 end
