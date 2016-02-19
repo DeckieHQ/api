@@ -34,7 +34,7 @@ FactoryGirl.define do
       end
     end
 
-    factory :event_with_attendees do
+    factory :event_with_subscriptions do
       transient { attendees_count 10 }
 
       before(:create) do |event, evaluator|

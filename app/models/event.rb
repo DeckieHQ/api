@@ -5,7 +5,9 @@ class Event < ApplicationRecord
 
   has_many :subscriptions, dependent: :destroy
 
-  has_many :attendees, through: :subscriptions, source: :profile
+  has_many :confirmed_subscriptions, -> { confirmed }, class_name: 'Subscription'
+
+  has_many :attendees, through: :confirmed_subscriptions, source: :profile
 
   validates :title, :street, presence: true, length: { maximum: 128 }
 
