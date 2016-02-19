@@ -3,11 +3,13 @@ class Serialized
     @serializer = serializer
   end
 
+  def relationships
+    content['data']['relationships']
+  end
+
   def attributes
     content['data']['attributes']
   end
-
-  private
 
   def content
     @content ||= JSON.parse(
