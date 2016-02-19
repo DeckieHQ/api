@@ -4,5 +4,9 @@ FactoryGirl.define do
     association :event,   factory: :event
 
     status { Fake::Subscription.status }
+
+    factory :subscription_confirmed do
+      status 'confirmed'
+    end
   end
 end

@@ -35,14 +35,33 @@ FactoryGirl.define do
     end
 
     factory :event_with_subscriptions do
-      transient { attendees_count 10 }
+      transient { subscriptions_count 10 }
 
       before(:create) do |event, evaluator|
-        event.capacity = evaluator.attendees_count
+        event.capacity = evaluator.subscriptions_count * 2
       end
 
       after(:create) do |event, evaluator|
-        create_list(:subscription, evaluator.attendees_count, event: event)
+        create_list(:subscription, evaluator.subscriptions_count, event: event)
+      end
+    end
+
+    factory :event_with_attendees do
+      transient { attendees_count 10 }
+
+      before(:create) do |event, evaluator|
+        event.capacity = evaluator.attendees_count * 2
+      end
+
+      after(:create) do |event, evaluator|
+        create_list(:subscription_confirmed, evaluator.attendees_count, event: event)
+      end
+
+      factory :event_full do
+        after(:create) do |event, evaluator|
+          event.capacity = evaluator.attendees_count
+          event.save(validate: false)
+        end
       end
     end
 

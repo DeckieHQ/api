@@ -41,6 +41,7 @@ en:
           attributes:
             base:
               closed: 'Event is closed.'
+              full: 'Event is full.'
   activemodel:
     errors:
       models:

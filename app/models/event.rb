@@ -23,8 +23,8 @@ class Event < ApplicationRecord
     in: %w(beginner intermediate advanced expert)
   }
 
-  validates :capacity, presence: true, numericality: {
-    greater_than: 0, less_than: 1000
+  validates :capacity, presence: true, numericality: { only_integer: true,
+    greater_than: 0, less_than: 1000, greater_than_or_equal_to: ->(e) { e.attendees_count }
   }
   validates :auto_accept, inclusion: { in: [true, false] }
 
@@ -53,6 +53,10 @@ class Event < ApplicationRecord
 
   def closed?
     errors.add(:base, :closed) if begin_at <= Time.now
+  end
+
+  def full?
+    errors.add(:base, :full) if attendees_count == capacity
   end
 
   protected

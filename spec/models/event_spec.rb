@@ -34,8 +34,17 @@ RSpec.describe Event, :type => :model do
 
     it do
       is_expected.to validate_numericality_of(:capacity)
+        .only_integer
         .is_greater_than(0)
         .is_less_than(1000)
+    end
+
+    context 'when event has attendees' do
+      subject(:event) { FactoryGirl.create(:event_with_attendees) }
+
+      it { is_expected.to_not allow_value(event.attendees_count - 1).for(:capacity) }
+
+      it { is_expected.to allow_value(event.attendees_count).for(:capacity) }
     end
 
     it do
@@ -106,28 +115,31 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  describe '#closed?' do
-    subject(:event) { FactoryGirl.create(:event) }
+  [:full, :closed].each do |state|
+    method = "#{state}?"
 
-    let(:closed?) { event.closed? }
+    describe "##{method}" do
 
-    before do
-      closed?
-    end
+      subject(:event) { FactoryGirl.create(:event) }
 
-    it { expect(closed?).to be_falsy }
+      it { expect(event.send(method)).to be_falsy }
 
-    it 'has no error' do
-      expect(event.errors).to be_empty
-    end
+      it 'has no error' do
+        event.send(method)
 
-    context 'when event is closed' do
-      subject(:event) { FactoryGirl.create(:event_closed) }
+        expect(event.errors).to be_empty
+      end
 
-      it { expect(closed?).to be_truthy }
+      context "when event is #{state}" do
+        subject(:event) { FactoryGirl.create(:"event_#{state}") }
 
-      it 'has an error on base' do
-        expect(event.errors.added?(:base, :closed)).to be_truthy
+        it { expect(event.send(method)).to be_truthy }
+
+        it 'has an error on base' do
+          event.send(method)
+
+          expect(event.errors.added?(:base, state)).to be_truthy
+        end
       end
     end
   end
