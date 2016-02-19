@@ -5,7 +5,7 @@ module Token
   # one of these token generators to generate a token used to retrieve an
   # entity by its token.
   #
-  # For this specific case, checkout ActiveRecord::SecureToken (add in Rails 5).
+  # For this specific case, checkout ActiveRecord::SecureToken (added in Rails 5).
 
   def friendly
     Devise.friendly_token
