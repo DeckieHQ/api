@@ -13,7 +13,7 @@ class CreateEventsAndSubscriptions < ActiveRecord::Migration[5.0]
       t.text :description
 
       t.datetime :begin_at, null: false
-      t.datetime :end_at,   null: false
+      t.datetime :end_at
 
       t.decimal :latitude,  precision: 10, scale: 6
       t.decimal :longitude, precision: 10, scale: 6
