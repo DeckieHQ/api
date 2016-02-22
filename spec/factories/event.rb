@@ -26,6 +26,18 @@ FactoryGirl.define do
 
     association :host, factory: :profile_verified
 
+    trait :auto_accept do
+      auto_accept true
+    end
+
+    trait :with_pending_subscriptions do
+      transient { pendings_count 5 }
+
+      after(:create) do |event, evaluator|
+        create_list(:subscription_pending, evaluator.pendings_count, event: event)
+      end
+    end
+
     factory :event_closed do
       begin_at { Faker::Time.backward(5, :all) }
 
@@ -55,6 +67,12 @@ FactoryGirl.define do
 
       after(:create) do |event, evaluator|
         create_list(:subscription_confirmed, evaluator.attendees_count, event: event)
+      end
+
+      factory :event_with_one_slot_remaining do
+        after(:create) do |event, evaluator|
+          event.update(capacity: evaluator.attendees_count + 1)
+        end
       end
 
       factory :event_full do

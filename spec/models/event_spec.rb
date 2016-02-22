@@ -33,10 +33,8 @@ RSpec.describe Event, :type => :model do
     end
 
     it do
-      is_expected.to validate_numericality_of(:capacity)
-        .only_integer
-        .is_greater_than(0)
-        .is_less_than(1000)
+      is_expected.to validate_numericality_of(:capacity).only_integer
+        .is_greater_than(0).is_less_than(1000)
     end
 
     context 'when event has attendees' do
