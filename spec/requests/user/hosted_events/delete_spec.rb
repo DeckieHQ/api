@@ -20,13 +20,15 @@ RSpec.describe 'User hosted event delete', :type => :request do
       end
 
       context 'when event is closed' do
-        let(:event) do
-          FactoryGirl.create(:event_closed).tap do |event|
-            event.errors.add(:base, :closed)
+        let(:event) { FactoryGirl.create(:event_closed) }
+
+        let(:event_service) do
+          EventService.new(event).tap do |service|
+            service.valid?(:destroy)
           end
         end
 
-        it { is_expected.to return_validation_errors :event }
+        it { is_expected.to return_validation_errors :event_service }
 
         it "doesn't delete the event" do
           expect(event.reload).to be_persisted

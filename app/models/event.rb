@@ -52,11 +52,11 @@ class Event < ApplicationRecord
   end
 
   def closed?
-    errors.add(:base, :closed) if begin_at <= Time.now
+    begin_at <= Time.now
   end
 
   def full?
-    errors.add(:base, :full) if attendees_count == capacity
+    attendees_count == capacity
   end
 
   protected

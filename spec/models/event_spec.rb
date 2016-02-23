@@ -118,26 +118,14 @@ RSpec.describe Event, :type => :model do
 
     describe "##{method}" do
 
-      subject(:event) { FactoryGirl.create(:event) }
+      subject(:method) { FactoryGirl.create(:event).send(method) }
 
-      it { expect(event.send(method)).to be_falsy }
-
-      it 'has no error' do
-        event.send(method)
-
-        expect(event.errors).to be_empty
-      end
+      it { is_expected.to be_falsy }
 
       context "when event is #{state}" do
-        subject(:event) { FactoryGirl.create(:"event_#{state}") }
+        subject(:method) { FactoryGirl.create(:"event_#{state}").send(method) }
 
-        it { expect(event.send(method)).to be_truthy }
-
-        it 'has an error on base' do
-          event.send(method)
-
-          expect(event.errors.added?(:base, state)).to be_truthy
-        end
+        it { is_expected.to be_truthy }
       end
     end
   end

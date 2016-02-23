@@ -45,21 +45,19 @@ RSpec.describe 'User hosted event update', :type => :request do
       context 'when attributes are invalid' do
         let(:event_update) { Event.new }
 
-        it { is_expected.to return_validation_errors :event_update } 
+        it { is_expected.to return_validation_errors :event_update }
       end
 
       context 'when event is closed' do
-        # Ensures that event closed unprocessable happens before request
-        # parameters verification.
-        let(:params) {}
+        let(:event) { FactoryGirl.create(:event_closed) }
 
-        let(:event) do
-          FactoryGirl.create(:event_closed).tap do |event|
-            event.errors.add(:base, :closed)
+        let(:event_service) do
+          EventService.new(event).tap do |service|
+            service.valid?(:update)
           end
         end
 
-        it { is_expected.to return_validation_errors :event }
+        it { is_expected.to return_validation_errors :event_service }
       end
     end
 

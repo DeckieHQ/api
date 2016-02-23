@@ -6,7 +6,7 @@ class User::HostedEventsController < ApplicationController
 
   before_action :verified!, only: :create
 
-  before_action :event_closed?, only: [:update, :destroy]
+  before_action :event, only: :update
 
   before_action -> { check_parameters_for :events }, only: [:create, :update]
 
@@ -31,13 +31,14 @@ class User::HostedEventsController < ApplicationController
   end
 
   def update
-    return render_validation_errors(event) unless event.update(event_params)
-
+    unless event_service.update(event_params)
+      return render_validation_errors(event_service)
+    end
     render json: event
   end
 
   def destroy
-    event.destroy
+    return render_validation_errors(event_service) unless event_service.destroy
 
     head :no_content
   end
@@ -48,14 +49,14 @@ class User::HostedEventsController < ApplicationController
     @event ||= hosted_events.find(params[:id])
   end
 
+  def event_service
+    @event_service ||= EventService.new(event)
+  end
+
   def event_params
     resource_attributes.permit(
      :title, :category, :ambiance, :level, :capacity, :auto_accept, :description,
      :begin_at, :end_at, :street, :postcode, :city, :state, :country
     )
-  end
-
-  def event_closed?
-    render_validation_errors(event) if event.closed?
   end
 end
