@@ -29,6 +29,10 @@ class ApplicationController < ActionController::API
     current_user.verified? || render_validation_errors(current_user)
   end
 
+  def current_profile
+    current_user.profile
+  end
+
   def check_parameters_for(resource_type)
     parameters = Parameters.new(params.to_unsafe_h, resource_type: resource_type.to_s)
 
