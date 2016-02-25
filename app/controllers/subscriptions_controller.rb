@@ -1,6 +1,8 @@
 class SubscriptionsController < ApplicationController
   before_action :authenticate!
 
+  before_action :subscription, only: [:show, :confirm, :destroy]
+
   def create
     event_service = EventService.new(event)
 
@@ -14,6 +16,17 @@ class SubscriptionsController < ApplicationController
   def show
     unless subscriber? || event_host?
       return render_error_for(:forbidden)
+    end
+    render json: subscription
+  end
+
+  def confirm
+    return render_error_for(:forbidden) unless event_host?
+
+    subscribtion_service = SubscriptionService.new(subscription)
+
+    unless subscribtion_service.confirm
+      return render_validation_errors(subscribtion_service)
     end
     render json: subscription
   end
@@ -36,7 +49,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def subscription
-    @subscription ||= event.subscriptions.find(params[:id])
+    @subscription ||= event.subscriptions.find(params[:id] || params[:subscription_id])
   end
 
   def subscriber?

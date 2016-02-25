@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   end
 
   resources :events, only: :show do
-    resources :subscriptions, only: [:create, :show, :destroy]
+    resources :subscriptions, only: [:create, :show, :destroy] do
+      post '/confirm', to: 'subscriptions#confirm'
+    end
   end
 end
