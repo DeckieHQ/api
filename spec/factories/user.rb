@@ -67,5 +67,13 @@ FactoryGirl.define do
         end
       end
     end
+
+    trait :with_subscriptions do
+      transient { subscriptions_count 5 }
+
+      after(:create) do |user, evaluator|
+        create_list(:subscription, evaluator.subscriptions_count, profile: user.profile)
+      end
+    end
   end
 end

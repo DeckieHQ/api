@@ -1,5 +1,5 @@
 class Search
-  def initialize(params, sort: [], filters: [])
+  def initialize(params, sort: [], filters: {})
     params = params.to_unsafe_h
 
     @page    = Page.new(params[:page] || { number: 1, size: 10 })

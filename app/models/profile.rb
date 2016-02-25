@@ -8,6 +8,4 @@ class Profile < ApplicationRecord
   has_many :subscriptions
 
   has_many :hosted_events, class_name: :Event
-
-  has_many :attendance_events, through: :subscriptions, source: :event
 end

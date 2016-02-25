@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_one :profile, dependent: :nullify
 
   delegate :hosted_events, to: :profile
+  delegate :subscriptions, to: :profile
 
   has_secure_token :authentication_token
 

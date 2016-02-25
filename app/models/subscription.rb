@@ -16,6 +16,10 @@ class Subscription < ApplicationRecord
     where(status: status)
   end
 
+  def self.event(filters)
+    joins(:event).merge(Event.filter(filters))
+  end
+
   protected
 
   def update_counter_cache

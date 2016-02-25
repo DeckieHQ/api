@@ -13,6 +13,7 @@ Rails.application.routes.draw do
         resource  :password,      only: [:create, :update]
         resource  :verifications, only: [:create, :update]
         resources :hosted_events
+        resources :subscriptions, only: :index
       end
     end
   end

@@ -12,6 +12,4 @@ RSpec.describe Profile, :type => :model do
   it { is_expected.to have_many(:subscriptions) }
 
   it { is_expected.to have_many(:hosted_events) }
-
-  it { is_expected.to have_many(:attendance_events) }
 end

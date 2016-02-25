@@ -19,7 +19,7 @@ RSpec.describe 'User hosted event list', :type => :request do
     it_behaves_like 'an action with pagination', :user, :hosted_events
 
     it_behaves_like 'an action with filtering', :user, :hosted_events,
-      accept: [:opened], try: { opened: [true, false, nil, 1, 0] }
+      accept: { scopes: [:opened] }, try: { opened: [true, false, nil, 1, 0] }
 
     it_behaves_like 'an action with sorting', :user, :hosted_events,
       accept: %w(begin_at end_at)

@@ -29,7 +29,7 @@ RSpec.describe 'List event subscriptions', :type => :request do
         accept: %w(created_at)
 
       it_behaves_like 'an action with filtering', :event, :subscriptions,
-        accept: [:status], try: { status: %w(confirmed pending unknown) }
+        accept: { scopes: [:status] }, try: { status: %w(confirmed pending unknown) }
     end
 
     context "when event doesn't exist" do

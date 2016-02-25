@@ -11,7 +11,7 @@ class User::HostedEventsController < ApplicationController
   before_action -> { check_parameters_for :events }, only: [:create, :update]
 
   def index
-    search = Search.new(params, sort: %w(begin_at end_at), filters: [:opened])
+    search = Search.new(params, sort: %w(begin_at end_at), filters: { scopes: [:opened] })
 
     return render_search_errors(search) unless search.valid?
 

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Filters, :type => :model do
   describe '#params' do
-    subject(:filters) { Filters.new(attributes, accept: []) }
+    subject(:filters) { Filters.new(attributes, accept: {}) }
 
     context 'when attributes has a value' do
       let(:attributes) { { test: :params } }
@@ -24,7 +24,11 @@ RSpec.describe Filters, :type => :model do
   describe '#valid?' do
     subject(:filters) { Filters.new(attributes, accept: accept) }
 
-    let(:accept) { [:status, :published] }
+    let(:accept) do
+      {
+        scopes: [:status, :published], associations_scopes: { event: [:opened] }
+      }
+    end
 
     let(:errors) { filters.tap(&:valid?).errors }
 
@@ -44,6 +48,12 @@ RSpec.describe Filters, :type => :model do
       it { is_expected.to be_valid }
     end
 
+    context 'with nested attributes' do
+      let(:attributes) { { event: { opened: true } } }
+
+      it { is_expected.to be_valid }
+    end
+
     context 'when attributes are not supported' do
       let(:attributes) { { huh: :nope, rofl: :maoh } }
 
@@ -51,6 +61,16 @@ RSpec.describe Filters, :type => :model do
 
       it 'has an unsupported error' do
         expect_unsuported_error
+      end
+
+      context 'with nested attributes' do
+        let(:attributes) { { event: { test: :wtf } } }
+
+        it { is_expected.to_not be_valid }
+
+        it 'has an unsupported error' do
+          expect_unsuported_error
+        end
       end
     end
 
