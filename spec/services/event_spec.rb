@@ -26,20 +26,10 @@ RSpec.describe EventService, :type => :service do
       is_expected.to be_pending
     end
 
-    context 'when profile is the event host' do
-      let(:profile) { event.host }
-
-      it { is_expected.to be_falsy }
-
-      it 'has an error on base' do
-        expect(service.errors.added?(:base, :subscriber_already_exist)).to be_truthy
-      end
-    end
-
-    context 'when profile has already suscribed' do
+    context 'when profile already subscribed' do
       let(:event) { FactoryGirl.create(:event_with_subscriptions) }
 
-      let(:profile) { event.subscriptions.last }
+      let(:profile) { event.subscriptions.last.profile }
 
       it { is_expected.to be_falsy }
 

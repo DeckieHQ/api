@@ -12,6 +12,8 @@ class SubscriptionsController < ApplicationController
   end
 
   def create
+    return render_error_for(:forbidden) if event_host?
+
     event_service = EventService.new(event)
 
     unless new_subscription = event_service.subscribe(current_profile)

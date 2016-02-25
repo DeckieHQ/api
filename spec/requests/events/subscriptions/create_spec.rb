@@ -46,6 +46,12 @@ RSpec.describe 'Create event subscription', :type => :request do
       it { is_expected.to return_validation_errors :service }
     end
 
+    context 'when authenticated as the event host' do
+      let(:authenticate) { event.host.user }
+
+      it { is_expected.to return_forbidden }
+    end
+
     context "when event doesn't exist" do
       let(:event) { { event_id: 0 } }
 

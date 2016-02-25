@@ -65,8 +65,8 @@ class EventService
     errors.add(:base, :event_closed) if event.closed?
   end
 
-  def already_has_subscriber?(subscriber)
-    if event.host == subscriber || event.subscriptions.include?(subscriber)
+  def already_has_subscriber?(profile)
+    if event.subscriptions.find_by(profile: profile)
       return errors.add(:base, :subscriber_already_exist)
     end
   end
