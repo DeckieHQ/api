@@ -6,6 +6,8 @@ class CreateSubscriptions < ActiveRecord::Migration[5.0]
 
       t.integer :status, null: false
 
+      t.index [:event_id, :profile_id], unique: true
+
       t.timestamps null: false
     end
   end
