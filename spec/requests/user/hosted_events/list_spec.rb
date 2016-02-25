@@ -22,6 +22,6 @@ RSpec.describe 'User hosted event list', :type => :request do
       accept: [:opened], try: { opened: [true, false, nil, 1, 0] }
 
     it_behaves_like 'an action with sorting', :user, :hosted_events,
-      accept: [:begin_at, :end_at]
+      accept: %w(begin_at end_at)
   end
 end

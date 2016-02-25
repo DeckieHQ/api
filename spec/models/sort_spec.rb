@@ -5,10 +5,11 @@ RSpec.describe Sort, :type => :model do
     subject(:sort) { Sort.new(attributes, accept: []) }
 
     {
-      'id':               [{ id: :asc }],
-      '-count':           [{ count: :desc }],
-      'begin_at,-end_at': [{ begin_at: :asc }, { end_at: :desc }],
-      'a,,-':             [{ a: :asc }, { '': :asc }, { '-': :asc }]
+      'id':               'id asc',
+      '-count':           'count desc',
+      'begin_at,-end_at': 'begin_at asc, end_at desc',
+      'a,,-':             'a asc,  asc, - asc',
+      'event.begin_at':   'events.begin_at asc'
     }.each do |combination, expected|
       context "with attributes = '#{combination}'" do
         let(:attributes) { combination }
@@ -22,8 +23,8 @@ RSpec.describe Sort, :type => :model do
     context 'when attributes is null' do
       let(:attributes) {}
 
-      it 'returns an empty array' do
-        expect(sort.params).to eq([])
+      it 'returns an empty string' do
+        expect(sort.params).to be_empty
       end
     end
   end
@@ -31,7 +32,7 @@ RSpec.describe Sort, :type => :model do
   describe '#valid?' do
     subject(:sort) { Sort.new(attributes, accept: accept) }
 
-    let(:accept) { [:begin_at, :end_at] }
+    let(:accept) { %w(begin_at end_at) }
 
     let(:errors) { sort.tap(&:valid?).errors }
 

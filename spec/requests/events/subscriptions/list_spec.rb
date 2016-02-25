@@ -26,7 +26,7 @@ RSpec.describe 'List event subscriptions', :type => :request do
       it_behaves_like 'an action with pagination', :event, :subscriptions
 
       it_behaves_like 'an action with sorting', :event, :subscriptions,
-        accept: [:created_at]
+        accept: %w(created_at)
 
       it_behaves_like 'an action with filtering', :event, :subscriptions,
         accept: [:status], try: { status: %w(confirmed pending unknown) }
