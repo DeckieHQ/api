@@ -18,6 +18,6 @@ Rails.application.routes.draw do
   end
 
   resources :events, only: :show do
-    resources :subscriptions, only: [:create, :show]
+    resources :subscriptions, only: [:create, :show, :destroy]
   end
 end

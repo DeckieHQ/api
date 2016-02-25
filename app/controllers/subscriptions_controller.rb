@@ -18,6 +18,17 @@ class SubscriptionsController < ApplicationController
     render json: subscription
   end
 
+  def destroy
+    return render_error_for(:forbidden) unless subscriber?
+
+    subscribtion_service = SubscriptionService.new(subscription)
+
+    unless subscribtion_service.destroy
+      return render_validation_errors(subscribtion_service)
+    end
+    head :no_content
+  end
+
   protected
 
   def event
