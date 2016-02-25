@@ -6,7 +6,7 @@ RSpec.describe 'Show event subscription', :type => :request do
   let(:subscription) { event.subscriptions.shuffle.last }
 
   before do
-    get event_subscription_path(event, subscription), headers: json_headers
+    get subscription_path(subscription), headers: json_headers
   end
 
   it_behaves_like 'an action requiring authentication'

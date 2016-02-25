@@ -1,16 +1,13 @@
 class SubscriptionsController < ApplicationController
   before_action :authenticate!
 
-  before_action :subscription, only: [:show, :confirm, :destroy]
-
   def create
     event_service = EventService.new(event)
 
-    subscription = event_service.subscribe(current_profile)
-
-    return render_validation_errors(event_service) unless subscription
-
-    render json: subscription, status: :created
+    unless new_subscription = event_service.subscribe(current_profile)
+      return render_validation_errors(event_service)
+    end
+    render json: new_subscription, status: :created
   end
 
   def show
@@ -23,8 +20,6 @@ class SubscriptionsController < ApplicationController
   def confirm
     return render_error_for(:forbidden) unless event_host?
 
-    subscribtion_service = SubscriptionService.new(subscription)
-
     unless subscribtion_service.confirm
       return render_validation_errors(subscribtion_service)
     end
@@ -33,8 +28,6 @@ class SubscriptionsController < ApplicationController
 
   def destroy
     return render_error_for(:forbidden) unless subscriber?
-
-    subscribtion_service = SubscriptionService.new(subscription)
 
     unless subscribtion_service.destroy
       return render_validation_errors(subscribtion_service)
@@ -45,11 +38,15 @@ class SubscriptionsController < ApplicationController
   protected
 
   def event
-    @event ||= Event.find(params[:event_id])
+    @event ||= retrieve_event
   end
 
   def subscription
-    @subscription ||= event.subscriptions.find(params[:id] || params[:subscription_id])
+    @subscription ||= Subscription.find(params[:id])
+  end
+
+  def subscribtion_service
+    @subscription_service ||= SubscriptionService.new(subscription)
   end
 
   def subscriber?
@@ -58,5 +55,13 @@ class SubscriptionsController < ApplicationController
 
   def event_host?
     current_profile == event.host
+  end
+
+  private
+
+  def retrieve_event
+    event_id = params[:event_id]
+
+    event_id.present? ? Event.find(event_id) : subscription.event
   end
 end

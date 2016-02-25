@@ -17,9 +17,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :events, only: :show do
+  resources :events, only: :show, shallow: true do
     resources :subscriptions, only: [:create, :show, :destroy] do
-      post '/confirm', to: 'subscriptions#confirm'
+      post 'confirm', on: :member
     end
   end
 end

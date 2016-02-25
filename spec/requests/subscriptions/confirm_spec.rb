@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe 'Destroy event subscription', :type => :request do
+RSpec.describe 'Confirm event subscription', :type => :request do
   let(:event) { FactoryGirl.create(:event, :with_pending_subscriptions) }
 
   let(:subscription) { event.subscriptions.shuffle.last }
 
   before do
-    delete event_subscription_path(event, subscription), headers: json_headers
+    post confirm_subscription_path(subscription), headers: json_headers
   end
 
   it_behaves_like 'an action requiring authentication'
@@ -27,18 +27,22 @@ RSpec.describe 'Destroy event subscription', :type => :request do
 
       it { is_expected.to return_forbidden }
 
-      it "doesn't destroy the subscription" do
-        expect(subscription.reload).to be_persisted
+      it "doesn't confirm the subscription" do
+        expect(subscription.reload).to be_pending
       end
     end
 
-    context 'when subscribtion belongs to the user' do
-      let(:user) { subscription.profile.user }
+    context 'when user is the event host' do
+      let(:user) { event.host.user }
 
-      it { is_expected.to return_no_content }
+      it { is_expected.to return_status_code 200 }
 
-      it 'destroys the subscription' do
-        expect(Subscription.find_by(id: subscription.id)).to be_nil
+      it 'returns the subscription' do
+        expect(response.body).to equal_serialized(subscription.reload)
+      end
+
+      it 'confirms the subscription' do
+        expect(subscription.reload).to be_confirmed
       end
 
       # Test the service invokation. Therefore we don't need more tests here as
@@ -47,7 +51,7 @@ RSpec.describe 'Destroy event subscription', :type => :request do
         let(:event) { FactoryGirl.create(:event_closed, :with_pending_subscriptions) }
 
         let(:service) do
-          SubscriptionService.new(subscription).tap { |s| s.valid?(:destroy) }
+          SubscriptionService.new(subscription).tap { |s| s.valid?(:confirm) }
         end
 
         it { is_expected.to return_validation_errors :service }
