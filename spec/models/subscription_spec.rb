@@ -40,40 +40,6 @@ RSpec.describe Subscription, :type => :model do
           expect_to_increase_counter_cache { subscription.confirmed! }
         end
       end
-
-      context 'with a refused status' do
-        it 'increases the event attendees_count' do
-          expect_to_not_change_counter_cache { subscription.refused! }
-        end
-      end
-    end
-
-    context 'when confirmed' do
-      let(:status) { :confirmed }
-
-      before do
-        subscription.save
-      end
-
-      context 'with a refused status' do
-        it 'descreases the event attendees_count' do
-          expect_to_decrease_counter_cache { subscription.refused! }
-        end
-      end
-    end
-
-    context 'when refused' do
-      let(:status) { :refused }
-
-      before do
-        subscription.save
-      end
-
-      context 'with a confirmed status' do
-        it 'increases the event attendees_count' do
-          expect_to_increase_counter_cache { subscription.confirmed! }
-        end
-      end
     end
   end
 
@@ -95,6 +61,34 @@ RSpec.describe Subscription, :type => :model do
 
       it "doesn't change the event attendees_count" do
         expect_to_not_change_counter_cache { subscription.destroy }
+      end
+    end
+  end
+
+  describe '.status' do
+    before do
+      FactoryGirl.create_list(:subscription, 5)
+    end
+
+    let(:results) { Subscription.status(status) }
+
+    [:confirmed, :pending].each do |state|
+      context "when status equals #{state}" do
+        let(:status) { state }
+
+        it "returns the #{state} subscriptions" do
+          expect(results).to eq(Subscription.send(status))
+        end
+      end
+    end
+
+    [:unkown, 0, nil].each do |state|
+      context "when status equals #{state}" do
+        let(:status) { state }
+
+        it 'returns an empty collection' do
+          expect(results).to eq(Subscription.none)
+        end
       end
     end
   end

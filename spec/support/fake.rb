@@ -29,7 +29,7 @@ module Fake
     extend self
 
     def status
-      [:pending, :confirmed, :refused].sample
+      [:pending, :confirmed].sample
     end
   end
 end

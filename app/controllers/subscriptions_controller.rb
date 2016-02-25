@@ -1,6 +1,16 @@
 class SubscriptionsController < ApplicationController
   before_action :authenticate!
 
+  def index
+    return render_error_for(:forbidden) unless event_host?
+
+    search = Search.new(params, sort: [:created_at], filters: [:status])
+
+    return render_search_errors(search) unless search.valid?
+
+    render json: search.apply(event.subscriptions)
+  end
+
   def create
     event_service = EventService.new(event)
 

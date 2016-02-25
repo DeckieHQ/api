@@ -1,12 +1,20 @@
 class Subscription < ApplicationRecord
+  include Filterable
+
   belongs_to :event
   belongs_to :profile
 
-  enum status: [ :pending, :confirmed, :refused ]
+  enum status: [:pending, :confirmed]
 
   after_save    :update_counter_cache
 
   after_destroy :update_counter_cache
+
+  def self.status(status)
+    return none unless statuses.has_key?(status)
+
+    where(status: status)
+  end
 
   protected
 
