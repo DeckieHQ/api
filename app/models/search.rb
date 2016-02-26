@@ -21,7 +21,11 @@ class Search
   end
 
   def apply(collection)
-    collection.filter(filters.params).order(sort.params).paginate(page.params)
+    collection
+    .filter(filters.params)
+    .joins(sort.joins)
+    .reorder(sort.params)
+    .paginate(page.params)
   end
 
   protected

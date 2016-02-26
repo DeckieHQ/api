@@ -1,8 +1,17 @@
 class Sort < SearchOption
   def params
-    options.map do |attribute, order|
+    @params ||= options.map do |attribute, order|
       "#{pluralize_associations(attribute)} #{order}"
     end.join(', ')
+  end
+
+  def joins
+    associations = []
+
+    keys.each do |key|
+      associations.concat(key.split('.').tap(&:pop))
+    end
+    associations.map(&:to_sym)
   end
 
   private
@@ -33,8 +42,8 @@ class Sort < SearchOption
   def pluralize_associations(attribute)
     nested_attributes = attribute.split('.')
 
-    nested_attributes.map do |nested|
-      nested == nested_attributes.last ? nested : nested.pluralize
-    end.join('.')
+    column = nested_attributes.pop
+
+    nested_attributes.map(&:pluralize).push(column).join('.')
   end
 end

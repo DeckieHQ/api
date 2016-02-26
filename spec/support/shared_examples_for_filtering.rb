@@ -6,11 +6,11 @@ RSpec.shared_examples 'an action with filtering' do |owner_name, collection_name
 
   let(:collection) { send(owner_name).send(collection_name) }
 
-  let(:complete_collection) { collection.paginate(page.params) }
-
   let(:params) { Serialize.query(filters: filters) }
 
   context 'when filters are empty' do
+    let(:complete_collection) { collection.paginate(page.params) }
+
     let(:filters) {}
 
     it { is_expected.to return_status_code 200 }

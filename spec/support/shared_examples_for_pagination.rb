@@ -14,6 +14,11 @@ RSpec.shared_examples 'an action with pagination' do |owner_name, collection_nam
 
   let(:params) { Serialize.query(page: page) }
 
+  before do
+  #  p "expected: %#{page.params}"
+  #  p collection.pluck('id')
+  end
+
   it { is_expected.to return_status_code 200 }
 
   it "returns the #{owner_name} paginated #{collection_name} list" do
