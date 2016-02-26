@@ -2,14 +2,13 @@ require 'rails_helper'
 
 RSpec.describe User, :type => :model do
   [
-    :email, :phone_number, :reset_password_token, :email_verification_token,
+    :email, :reset_password_token, :email_verification_token,
     :phone_number_verification_token
   ].each do |attribute|
     it { is_expected.to have_db_index(attribute).unique(true) }
   end
 
   subject { FactoryGirl.build(:user_with_phone_number) }
-
 
   it { is_expected.to have_one(:profile) }
 
