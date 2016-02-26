@@ -59,6 +59,10 @@ en:
           attributes:
             base:
               unsupported: 'Unsupported filters. Must be in %{accept}'
+        include:
+          attributes:
+            base:
+              unsupported: 'Unsupported include. Must be in %{accept}'
         verification:
           attributes:
             base:

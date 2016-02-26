@@ -46,7 +46,7 @@ class ApplicationController < ActionController::API
   end
 
   def render_search_errors(search)
-    errors = [:page, :sort, :filters].inject([]) do |errors, type|
+    errors = [:page, :sort, :filters, :include].inject([]) do |errors, type|
       errors.concat(
         ErrorsSerializer.new(search.errors[type], on: type).serialize[:errors]
       )

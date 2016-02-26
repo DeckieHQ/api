@@ -37,7 +37,7 @@ class ErrorsSerializer
       { pointer: "/data/#{field}" }
     when :attributes
       { pointer: "/data/attributes/#{field}" }
-    when :page, :sort, :filter
+    when :page, :sort, :filters, :include
       { parameter: "#{on}[#{field}]" }
     end
   end
@@ -46,7 +46,7 @@ class ErrorsSerializer
     case on
     when :data, :attributes
       { pointer: '' }
-    when :page, :sort, :filter
+    when :page, :sort, :filters, :include
       { parameter: on.to_s }
     end
   end

@@ -4,11 +4,12 @@ class SubscriptionsController < ApplicationController
   def index
     return render_error_for(:forbidden) unless event_host?
 
-    search = Search.new(params, sort: %w(created_at), filters: { scopes: [:status] })
-
+    search = Search.new(params,
+      sort: %w(created_at), include: %w(profile), filters: { scopes: [:status] }
+    )
     return render_search_errors(search) unless search.valid?
 
-    render json: search.apply(event.subscriptions)
+    render json: search.apply(event.subscriptions), include: search.included
   end
 
   def create

@@ -30,7 +30,7 @@ module Serialize
     }.to_json
   end
 
-  def query(page: nil, filters: nil, sort: nil)
+  def query(page: nil, filters: nil, sort: nil, include: nil)
     query = {}
     if page
       query[:page] = { number: page.number, size: page.size }
@@ -40,6 +40,9 @@ module Serialize
     end
     if sort
       query[:sort] = sort
+    end
+    if include
+      query[:include] = include
     end
     query
   end

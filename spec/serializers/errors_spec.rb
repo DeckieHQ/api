@@ -59,7 +59,7 @@ RSpec.describe ErrorsSerializer, :type => :serializer do
         end
       end
 
-      [:page, :sort, :filter].each do |type|
+      [:page, :sort, :filters, :include].each do |type|
         context "on #{type}" do
           let(:model) { Page.new(number: -1, size: 60).tap(&:valid?) }
           let(:on)    { type }

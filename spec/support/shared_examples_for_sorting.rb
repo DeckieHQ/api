@@ -20,7 +20,7 @@ RSpec.shared_examples 'an action with sorting' do |owner_name, collection_name, 
   end
 
   context 'with supported sort' do
-    let(:sort_attributes) { accept.shuffle.map(&:to_s).join(',') }
+    let(:sort_attributes) { accept.shuffle.join(',') }
 
     it { is_expected.to return_status_code 200 }
 
