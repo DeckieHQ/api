@@ -18,10 +18,6 @@ class User::HostedEventsController < ApplicationController
     render json: search.apply(hosted_events)
   end
 
-  def show
-    render json: event
-  end
-
   def create
     event = Event.new(event_params)
 
