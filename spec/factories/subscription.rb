@@ -12,5 +12,9 @@ FactoryGirl.define do
     factory :subscription_pending do
       status 'pending'
     end
+
+    factory :subscription_closed do
+      association :event, factory: :event_closed
+    end
   end
 end

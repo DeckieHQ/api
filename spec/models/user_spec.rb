@@ -70,7 +70,7 @@ RSpec.describe User, :type => :model do
     end
 
     context 'when destroyed' do
-      subject(:user) { FactoryGirl.create(:user_with_hosted_events) }
+      subject(:user) { FactoryGirl.create(:user) }
 
       let(:profile) { user.profile }
 
@@ -80,14 +80,6 @@ RSpec.describe User, :type => :model do
 
       it 'unlinks its profile' do
         expect(profile.reload).to have_attributes({ user_id: nil })
-      end
-
-      it 'removes its opened events' do
-        expect(user.hosted_events.opened).to be_empty
-      end
-
-      it "doesn't remove its closed events" do
-        expect(user.hosted_events).to_not be_empty
       end
     end
   end

@@ -29,6 +29,8 @@ class User::RegistrationsController < Devise::RegistrationsController
   end
 
   def destroy
+    AccountService.new(current_user).cleanup
+
     super { head :no_content and return }
   end
 
