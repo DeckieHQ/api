@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe 'User hosted event delete', :type => :request do
+RSpec.describe 'Event delete', :type => :request do
   let(:event) { FactoryGirl.create(:event) }
 
   before do
-    delete user_hosted_event_path(event), headers: json_headers
+    delete event_path(event), headers: json_headers
   end
 
   it_behaves_like 'an action requiring authentication'
@@ -36,10 +36,18 @@ RSpec.describe 'User hosted event delete', :type => :request do
       end
     end
 
-    context "when event doesn't belong to the user" do
+    context "when event doesn't exists" do
+      let(:event) { { id: 0 } }
+
       let(:authenticate) { FactoryGirl.create(:user) }
 
       it { is_expected.to return_not_found }
+    end
+
+    context "when event doesn't belong to the user" do
+      let(:authenticate) { FactoryGirl.create(:user) }
+
+      it { is_expected.to return_forbidden }
     end
   end
 end

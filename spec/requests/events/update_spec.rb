@@ -1,14 +1,16 @@
 require 'rails_helper'
 
-RSpec.describe 'User hosted event update', :type => :request do
+RSpec.describe 'Event update', :type => :request do
   let(:params) { Serialize.params(event_update_params, type: :events) }
 
   let(:event_update_params) { event_update.attributes }
 
+  let(:event_update) { FactoryGirl.build(:event)  }
+
   let(:event) { FactoryGirl.create(:event) }
 
   before do
-    put user_hosted_event_path(event), params: params, headers: json_headers
+    put event_path(event), params: params, headers: json_headers
   end
 
   it_behaves_like 'an action requiring authentication'
@@ -22,8 +24,6 @@ RSpec.describe 'User hosted event update', :type => :request do
       end
 
       include_examples 'check parameters for', :events
-
-      let(:event_update) { FactoryGirl.build(:event) }
 
       it { is_expected.to return_status_code 200 }
 
@@ -61,12 +61,18 @@ RSpec.describe 'User hosted event update', :type => :request do
       end
     end
 
+    context "when event doesn't exists" do
+      let(:event) { { id: 0 } }
+
+      let(:authenticate) { FactoryGirl.create(:user) }
+
+      it { is_expected.to return_not_found }
+    end
+
     context "when event doesn't belong to the user" do
       let(:authenticate) { FactoryGirl.create(:user) }
 
-      let(:params) {}
-
-      it { is_expected.to return_not_found }
+      it { is_expected.to return_forbidden }
     end
   end
 end
