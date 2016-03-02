@@ -24,7 +24,33 @@ RSpec.describe Sort, :type => :model do
       let(:attributes) {}
 
       it 'returns an empty string' do
-        expect(sort.params).to be_empty
+        expect(sort.params).to eq('')
+      end
+    end
+  end
+
+  describe '#joins' do
+    subject(:sort) { Sort.new(attributes, accept: []) }
+
+    {
+      'id':              [],
+      'events.begin_at': [:events],
+      'page.created_at': [:page]
+    }.each do |combination, expected|
+      context "with attributes = '#{combination}'" do
+        let(:attributes) { combination }
+
+        it "returns #{expected}" do
+          expect(sort.joins).to eq(expected)
+        end
+      end
+    end
+
+    context 'when attributes is null' do
+      let(:attributes) {}
+
+      it 'returns an empty array' do
+        expect(sort.joins).to eq([])
       end
     end
   end

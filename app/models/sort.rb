@@ -42,8 +42,8 @@ class Sort < SearchOption
   def pluralize_associations(attribute)
     nested_attributes = attribute.split('.')
 
-    column = nested_attributes.pop
+    last = nested_attributes.pop
 
-    nested_attributes.map(&:pluralize).push(column).join('.')
+    nested_attributes.map(&:pluralize).push(last).join('.')
   end
 end

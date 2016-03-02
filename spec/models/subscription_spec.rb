@@ -95,6 +95,18 @@ RSpec.describe Subscription, :type => :model do
     end
   end
 
+  describe '.event' do
+    before do
+      FactoryGirl.create_list(:subscription, 5)
+    end
+
+    it "propagates event's scopes" do
+      expect(
+        Subscription.event(:opened).pluck(:event_id)
+      ).to eq(Event.opened.pluck(:id))
+    end
+  end
+
   def expect_to_increase_counter_cache(&action)
     expect_to_change_counter_cache_by(1, &action)
   end
