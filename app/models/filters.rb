@@ -8,17 +8,21 @@ class Filters < SearchOption
   def unsupported
     return [params] unless params.kind_of?(Hash)
 
-    @unsupported ||= params.reject do |key, value|
-      if value.kind_of?(Hash)
-        associations_scopes_include?(key.to_sym, value)
+    @unsupported ||= params.transform_keys(&:to_sym).reject do |key, value|
+      if associations_scopes.include?(key)
+        associations_scopes_supports?(key, value)
       else
-        scopes.include?(key.to_sym)
+        scopes.include?(key)
       end
     end
   end
 
-  def associations_scopes_include?(key, value)
-    associations_scopes[key] == value.keys.map(&:to_sym)
+  def associations_scopes_supports?(key, value)
+    if value.kind_of?(Hash)
+      associations_scopes[key] == value.keys.map(&:to_sym)
+    else
+      associations_scopes.include?(key)
+    end
   end
 
   def scopes

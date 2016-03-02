@@ -49,9 +49,16 @@ RSpec.describe Filters, :type => :model do
     end
 
     context 'with nested attributes' do
-      let(:attributes) { { event: { opened: true } } }
+      [
+        { event: { opened: true } },
+        { event: :opened }
+      ].each do |combination|
+        context "with #{combination}" do
+          let(:attributes) { combination }
 
-      it { is_expected.to be_valid }
+          it { is_expected.to be_valid }
+        end
+      end
     end
 
     context 'when attributes are not supported' do
