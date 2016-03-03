@@ -46,11 +46,7 @@ RSpec.describe 'Destroy event subscription', :type => :request do
       context 'when event is closed' do
         let(:event) { FactoryGirl.create(:event_closed, :with_pending_subscriptions) }
 
-        let(:service) do
-          SubscriptionService.new(subscription).tap { |s| s.valid?(:destroy) }
-        end
-
-        it { is_expected.to return_validation_errors :service }
+        it { is_expected.to return_forbidden }
       end
     end
   end

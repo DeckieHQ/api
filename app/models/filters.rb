@@ -8,7 +8,7 @@ class Filters < SearchOption
   def unsupported
     return [params] unless params.kind_of?(Hash)
 
-    @unsupported ||= params.transform_keys(&:to_sym).reject do |key, value|
+    @unsupported ||= params.symbolize_keys.reject do |key, value|
       if associations_scopes.include?(key)
         associations_scopes_supports?(key, value)
       else

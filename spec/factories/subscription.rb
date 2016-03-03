@@ -5,16 +5,22 @@ FactoryGirl.define do
 
     status { Fake::Subscription.status }
 
-    factory :subscription_confirmed do
-      status 'confirmed'
-    end
-
-    factory :subscription_pending do
+    trait :pending do
       status 'pending'
     end
 
-    factory :subscription_closed do
+    trait :confirmed do
+      status 'confirmed'
+    end
+
+    trait :to_event_closed do
       association :event, factory: :event_closed
+    end
+
+    trait :to_event_full do
+      status 'pending'
+
+      association :event, factory: :event_full
     end
   end
 end

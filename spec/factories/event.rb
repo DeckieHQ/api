@@ -34,7 +34,7 @@ FactoryGirl.define do
       transient { pendings_count 5 }
 
       after(:create) do |event, evaluator|
-        create_list(:subscription_pending, evaluator.pendings_count, event: event)
+        create_list(:subscription, evaluator.pendings_count, :pending, event: event)
       end
     end
 
@@ -66,7 +66,7 @@ FactoryGirl.define do
       end
 
       after(:create) do |event, evaluator|
-        create_list(:subscription_confirmed, evaluator.attendees_count, event: event)
+        create_list(:subscription, evaluator.attendees_count, :confirmed, event: event)
       end
 
       factory :event_with_one_slot_remaining do

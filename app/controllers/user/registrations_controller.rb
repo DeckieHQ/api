@@ -3,8 +3,6 @@ class User::RegistrationsController < Devise::RegistrationsController
 
   before_action :authenticate!, only: :show
 
-  before_action -> { check_parameters_for :users }, only: [:create, :update]
-
   def show
     render json: current_user
   end
@@ -37,11 +35,11 @@ class User::RegistrationsController < Devise::RegistrationsController
   protected
 
   def sign_up_params
-    resource_attributes.permit(shared_attributes)
+    attributes(:users).permit(shared_attributes)
   end
 
   def account_update_params
-    resource_attributes.permit(shared_attributes.push(:current_password))
+    attributes(:users).permit(shared_attributes.push(:current_password))
   end
 
   def shared_attributes

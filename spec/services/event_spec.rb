@@ -26,30 +26,6 @@ RSpec.describe EventService, :type => :service do
       is_expected.to be_pending
     end
 
-    context 'when profile already subscribed' do
-      let(:event) { FactoryGirl.create(:event_with_subscriptions) }
-
-      let(:profile) { event.subscriptions.last.profile }
-
-      it { is_expected.to be_falsy }
-
-      it 'has an error on base' do
-        expect(service.errors.added?(:base, :subscriber_already_exist)).to be_truthy
-      end
-    end
-
-    [:closed, :full].each do |status|
-      context "when event is #{status}" do
-        let(:event) { FactoryGirl.create(:"event_#{status}") }
-
-        it { is_expected.to be_falsy }
-
-        it 'has an error on base' do
-          expect(service.errors.added?(:base, :"event_#{status}")).to be_truthy
-        end
-      end
-    end
-
     context 'when event has auto_accept' do
       let(:event) { FactoryGirl.create(:event, :auto_accept) }
 
@@ -70,20 +46,6 @@ RSpec.describe EventService, :type => :service do
 
     it 'removes the event' do
       expect(event).to_not be_persisted
-    end
-
-    context 'when event is closed' do
-      let(:event) { FactoryGirl.create(:event_closed) }
-
-      it { is_expected.to be_falsy }
-
-      it "doesn't remove the event" do
-        expect(event).to be_persisted
-      end
-
-      it 'has an error on base' do
-        expect(service.errors.added?(:base, :event_closed)).to be_truthy
-      end
     end
   end
 
@@ -145,20 +107,6 @@ RSpec.describe EventService, :type => :service do
 
       it 'has the validation errors' do
         expect(service.errors).to eql(event.errors)
-      end
-    end
-
-    context 'when event is closed' do
-      let(:event) { FactoryGirl.create(:event_closed) }
-
-      it { is_expected.to be_falsy }
-
-      it 'has an error on base' do
-        expect(service.errors.added?(:base, :event_closed)).to be_truthy
-      end
-
-      it "doesn't update the event" do
-        expect(event.reload).to_not have_attributes(params)
       end
     end
   end

@@ -51,13 +51,7 @@ RSpec.describe 'Event update', :type => :request do
       context 'when event is closed' do
         let(:event) { FactoryGirl.create(:event_closed) }
 
-        let(:event_service) do
-          EventService.new(event).tap do |service|
-            service.valid?(:update)
-          end
-        end
-
-        it { is_expected.to return_validation_errors :event_service }
+        it { is_expected.to return_forbidden }
       end
     end
 

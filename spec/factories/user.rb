@@ -78,7 +78,9 @@ FactoryGirl.define do
         create_list(:subscription,
           e.subscriptions_count - e.subscriptions_closed_count, profile: user.profile
         )
-        create_list(:subscription_closed, e.subscriptions_closed_count, profile: user.profile)
+        create_list(
+          :subscription, e.subscriptions_closed_count, :to_event_closed, profile: user.profile
+        )
       end
     end
   end

@@ -1,13 +1,26 @@
 class ApplicationController < ActionController::API
   include ActionController::HttpAuthentication::Token::ControllerMethods
 
+  include Pundit
+
   respond_to :json
 
   rescue_from ActiveRecord::RecordNotFound, with: -> { render_error_for(:not_found) }
 
+  rescue_from Pundit::NotAuthorizedError,   with: -> { render_error_for(:forbidden) }
+
+  rescue_from 'ParametersError' do |exception|
+    render_validation_errors(exception, on: :data)
+  end
+
   protected
 
-  def resource_attributes
+  def attributes(resource_type)
+    parameters = Parameters.new(params.to_unsafe_h, resource_type: resource_type.to_s)
+
+    unless parameters.valid?
+      raise ParametersError, errors: parameters.errors
+    end
     params.require(:data).require(:attributes)
   end
 
@@ -25,18 +38,8 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def verified!
-    current_user.verified? || render_validation_errors(current_user)
-  end
-
   def current_profile
     current_user.profile
-  end
-
-  def check_parameters_for(resource_type)
-    parameters = Parameters.new(params.to_unsafe_h, resource_type: resource_type.to_s)
-
-    render_validation_errors(parameters, on: :data) unless parameters.valid?
   end
 
   def render_validation_errors(model, on: :attributes)

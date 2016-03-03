@@ -1,14 +1,12 @@
 class EventsController < ApplicationController
   before_action :authenticate!, only: [:update, :destroy]
 
-  before_action -> { check_parameters_for(:events) }, only: :update
-
   def show
     render json: event
   end
 
   def update
-    return render_error_for(:forbidden) unless event_host?
+    authorize event
 
     unless event_service.update(event_params)
       return render_validation_errors(event_service)
@@ -17,7 +15,7 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    return render_error_for(:forbidden) unless event_host?
+    authorize event
 
     unless event_service.destroy
       return render_validation_errors(event_service)
@@ -35,14 +33,7 @@ class EventsController < ApplicationController
     @event_service ||= EventService.new(event)
   end
 
-  def event_host?
-    current_profile == event.host
-  end
-
   def event_params
-    resource_attributes.permit(
-     :title, :category, :ambiance, :level, :capacity, :auto_accept, :description,
-     :begin_at, :end_at, :street, :postcode, :city, :state, :country
-    )
+    attributes(:events).permit(policy(event).permited_attributes)
   end
 end
