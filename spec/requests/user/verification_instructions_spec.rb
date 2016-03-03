@@ -30,6 +30,7 @@ RSpec.describe 'User verification instructions', :type => :request do
       let(:verification_params) { { type: :invalid } }
 
       it { is_expected.to return_validation_errors :verification }
+
       it { is_expected.not_to have_sent_mail }
       it { is_expected.not_to have_sent_sms  }
     end
@@ -65,10 +66,7 @@ RSpec.describe 'User verification instructions', :type => :request do
         context "when user #{type} is already verified" do
           let(:user) { FactoryGirl.create(:"user_with_#{type}_verified") }
 
-          it do
-            is_expected.to return_validation_errors :verification,
-              context: :send_instructions
-          end
+          it { is_expected.to return_authorization_error(:"#{type}_already_verified") }
 
           it { is_expected.not_to have_sent_mail }
           it { is_expected.not_to have_sent_sms  }

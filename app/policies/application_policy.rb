@@ -50,4 +50,10 @@ class ApplicationPolicy
       scope
     end
   end
+
+  protected
+
+  def add_error(code)
+    user.errors.add(:base, code)
+  end
 end

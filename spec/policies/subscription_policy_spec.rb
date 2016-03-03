@@ -23,10 +23,14 @@ RSpec.describe SubscriptionPolicy do
     [:closed, :full].each do |type|
       context "when subscription event is #{type}" do
         let(:subscription) do
-          FactoryGirl.create(:subscription, :"to_event_#{type}")
+          FactoryGirl.create(:subscription, :pending, :"to_event_#{type}")
         end
 
         it { is_expected.to forbid_action(:confirm)  }
+
+        it do
+          is_expected.to have_authorization_error(:"event_#{type}", on: :confirm)
+        end
       end
     end
 
@@ -34,6 +38,12 @@ RSpec.describe SubscriptionPolicy do
       let(:subscription) { FactoryGirl.create(:subscription, :confirmed) }
 
       it { is_expected.to forbid_action(:confirm) }
+
+      it do
+        is_expected.to have_authorization_error(
+          :subscription_already_confirmed, on: :confirm
+        )
+      end
     end
   end
 
@@ -50,6 +60,8 @@ RSpec.describe SubscriptionPolicy do
       end
 
       it { is_expected.to forbid_action(:destroy) }
+
+      it { is_expected.to have_authorization_error(:event_closed, on: :destroy) }
     end
   end
 end

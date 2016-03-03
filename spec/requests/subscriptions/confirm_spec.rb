@@ -50,7 +50,7 @@ RSpec.describe 'Confirm event subscription', :type => :request do
       context 'when event is closed' do
         let(:event) { FactoryGirl.create(:event_closed, :with_pending_subscriptions) }
 
-        it { is_expected.to return_forbidden }
+        it { is_expected.to return_authorization_error(:event_closed) }
       end
     end
   end

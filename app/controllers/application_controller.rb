@@ -7,7 +7,13 @@ class ApplicationController < ActionController::API
 
   rescue_from ActiveRecord::RecordNotFound, with: -> { render_error_for(:not_found) }
 
-  rescue_from Pundit::NotAuthorizedError,   with: -> { render_error_for(:forbidden) }
+  rescue_from 'Pundit::NotAuthorizedError' do
+    if current_user.errors.empty?
+      render_error_for(:forbidden)
+    else
+      render_validation_errors(current_user)
+    end
+  end
 
   rescue_from 'ParametersError' do |exception|
     render_validation_errors(exception, on: :data)
@@ -36,10 +42,6 @@ class ApplicationController < ActionController::API
 
       sign_in(user, store: false)
     end
-  end
-
-  def current_profile
-    current_user.profile
   end
 
   def render_validation_errors(model, on: :attributes)

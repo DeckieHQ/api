@@ -14,11 +14,19 @@ RSpec.describe EventPolicy do
     it { is_expected.to forbid_action(:destroy)       }
     it { is_expected.to forbid_action(:subscriptions) }
 
+    it do
+      is_expected.to have_authorization_error(:user_unverified, on: :create)
+    end
+
     [:closed, :full].each do |type|
       context "when event is #{type}" do
         let(:event) { FactoryGirl.create(:"event_#{type}") }
 
         it { is_expected.to forbid_action(:subscribe)  }
+
+        it do
+          is_expected.to have_authorization_error(:"event_#{type}", on: :subscribe)
+        end
       end
     end
 
@@ -42,6 +50,9 @@ RSpec.describe EventPolicy do
 
       it { is_expected.to forbid_action(:update)  }
       it { is_expected.to forbid_action(:destroy) }
+
+      it { is_expected.to have_authorization_error(:event_closed, on: :update)  }
+      it { is_expected.to have_authorization_error(:event_closed, on: :destroy) }
     end
   end
 

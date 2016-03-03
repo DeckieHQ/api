@@ -1,10 +1,15 @@
 class EventPolicy < ApplicationPolicy
+  include PolicyMatchers::User
+  include PolicyMatchers::Event
+
+  alias_method :event, :record
+
   def create?
-    user.verified?
+    user_verified?
   end
 
   def update?
-    host? && !record.closed?
+    event_host? && !event_closed?
   end
 
   def destroy?
@@ -12,11 +17,11 @@ class EventPolicy < ApplicationPolicy
   end
 
   def subscribe?
-    !record.closed? && !record.full? && !host? && !already_subscribed?
+    !event_host? && !subscription_already_exist? && !event_closed? && !event_full?
   end
 
   def subscriptions?
-    host?
+    event_host?
   end
 
   def permited_attributes
@@ -40,12 +45,8 @@ class EventPolicy < ApplicationPolicy
 
   private
 
-  def already_subscribed?
-    record.subscriptions.find_by(profile: user.profile)
-  end
-
-  def host?
-    record.host == user.profile
+  def subscription_already_exist?
+    event.subscriptions.find_by(profile: user.profile)
   end
 
   class Scope < Scope

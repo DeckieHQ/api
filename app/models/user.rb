@@ -35,10 +35,7 @@ class User < ApplicationRecord
   validates_plausible_phone :phone_number
 
   def verified?
-    unless verified = email_verified? && phone_number_verified?
-      errors.add(:base, :unverified)
-    end
-    verified
+    email_verified? && phone_number_verified?
   end
 
   protected

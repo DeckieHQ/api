@@ -2,6 +2,8 @@ class User::VerificationsController < ApplicationController
   before_action :authenticate!
 
   def create
+    authorize verification if verification.valid?
+
     unless verification.send_instructions
       return render_validation_errors(verification)
     end
@@ -9,6 +11,8 @@ class User::VerificationsController < ApplicationController
   end
 
   def update
+    authorize verification if verification.valid?
+
     unless verification.complete
       return render_validation_errors(verification)
     end

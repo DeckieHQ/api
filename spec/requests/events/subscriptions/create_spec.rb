@@ -41,7 +41,7 @@ RSpec.describe 'Create event subscription', :type => :request do
     context 'when event is closed' do
       let(:event) { FactoryGirl.create(:event_closed) }
 
-      it { is_expected.to return_forbidden }
+      it { is_expected.to return_authorization_error(:event_closed) }
     end
 
     context 'when authenticated as the event host' do

@@ -95,32 +95,22 @@ RSpec.describe User, :type => :model do
     token_type: :pin
 
   describe '#verified?' do
-    let(:verified?) { user.verified? }
+    subject(:verified?) { user.verified? }
 
-    before do
-      verified?
-    end
+    before { verified? }
 
     [:email, :phone_number].each do |attribute|
       context "when user #{attribute} is not verified" do
-        subject(:user) { FactoryGirl.create(:"user_with_#{attribute}_verified") }
+        let(:user) { FactoryGirl.create(:"user_with_#{attribute}_verified") }
 
-        it { expect(verified?).to be_falsy }
-
-        it 'has an error on base' do
-          expect(user.errors.added?(:base, :unverified)).to be_truthy
-        end
+        it { is_expected.to be_falsy }
       end
     end
 
     context 'when user is verified' do
-      subject(:user) { FactoryGirl.create(:user_verified) }
+      let(:user) { FactoryGirl.create(:user_verified) }
 
-      it { expect(verified?).to be_truthy }
-
-      it 'has no error' do
-        expect(user.errors).to be_empty
-      end
+      it { is_expected.to be_truthy }
     end
   end
 end

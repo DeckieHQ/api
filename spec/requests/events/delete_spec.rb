@@ -22,7 +22,7 @@ RSpec.describe 'Event delete', :type => :request do
       context 'when event is closed' do
         let(:event) { FactoryGirl.create(:event_closed) }
 
-        it { is_expected.to return_forbidden }
+        it { is_expected.to return_authorization_error(:event_closed) }
 
         it "doesn't delete the event" do
           expect(event.reload).to be_persisted

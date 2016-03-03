@@ -31,3 +31,11 @@ RSpec::Matchers.define :have_coordinates_of_address do
     ).values.compact.join(', ')
   end
 end
+
+RSpec::Matchers.define :have_authorization_error do |error_code, options|
+  match do |policy|
+    policy.public_send("#{options[:on]}?")
+
+    policy.user.errors.added?(:base, error_code)
+  end
+end

@@ -59,7 +59,7 @@ RSpec.describe 'User verification', :type => :request do
         context "when user #{type} is already verified" do
           let(:user) { FactoryGirl.create(:"user_with_#{type}_verified") }
 
-          it { expect_validation_errors_on_complete }
+          it { is_expected.to return_authorization_error(:"#{type}_already_verified") }
         end
 
         context "when #{type} verification token has expired" do
