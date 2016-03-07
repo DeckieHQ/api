@@ -1,4 +1,4 @@
-class User::SubscriptionsController < ApplicationController
+class User::SubmissionsController < ApplicationController
   before_action :authenticate!
 
   def index
@@ -7,6 +7,6 @@ class User::SubscriptionsController < ApplicationController
     )
     return render_search_errors(search) unless search.valid?
 
-    render json: search.apply(current_user.subscriptions), include: search.included
+    render json: search.apply(current_user.submissions), include: search.included
   end
 end

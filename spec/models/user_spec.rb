@@ -124,13 +124,13 @@ RSpec.describe User, :type => :model do
     end
   end
 
-  describe '#opened_subscriptions' do
-    let(:user) { FactoryGirl.create(:user, :with_subscriptions) }
+  describe '#opened_submissions' do
+    let(:user) { FactoryGirl.create(:user, :with_submissions) }
 
-    subject { user.opened_subscriptions }
+    subject { user.opened_submissions }
 
-    it 'returns the user subscriptions to opened events' do
-      is_expected.to eq(user.subscriptions.filter({ event: :opened }))
+    it 'returns the user submissions to opened events' do
+      is_expected.to eq(user.submissions.filter({ event: :opened }))
     end
   end
 end

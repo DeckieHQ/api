@@ -5,7 +5,7 @@ class Profile < ApplicationRecord
   validates :short_description, length: { maximum: 140 }
   validates :description, length: { maximum: 8192 }
 
-  has_many :subscriptions
+  has_many :submissions
 
   has_many :hosted_events, class_name: :Event
 end

@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe SubscriptionPolicy do
-  subject { SubscriptionPolicy.new(user, subscription) }
+RSpec.describe SubmissionPolicy do
+  subject { SubmissionPolicy.new(user, submission) }
 
-  let(:subscription) { FactoryGirl.create(:subscription, :pending) }
+  let(:submission) { FactoryGirl.create(:submission, :pending) }
 
   context 'being a visitor' do
     let(:user) { FactoryGirl.create(:user) }
@@ -14,16 +14,16 @@ RSpec.describe SubscriptionPolicy do
   end
 
   context 'being the subscribtion event host' do
-    let(:user) { subscription.event.host.user }
+    let(:user) { submission.event.host.user }
 
     it { is_expected.to permit_action(:show) }
     it { is_expected.to forbid_action(:destroy) }
     it { is_expected.to permit_action(:confirm) }
 
     [:closed, :full].each do |type|
-      context "when subscription event is #{type}" do
-        let(:subscription) do
-          FactoryGirl.create(:subscription, :pending, :"to_event_#{type}")
+      context "when submission event is #{type}" do
+        let(:submission) do
+          FactoryGirl.create(:submission, :pending, :"to_event_#{type}")
         end
 
         it { is_expected.to forbid_action(:confirm)  }
@@ -34,29 +34,29 @@ RSpec.describe SubscriptionPolicy do
       end
     end
 
-    context 'when subscription is already confirmed' do
-      let(:subscription) { FactoryGirl.create(:subscription, :confirmed) }
+    context 'when submission is already confirmed' do
+      let(:submission) { FactoryGirl.create(:submission, :confirmed) }
 
       it { is_expected.to forbid_action(:confirm) }
 
       it do
         is_expected.to have_authorization_error(
-          :subscription_already_confirmed, on: :confirm
+          :submission_already_confirmed, on: :confirm
         )
       end
     end
   end
 
   context 'being the subscribtion owner' do
-    let(:user) { subscription.profile.user }
+    let(:user) { submission.profile.user }
 
     it { is_expected.to permit_action(:show) }
     it { is_expected.to permit_action(:destroy) }
     it { is_expected.to forbid_action(:confirm) }
 
-    context 'when subscription event is closed' do
-      let(:subscription) do
-        FactoryGirl.create(:subscription, :to_event_closed)
+    context 'when submission event is closed' do
+      let(:submission) do
+        FactoryGirl.create(:submission, :to_event_closed)
       end
 
       it { is_expected.to forbid_action(:destroy) }

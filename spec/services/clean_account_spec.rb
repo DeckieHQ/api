@@ -19,14 +19,14 @@ RSpec.describe CleanAccount do
     end
 
     context 'when user subscribed to some events' do
-      let(:user) { FactoryGirl.create(:user, :with_subscriptions) }
+      let(:user) { FactoryGirl.create(:user, :with_submissions) }
 
-      it 'removes the subscriptions to opened events' do
-        expect(user.opened_subscriptions).to be_empty
+      it 'removes the submissions to opened events' do
+        expect(user.opened_submissions).to be_empty
       end
 
-      it "doesn't remove the subscriptions to closed events" do
-        expect(user.subscriptions).to_not be_empty
+      it "doesn't remove the submissions to closed events" do
+        expect(user.submissions).to_not be_empty
       end
     end
   end

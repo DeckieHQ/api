@@ -6,17 +6,17 @@ RSpec.describe Event, :type => :model do
 
     it { is_expected.to belong_to(:host) }
 
-    it { is_expected.to have_many(:subscriptions) }
+    it { is_expected.to have_many(:submissions) }
 
     it do
-      is_expected.to have_many(:confirmed_subscriptions).conditions(status: :confirmed)
+      is_expected.to have_many(:confirmed_submissions).conditions(status: :confirmed)
     end
 
     it do
-      is_expected.to have_many(:pending_subscriptions).conditions(status: :pending)
+      is_expected.to have_many(:pending_submissions).conditions(status: :pending)
     end
 
-    it { is_expected.to have_many(:attendees).through(:confirmed_subscriptions) }
+    it { is_expected.to have_many(:attendees).through(:confirmed_submissions) }
 
     [
       :title,  :category, :ambiance, :level, :capacity, :begin_at,
@@ -106,14 +106,14 @@ RSpec.describe Event, :type => :model do
   end
 
   context 'when destroyed' do
-    subject(:event) { FactoryGirl.create(:event_with_subscriptions) }
+    subject(:event) { FactoryGirl.create(:event_with_submissions) }
 
     before do
       event.destroy
     end
 
-    it 'removes its subscriptions' do
-      expect(event.subscriptions).to be_empty
+    it 'removes its submissions' do
+      expect(event.submissions).to be_empty
     end
   end
 

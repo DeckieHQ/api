@@ -35,7 +35,7 @@ en:
       messages:
         user_unverified: 'User must be verified.'
         subscribtion_already_exist: 'Profile already subscribed.'
-        subscribtion_already_confirmed: 'Subscription already confirmed.'
+        subscribtion_already_confirmed: 'Submission already confirmed.'
         event_full: 'Event is full.'
         event_closed: 'Event is closed.'
         email_already_verified: 'Email is already verified.'

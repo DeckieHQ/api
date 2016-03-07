@@ -1,4 +1,4 @@
-class Subscription < ApplicationRecord
+class Submission < ApplicationRecord
   include Filterable
 
   belongs_to :event

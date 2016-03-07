@@ -3,13 +3,13 @@ class Event < ApplicationRecord
 
   belongs_to :host, class_name: 'Profile', foreign_key: 'profile_id'
 
-  has_many :subscriptions, dependent: :destroy
+  has_many :submissions, dependent: :destroy
 
-  has_many :confirmed_subscriptions, -> { confirmed }, class_name: 'Subscription'
+  has_many :confirmed_submissions, -> { confirmed }, class_name: 'Submission'
 
-  has_many :pending_subscriptions, -> { pending }, class_name: 'Subscription'
+  has_many :pending_submissions, -> { pending }, class_name: 'Submission'
 
-  has_many :attendees, through: :confirmed_subscriptions, source: :profile
+  has_many :attendees, through: :confirmed_submissions, source: :profile
 
   validates :title, :street, presence: true, length: { maximum: 128 }
 

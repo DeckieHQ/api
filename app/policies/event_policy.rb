@@ -17,10 +17,10 @@ class EventPolicy < ApplicationPolicy
   end
 
   def subscribe?
-    !event_host? && !subscription_already_exist? && !event_closed? && !event_full?
+    !event_host? && !submission_already_exist? && !event_closed? && !event_full?
   end
 
-  def subscriptions?
+  def submissions?
     event_host?
   end
 
@@ -45,8 +45,8 @@ class EventPolicy < ApplicationPolicy
 
   private
 
-  def subscription_already_exist?
-    event.subscriptions.find_by(profile: user.profile)
+  def submission_already_exist?
+    event.submissions.find_by(profile: user.profile)
   end
 
   class Scope < Scope

@@ -30,11 +30,11 @@ FactoryGirl.define do
       auto_accept true
     end
 
-    trait :with_pending_subscriptions do
+    trait :with_pending_submissions do
       transient { pendings_count 5 }
 
       after(:create) do |event, evaluator|
-        create_list(:subscription, evaluator.pendings_count, :pending, event: event)
+        create_list(:submission, evaluator.pendings_count, :pending, event: event)
       end
     end
 
@@ -46,22 +46,22 @@ FactoryGirl.define do
       end
     end
 
-    factory :event_with_subscriptions do
+    factory :event_with_submissions do
       transient do
-        subscriptions_count 10
+        submissions_count 10
         capacity 15
       end
 
       before(:create) do |event, evaluator|
-        if evaluator.capacity <= evaluator.subscriptions_count
-          event.capacity = evaluator.subscriptions_count + Faker::Number.between(1, 5)
+        if evaluator.capacity <= evaluator.submissions_count
+          event.capacity = evaluator.submissions_count + Faker::Number.between(1, 5)
         else
           event.capacity = evaluator.capacity
         end
       end
 
       after(:create) do |event, evaluator|
-        create_list(:subscription, evaluator.subscriptions_count, event: event)
+        create_list(:submission, evaluator.submissions_count, event: event)
       end
     end
 
@@ -73,7 +73,7 @@ FactoryGirl.define do
       end
 
       after(:create) do |event, evaluator|
-        create_list(:subscription, evaluator.attendees_count, :confirmed, event: event)
+        create_list(:submission, evaluator.attendees_count, :confirmed, event: event)
       end
 
       factory :event_with_one_slot_remaining do

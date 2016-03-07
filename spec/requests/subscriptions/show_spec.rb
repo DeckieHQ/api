@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe 'Show event subscription', :type => :request do
-  let(:event) { FactoryGirl.create(:event, :with_pending_subscriptions) }
+RSpec.describe 'Show event submission', :type => :request do
+  let(:event) { FactoryGirl.create(:event, :with_pending_submissions) }
 
-  let(:subscription) { event.subscriptions.shuffle.last }
+  let(:submission) { event.submissions.shuffle.last }
 
   before do
-    get subscription_path(subscription), headers: json_headers
+    get submission_path(submission), headers: json_headers
   end
 
   it_behaves_like 'an action requiring authentication'
@@ -14,15 +14,15 @@ RSpec.describe 'Show event subscription', :type => :request do
   context 'when user is authenticated' do
     let(:authenticate) { user }
 
-    context "when subscription doesn't exist" do
+    context "when submission doesn't exist" do
       let(:user) { FactoryGirl.create(:user) }
 
-      let(:subscription) { { id: 0 } }
+      let(:submission) { { id: 0 } }
 
       it { is_expected.to return_not_found }
     end
 
-    context 'when user has no access to the subscription' do
+    context 'when user has no access to the submission' do
       let(:user) { FactoryGirl.create(:user) }
 
       it { is_expected.to return_forbidden }
@@ -33,18 +33,18 @@ RSpec.describe 'Show event subscription', :type => :request do
 
       it { is_expected.to return_status_code 200 }
 
-      it 'returns the subscription' do
-        expect(response.body).to equal_serialized(subscription)
+      it 'returns the submission' do
+        expect(response.body).to equal_serialized(submission)
       end
     end
 
     context 'when subscribtion belongs to the user' do
-      let(:user) { subscription.profile.user }
+      let(:user) { submission.profile.user }
 
       it { is_expected.to return_status_code 200 }
 
-      it 'returns the subscription' do
-        expect(response.body).to equal_serialized(subscription)
+      it 'returns the submission' do
+        expect(response.body).to equal_serialized(submission)
       end
     end
   end

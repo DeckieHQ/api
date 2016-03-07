@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Subscription, :type => :model do
+RSpec.describe Submission, :type => :model do
   it { is_expected.to have_db_index(:event_id) }
   it { is_expected.to have_db_index(:profile_id) }
 
@@ -9,14 +9,14 @@ RSpec.describe Subscription, :type => :model do
   it { is_expected.to belong_to(:event) }
   it { is_expected.to belong_to(:profile) }
 
-  let(:subscription) { FactoryGirl.build(:subscription, status: status) }
+  let(:submission) { FactoryGirl.build(:submission, status: status) }
 
   context 'when created' do
     context 'with a confirmed status' do
       let(:status) { :confirmed }
 
       it 'increases the event attendees_count' do
-        expect_to_increase_counter_cache { subscription.save }
+        expect_to_increase_counter_cache { submission.save }
       end
     end
 
@@ -24,7 +24,7 @@ RSpec.describe Subscription, :type => :model do
       let(:status) { :pending }
 
       it "doesn't change the event attendees_count" do
-        expect_to_not_change_counter_cache { subscription.save }
+        expect_to_not_change_counter_cache { submission.save }
       end
     end
   end
@@ -34,12 +34,12 @@ RSpec.describe Subscription, :type => :model do
       let(:status) { :pending }
 
       before do
-        subscription.save
+        submission.save
       end
 
       context 'with a confirmed status' do
         it 'increases the event attendees_count' do
-          expect_to_increase_counter_cache { subscription.confirmed! }
+          expect_to_increase_counter_cache { submission.confirmed! }
         end
       end
     end
@@ -47,14 +47,14 @@ RSpec.describe Subscription, :type => :model do
 
   context 'when destroyed' do
     before do
-      subscription.save
+      submission.save
     end
 
     context 'when confirmed' do
       let(:status) { :confirmed }
 
       it 'descreases the event attendees_count' do
-        expect_to_decrease_counter_cache { subscription.destroy }
+        expect_to_decrease_counter_cache { submission.destroy }
       end
     end
 
@@ -62,24 +62,24 @@ RSpec.describe Subscription, :type => :model do
       let(:status) { :pending }
 
       it "doesn't change the event attendees_count" do
-        expect_to_not_change_counter_cache { subscription.destroy }
+        expect_to_not_change_counter_cache { submission.destroy }
       end
     end
   end
 
   describe '.status' do
     before do
-      FactoryGirl.create_list(:subscription, 5)
+      FactoryGirl.create_list(:submission, 5)
     end
 
-    let(:results) { Subscription.status(status) }
+    let(:results) { Submission.status(status) }
 
     [:confirmed, :pending].each do |state|
       context "when status equals #{state}" do
         let(:status) { state }
 
-        it "returns the #{state} subscriptions" do
-          expect(results).to eq(Subscription.send(status))
+        it "returns the #{state} submissions" do
+          expect(results).to eq(Submission.send(status))
         end
       end
     end
@@ -89,7 +89,7 @@ RSpec.describe Subscription, :type => :model do
         let(:status) { state }
 
         it 'returns an empty collection' do
-          expect(results).to eq(Subscription.none)
+          expect(results).to eq(Submission.none)
         end
       end
     end
@@ -97,12 +97,12 @@ RSpec.describe Subscription, :type => :model do
 
   describe '.event' do
     before do
-      FactoryGirl.create_list(:subscription, 5)
+      FactoryGirl.create_list(:submission, 5)
     end
 
     it "propagates event's scopes" do
       expect(
-        Subscription.event(:opened).pluck(:event_id)
+        Submission.event(:opened).pluck(:event_id)
       ).to eq(Event.opened.pluck(:id))
     end
   end
@@ -116,10 +116,10 @@ RSpec.describe Subscription, :type => :model do
   end
 
   def expect_to_change_counter_cache_by(value, &action)
-    expect(action).to change { subscription.event.attendees_count }.by(value)
+    expect(action).to change { submission.event.attendees_count }.by(value)
   end
 
   def expect_to_not_change_counter_cache(&action)
-    expect(action).to_not change { subscription.event.attendees_count }
+    expect(action).to_not change { submission.event.attendees_count }
   end
 end

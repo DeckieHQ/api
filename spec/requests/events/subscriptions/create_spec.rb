@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe 'Create event subscription', :type => :request do
+RSpec.describe 'Create event submission', :type => :request do
   let(:event) { FactoryGirl.create(:event) }
 
   before do
-    post event_subscriptions_path(event), headers: json_headers
+    post event_submissions_path(event), headers: json_headers
   end
 
   it_behaves_like 'an action requiring authentication'
@@ -14,25 +14,25 @@ RSpec.describe 'Create event subscription', :type => :request do
 
     let(:authenticate) { user }
 
-    let(:created_subscription) { event.subscriptions.last }
+    let(:created_submission) { event.submissions.last }
 
     it { is_expected.to return_status_code 201 }
 
     it 'subscribes the user with a pending status' do
-      expect(created_subscription).to have_attributes(
+      expect(created_submission).to have_attributes(
         profile_id: user.profile.id, status: 'pending'
       )
     end
 
-    it 'returns the subscription created' do
-      expect(response.body).to equal_serialized(created_subscription)
+    it 'returns the submission created' do
+      expect(response.body).to equal_serialized(created_submission)
     end
 
     context 'when event has auto_accept' do
       let(:event) { FactoryGirl.create(:event, :auto_accept) }
 
       it 'subscribes the user with a confirmed status' do
-        expect(created_subscription).to have_attributes(
+        expect(created_submission).to have_attributes(
           profile_id: user.profile.id, status: 'confirmed'
         )
       end

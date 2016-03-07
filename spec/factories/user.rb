@@ -68,18 +68,18 @@ FactoryGirl.define do
       end
     end
 
-    trait :with_subscriptions do
+    trait :with_submissions do
       transient do
-        subscriptions_count        5
-        subscriptions_closed_count 2
+        submissions_count        5
+        submissions_closed_count 2
       end
 
       after(:create) do |user, e|
-        create_list(:subscription,
-          e.subscriptions_count - e.subscriptions_closed_count, profile: user.profile
+        create_list(:submission,
+          e.submissions_count - e.submissions_closed_count, profile: user.profile
         )
         create_list(
-          :subscription, e.subscriptions_closed_count, :to_event_closed, profile: user.profile
+          :submission, e.submissions_closed_count, :to_event_closed, profile: user.profile
         )
       end
     end

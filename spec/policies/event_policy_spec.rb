@@ -12,7 +12,7 @@ RSpec.describe EventPolicy do
     it { is_expected.to forbid_action(:create)        }
     it { is_expected.to forbid_action(:update)        }
     it { is_expected.to forbid_action(:destroy)       }
-    it { is_expected.to forbid_action(:subscriptions) }
+    it { is_expected.to forbid_action(:submissions) }
 
     it do
       is_expected.to have_authorization_error(:user_unverified, on: :create)
@@ -42,7 +42,7 @@ RSpec.describe EventPolicy do
 
     it { is_expected.to permit_action(:update)        }
     it { is_expected.to permit_action(:destroy)       }
-    it { is_expected.to permit_action(:subscriptions) }
+    it { is_expected.to permit_action(:submissions) }
     it { is_expected.to forbid_action(:subscribe)     }
 
     context 'when event is closed' do
@@ -64,6 +64,6 @@ RSpec.describe EventPolicy do
     it { is_expected.to forbid_action(:subscribe)     }
     it { is_expected.to forbid_action(:update)        }
     it { is_expected.to forbid_action(:destroy)       }
-    it { is_expected.to forbid_action(:subscriptions) }
+    it { is_expected.to forbid_action(:submissions) }
   end
 end

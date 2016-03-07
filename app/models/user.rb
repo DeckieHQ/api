@@ -4,7 +4,7 @@ class User < ApplicationRecord
   has_one :profile, dependent: :nullify
 
   delegate :hosted_events, to: :profile
-  delegate :subscriptions, to: :profile
+  delegate :submissions, to: :profile
 
   has_secure_token :authentication_token
 
@@ -42,8 +42,8 @@ class User < ApplicationRecord
     hosted_events.opened
   end
 
-  def opened_subscriptions
-    subscriptions.filter({ event: :opened })
+  def opened_submissions
+    submissions.filter({ event: :opened })
   end
 
   protected

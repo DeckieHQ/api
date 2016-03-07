@@ -1,9 +1,9 @@
 FactoryGirl.define do
-  factory :subscription do
+  factory :submission do
     association :profile, factory: :profile
     association :event,   factory: :event
 
-    status { Fake::Subscription.status }
+    status { Fake::Submission.status }
 
     trait :pending do
       status 'pending'

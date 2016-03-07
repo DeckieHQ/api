@@ -13,14 +13,14 @@ Rails.application.routes.draw do
         resource  :password,      only: [:create, :update]
         resource  :verifications, only: [:create, :update]
         resources :hosted_events, only: [:index,  :create]
-        resources :subscriptions, only: :index
+        resources :submissions, only: :index
       end
     end
   end
 
   shallow do
     resources :events, only: [:show, :update, :destroy] do
-      resources :subscriptions, only: [:index, :create, :show, :destroy] do
+      resources :submissions, only: [:index, :create, :show, :destroy] do
         post 'confirm', on: :member
       end
     end

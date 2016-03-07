@@ -5,10 +5,12 @@ class ChangeEventInfos
 
   def call(params)
     if event.update(params) && switched_to_auto_accept?
-      confirm_pending_subscriptions
+      confirm_pending_submissions
     end
     event
   end
+
+  private
 
   attr_reader :event
 
@@ -18,11 +20,11 @@ class ChangeEventInfos
     auto_accept && !auto_accept_was
   end
 
-  def confirm_pending_subscriptions
-    event.pending_subscriptions.take(
+  def confirm_pending_submissions
+    event.pending_submissions.take(
       event.capacity - event.attendees_count
-    ).each do |subscription|
-      ConfirmSubscription.new(subscription).call
+    ).each do |submission|
+      ConfirmSubmission.new(submission).call
     end
   end
 end

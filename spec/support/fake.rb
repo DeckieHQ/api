@@ -25,7 +25,7 @@ module Fake
     end
   end
 
-  module Subscription
+  module Submission
     extend self
 
     def status

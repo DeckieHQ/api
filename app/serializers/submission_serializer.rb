@@ -1,4 +1,4 @@
-class SubscriptionSerializer < ActiveModel::Serializer
+class SubmissionSerializer < ActiveModel::Serializer
   attributes :status, :created_at, :updated_at
 
   belongs_to :profile

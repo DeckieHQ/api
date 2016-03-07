@@ -1,6 +1,6 @@
-class CreateSubscriptions < ActiveRecord::Migration[5.0]
+class CreateSubmissions < ActiveRecord::Migration[5.0]
   def up
-    create_table(:subscriptions) do |t|
+    create_table(:submissions) do |t|
       t.belongs_to :event,   index: true
       t.belongs_to :profile, index: true
 
@@ -13,6 +13,6 @@ class CreateSubscriptions < ActiveRecord::Migration[5.0]
   end
 
   def down
-    drop_table :subscriptions
+    drop_table :submissions
   end
 end

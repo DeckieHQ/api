@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe 'List event subscriptions', :type => :request do
-  let(:event) { FactoryGirl.create(:event_with_subscriptions) }
+RSpec.describe 'List event submissions', :type => :request do
+  let(:event) { FactoryGirl.create(:event_with_submissions) }
 
   let(:params) {}
 
   before do
-    get event_subscriptions_path(event), params: params, headers: json_headers
+    get event_submissions_path(event), params: params, headers: json_headers
   end
 
   it_behaves_like 'an action requiring authentication'
@@ -23,15 +23,15 @@ RSpec.describe 'List event subscriptions', :type => :request do
     context 'when user is the event host' do
       let(:user) { event.host.user }
 
-      it_behaves_like 'an action with pagination', :event, :subscriptions
+      it_behaves_like 'an action with pagination', :event, :submissions
 
-      it_behaves_like 'an action with sorting', :event, :subscriptions,
+      it_behaves_like 'an action with sorting', :event, :submissions,
         accept: %w(created_at)
 
-      it_behaves_like 'an action with filtering', :event, :subscriptions,
+      it_behaves_like 'an action with filtering', :event, :submissions,
         accept: { scopes: [:status] }, try: { status: %w(confirmed pending unknown) }
 
-      it_behaves_like 'an action with include', :event, :subscriptions,
+      it_behaves_like 'an action with include', :event, :submissions,
         accept: %w(profile)
     end
 
