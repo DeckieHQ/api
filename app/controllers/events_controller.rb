@@ -8,18 +8,19 @@ class EventsController < ApplicationController
   def update
     authorize event
 
-    unless event_service.update(event_params)
-      return render_validation_errors(event_service)
+    result = ChangeEventInfos.new(event).call(event_params)
+
+    if result.errors.present?
+      return render_validation_errors(result)
     end
-    render json: event
+    render json: result
   end
 
   def destroy
     authorize event
 
-    unless event_service.destroy
-      return render_validation_errors(event_service)
-    end
+    CancelEvent.new(event).call
+
     head :no_content
   end
 
@@ -27,10 +28,6 @@ class EventsController < ApplicationController
 
   def event
     @event ||= Event.find(params[:id])
-  end
-
-  def event_service
-    @event_service ||= EventService.new(event)
   end
 
   def event_params

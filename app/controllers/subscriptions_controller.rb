@@ -15,12 +15,9 @@ class SubscriptionsController < ApplicationController
   def create
     authorize event, :subscribe?
 
-    event_service = EventService.new(event)
+    subscribtion = SubscribeEvent.new(current_user, event).call
 
-    unless new_subscription = event_service.subscribe(current_user.profile)
-      return render_validation_errors(event_service)
-    end
-    render json: new_subscription, status: :created
+    render json: subscribtion, status: :created
   end
 
   def show
@@ -32,18 +29,14 @@ class SubscriptionsController < ApplicationController
   def confirm
     authorize subscription
 
-    unless subscribtion_service.confirm
-      return render_validation_errors(subscribtion_service)
-    end
-    render json: subscription
+    render json: ConfirmSubscription.new(subscription).call
   end
 
   def destroy
     authorize subscription
 
-    unless subscribtion_service.destroy
-      return render_validation_errors(subscribtion_service)
-    end
+    CancelSubscription.new(subscription).call
+
     head :no_content
   end
 
@@ -55,9 +48,5 @@ class SubscriptionsController < ApplicationController
 
   def subscription
     @subscription ||= Subscription.find(params[:id])
-  end
-
-  def subscribtion_service
-    @subscription_service ||= SubscriptionService.new(subscription)
   end
 end

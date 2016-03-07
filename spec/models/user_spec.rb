@@ -113,4 +113,24 @@ RSpec.describe User, :type => :model do
       it { is_expected.to be_truthy }
     end
   end
+
+  describe '#opened_hosted_events' do
+    let(:user) { FactoryGirl.create(:user_with_hosted_events) }
+
+    subject { user.opened_hosted_events }
+
+    it 'returns the user opened hosted events' do
+      is_expected.to eq(user.hosted_events.opened)
+    end
+  end
+
+  describe '#opened_subscriptions' do
+    let(:user) { FactoryGirl.create(:user, :with_subscriptions) }
+
+    subject { user.opened_subscriptions }
+
+    it 'returns the user subscriptions to opened events' do
+      is_expected.to eq(user.subscriptions.filter({ event: :opened }))
+    end
+  end
 end

@@ -12,6 +12,10 @@ RSpec.describe Event, :type => :model do
       is_expected.to have_many(:confirmed_subscriptions).conditions(status: :confirmed)
     end
 
+    it do
+      is_expected.to have_many(:pending_subscriptions).conditions(status: :pending)
+    end
+
     it { is_expected.to have_many(:attendees).through(:confirmed_subscriptions) }
 
     [

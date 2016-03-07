@@ -38,6 +38,14 @@ class User < ApplicationRecord
     email_verified? && phone_number_verified?
   end
 
+  def opened_hosted_events
+    hosted_events.opened
+  end
+
+  def opened_subscriptions
+    subscriptions.filter({ event: :opened })
+  end
+
   protected
 
   def build_profile

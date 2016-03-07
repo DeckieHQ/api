@@ -1,30 +1,23 @@
-class SubscriptionService
+class ConfirmSubscription
   def initialize(subscription)
     @subscription = subscription
+    @event        = subscription.event
   end
 
-  def confirm
+  def call
     subscription.confirmed!
 
     destroy_pending_subscriptions if event.full?
 
-    true
-  end
-
-  def destroy
-    subscription.destroy
+    subscription
   end
 
   private
 
-  attr_reader :subscription
-
-  def event
-    @event ||= subscription.event
-  end
+  attr_reader :subscription, :event
 
   # TODO: send notification to removed subscriptions.
   def destroy_pending_subscriptions
-    event.subscriptions.pending.destroy_all
+    event.pending_subscriptions.destroy_all
   end
 end

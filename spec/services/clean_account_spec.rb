@@ -1,16 +1,16 @@
 require 'rails_helper'
 
-RSpec.describe AccountService, :type => :service do
-  let(:service) { AccountService.new(user) }
+RSpec.describe CleanAccount do
+  let(:service) { CleanAccount.new(user) }
 
-  describe '#cleanup' do
-    before { service.cleanup }
+  describe '#call' do
+    before { service.call }
 
     context 'when user has hosted events' do
       let(:user) { FactoryGirl.create(:user_with_hosted_events) }
 
       it 'removes its opened hosted events' do
-        expect(user.hosted_events.opened).to be_empty
+        expect(user.opened_hosted_events).to be_empty
       end
 
       it "doesn't remove its closed hosted events" do
@@ -22,9 +22,7 @@ RSpec.describe AccountService, :type => :service do
       let(:user) { FactoryGirl.create(:user, :with_subscriptions) }
 
       it 'removes the subscriptions to opened events' do
-        expect(
-          user.subscriptions.filter({ event: :opened })
-        ).to be_empty
+        expect(user.opened_subscriptions).to be_empty
       end
 
       it "doesn't remove the subscriptions to closed events" do

@@ -47,10 +47,17 @@ FactoryGirl.define do
     end
 
     factory :event_with_subscriptions do
-      transient { subscriptions_count 10 }
+      transient do
+        subscriptions_count 10
+        capacity 15
+      end
 
       before(:create) do |event, evaluator|
-        event.capacity = evaluator.subscriptions_count * 2
+        if evaluator.capacity <= evaluator.subscriptions_count
+          event.capacity = evaluator.subscriptions_count + Faker::Number.between(1, 5)
+        else
+          event.capacity = evaluator.capacity
+        end
       end
 
       after(:create) do |event, evaluator|
