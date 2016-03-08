@@ -100,10 +100,17 @@ RSpec.describe Submission, :type => :model do
       FactoryGirl.create_list(:submission, 5)
     end
 
+    # We need to order by id, somehow joins and pluck combined are messing
+    # with the order of the objects returned when objects have the same
+    # created_at value.
     it "propagates event's scopes" do
+      order = { id: :desc }
+
       expect(
-        Submission.event(:opened).pluck(:event_id)
-      ).to eq(Event.opened.pluck(:id))
+        Submission.event(:opened).order(order).pluck(:event_id)
+      ).to eq(
+        Event.opened.order(order).pluck(:id)
+      )
     end
   end
 
