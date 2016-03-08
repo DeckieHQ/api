@@ -65,9 +65,7 @@ RSpec.describe Include, :type => :model do
     end
 
     def expect_unsuported_error
-      added = errors.added?(:base, :unsupported, accept: accept)
-
-      expect(added).to be_truthy
+      expect(errors).to be_added(:base, :unsupported, accept: accept)
     end
   end
 end

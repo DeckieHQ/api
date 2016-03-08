@@ -1,32 +1,34 @@
 require 'rails_helper'
 
 RSpec.describe User, :type => :model do
-  [
-    :email, :reset_password_token, :email_verification_token,
-    :phone_number_verification_token
-  ].each do |attribute|
-    it { is_expected.to have_db_index(attribute).unique(true) }
+  describe 'Validations' do
+    [
+      :email, :reset_password_token, :email_verification_token,
+      :phone_number_verification_token
+    ].each do |attribute|
+      it { is_expected.to have_db_index(attribute).unique(true) }
+    end
+
+    subject { FactoryGirl.build(:user_with_phone_number) }
+
+    it { is_expected.to have_one(:profile) }
+
+    [
+      :first_name,  :last_name, :birthday, :email, :password, :culture
+    ].each do |attribute|
+      it { is_expected.to validate_presence_of(attribute) }
+    end
+
+    it { is_expected.to validate_length_of(:first_name).is_at_most(64) }
+    it { is_expected.to validate_length_of(:last_name).is_at_most(64) }
+
+    it { is_expected.to validate_plausible_phone(:phone_number) }
+
+    it { is_expected.to validate_date_after(:birthday,  { limit: 100.year.ago }) }
+    it { is_expected.to validate_date_before(:birthday, { limit: 18.year.ago + 1.day }) }
+
+    it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en)) }
   end
-
-  subject { FactoryGirl.build(:user_with_phone_number) }
-
-  it { is_expected.to have_one(:profile) }
-
-  [
-    :first_name,  :last_name, :birthday, :email, :password, :culture
-  ].each do |attribute|
-    it { is_expected.to validate_presence_of(attribute) }
-  end
-
-  it { is_expected.to validate_length_of(:first_name).is_at_most(64) }
-  it { is_expected.to validate_length_of(:last_name).is_at_most(64) }
-
-  it { is_expected.to validate_plausible_phone(:phone_number) }
-
-  it { is_expected.to validate_date_after(:birthday,  { limit: 100.year.ago }) }
-  it { is_expected.to validate_date_before(:birthday, { limit: 18.year.ago + 1.day }) }
-
-  it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en)) }
 
   context 'when created' do
     subject(:user) { FactoryGirl.create(:user) }

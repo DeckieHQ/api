@@ -18,7 +18,7 @@ RSpec.describe Parameters, :type => :model do
       let(:data) { value }
 
       it 'has a validation error on base' do
-        expect(parameters.errors.added?(:base, :missing_data)).to be_truthy
+        expect(parameters.errors).to be_added(:base, :missing_data)
       end
     end
   end
@@ -28,7 +28,7 @@ RSpec.describe Parameters, :type => :model do
       let(:data) { { key => nil } }
 
       it "has a validation error on #{key}" do
-        expect(parameters.errors.added?(key, :blank)).to be_truthy
+        expect(parameters.errors).to be_added(key, :blank)
       end
     end
   end
@@ -37,9 +37,7 @@ RSpec.describe Parameters, :type => :model do
     let(:data) { { type: "#{type}." } }
 
     it 'has a validation error on type' do
-      expect(
-        parameters.errors.added?(:type, :unmatch, { resource_type: type })
-      ).to be_truthy
+      expect(parameters.errors).to be_added(:type, :unmatch, { resource_type: type })
     end
   end
 
@@ -48,9 +46,7 @@ RSpec.describe Parameters, :type => :model do
       let(:data) { { type: type, attributes: value } }
 
       it 'has a validation error on attributes' do
-        expect(
-          parameters.errors.added?(:attributes, :invalid)
-        ).to be_truthy
+        expect(parameters.errors).to be_added(:attributes, :invalid)
       end
     end
   end
