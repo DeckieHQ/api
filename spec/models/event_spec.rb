@@ -10,7 +10,7 @@ RSpec.describe Event, :type => :model do
     it { is_expected.to have_many(:attendees) }
 
     [
-      :title,  :category, :ambiance, :level, :capacity, :begin_at, :end_at,
+      :title,  :category, :ambiance, :level, :capacity, :begin_at,
       :street, :postcode, :city, :country
     ].each do |attribute|
       it { is_expected.to validate_presence_of(attribute) }

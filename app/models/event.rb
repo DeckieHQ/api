@@ -29,7 +29,7 @@ class Event < ApplicationRecord
   }
 
   validates :begin_at, presence: true, date: { after: Proc.new { Time.now } }
-  validates :end_at,   presence: true, date: { after: :begin_at }
+  validates :end_at, date: { after: :begin_at }, allow_nil: true
 
   validates :postcode, presence: true, length: { maximum: 10 }
 
