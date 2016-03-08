@@ -74,3 +74,16 @@ RSpec::Matchers.define :return_authorization_error do |error_code|
     returned_errors?(authenticate, status: '422')
   end
 end
+
+
+RSpec::Matchers.define :return_service_error do |error_code|
+  Result = ImmutableStruct.new(:error)
+
+  match do
+    result = Result.new(error: error_code.to_s)
+
+    expected_errors = ServiceErrorSerializer.new(result).serialize
+
+    response.code == '422' && json_response == expected_errors
+  end
+end

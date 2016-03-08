@@ -59,6 +59,12 @@ class ApplicationController < ActionController::API
     render json: { errors: errors }, status: :bad_request
   end
 
+  def render_service_error(result)
+    errors = ServiceErrorSerializer.new(result).serialize
+
+    render json: errors, status: :unprocessable_entity
+  end
+
   def render_error_for(status)
     render json: {
       errors: [{

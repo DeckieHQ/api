@@ -6,7 +6,7 @@ RSpec.describe 'User verification', :type => :request do
   before do
     SMSDeliveries.use_fake_provider
 
-    put user_verifications_path, params: params, headers: json_headers
+    put user_verification_path, params: params, headers: json_headers
   end
 
   after do
@@ -29,7 +29,7 @@ RSpec.describe 'User verification', :type => :request do
     context 'with invalid type' do
       let(:verification_params) { { type: :invalid } }
 
-      it { is_expected.to return_validation_errors :verification }
+      it { expect_validation_errors_on_complete }
     end
 
     [:email, :phone_number].each do |type|
@@ -50,16 +50,8 @@ RSpec.describe 'User verification', :type => :request do
           it { is_expected.to return_no_content }
 
           it "completes user #{type} verification" do
-            verified_at = user.send("#{type}_verified_at")
-
-            expect(verified_at).to equal_time(Time.now)
+            expect(user).to send("be_#{type}_verified")
           end
-        end
-
-        context "when user #{type} is already verified" do
-          let(:user) { FactoryGirl.create(:"user_with_#{type}_verified") }
-
-          it { is_expected.to return_authorization_error(:"#{type}_already_verified") }
         end
 
         context "when #{type} verification token has expired" do

@@ -16,34 +16,14 @@ class Verification
     @model = model
   end
 
-  # def send_instructions
-  #   return false unless valid? && valid?(:send_instructions)
-  #
-  #   model.send("generate_#{type}_verification_token!")
-  #
-  #   sent = model.send("send_#{type}_verification_instructions")
-  #
-  #   errors.add(:base, :unassigned, base_error_options) unless sent
-  #
-  #   sent
-  # end
-  #
-  # def complete
-  #   return false unless valid? && valid?(:complete)
-  #
-  #   model.send("verify_#{type}!")
-  # end
-
   private
 
   attr_reader :model
 
   def token_must_be_valid
-    model_token = model.send("#{type}_verification_token")
+    model_token = model.send("#{type}_verification_token").to_s
 
-    if token != model_token.to_s || expired?
-      errors.add(:token, :invalid)
-    end
+    errors.add(:token, :invalid) if token != model_token || expired?
   end
 
   def expired?
