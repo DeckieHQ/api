@@ -16,5 +16,17 @@ RSpec.describe 'User account cancel', :type => :request do
     it 'deletes the user' do
       expect(User.find_by(email: user.email)).to_not be_present
     end
+
+    context 'when user has hosted events' do
+      let(:user) { FactoryGirl.create(:user_with_hosted_events) }
+
+      it 'deletes the user opened hosted events' do
+        expect(user.hosted_events.opened).to be_empty
+      end
+
+      it "doesn't delete the user closed hosted events" do
+        expect(user.hosted_events).to_not be_empty
+      end
+    end
   end
 end

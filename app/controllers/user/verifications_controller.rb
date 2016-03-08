@@ -1,9 +1,9 @@
 class User::VerificationsController < ApplicationController
   before_action :authenticate!
 
-  before_action -> { check_parameters_for :verifications }
-
   def create
+    authorize verification if verification.valid?
+
     unless verification.send_instructions
       return render_validation_errors(verification)
     end
@@ -11,6 +11,8 @@ class User::VerificationsController < ApplicationController
   end
 
   def update
+    authorize verification if verification.valid?
+
     unless verification.complete
       return render_validation_errors(verification)
     end
@@ -24,6 +26,6 @@ class User::VerificationsController < ApplicationController
   end
 
   def verification_params
-    resource_attributes.permit(:type, :token)
+    attributes(:verifications).permit(:type, :token)
   end
 end

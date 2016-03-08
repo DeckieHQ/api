@@ -6,8 +6,17 @@ RSpec.describe Event, :type => :model do
 
     it { is_expected.to belong_to(:host) }
 
-    it { is_expected.to have_many(:subscriptions) }
-    it { is_expected.to have_many(:attendees) }
+    it { is_expected.to have_many(:submissions) }
+
+    it do
+      is_expected.to have_many(:confirmed_submissions).conditions(status: :confirmed)
+    end
+
+    it do
+      is_expected.to have_many(:pending_submissions).conditions(status: :pending)
+    end
+
+    it { is_expected.to have_many(:attendees).through(:confirmed_submissions) }
 
     [
       :title,  :category, :ambiance, :level, :capacity, :begin_at,
@@ -28,9 +37,16 @@ RSpec.describe Event, :type => :model do
     end
 
     it do
-      is_expected.to validate_numericality_of(:capacity)
-        .is_greater_than(0)
-        .is_less_than(1000)
+      is_expected.to validate_numericality_of(:capacity).only_integer
+        .is_greater_than(0).is_less_than(1000)
+    end
+
+    context 'when event has attendees' do
+      subject(:event) { FactoryGirl.create(:event_with_attendees) }
+
+      it { is_expected.to_not allow_value(event.attendees_count - 1).for(:capacity) }
+
+      it { is_expected.to allow_value(event.attendees_count).for(:capacity) }
     end
 
     it do
@@ -40,6 +56,8 @@ RSpec.describe Event, :type => :model do
     it do
       is_expected.to validate_date_after(:end_at, { limit: :begin_at , on: :second })
     end
+
+    it { is_expected.to_not allow_value(nil).for(:auto_accept) }
 
     {
       title:       128,
@@ -88,39 +106,30 @@ RSpec.describe Event, :type => :model do
   end
 
   context 'when destroyed' do
-    subject(:event) { FactoryGirl.create(:event_with_attendees) }
+    subject(:event) { FactoryGirl.create(:event_with_submissions) }
 
     before do
       event.destroy
     end
 
-    it 'removes its attendees' do
-      expect(event.attendees).to be_empty
+    it 'removes its submissions' do
+      expect(event.submissions).to be_empty
     end
   end
 
-  describe '#closed?' do
-    subject(:event) { FactoryGirl.create(:event) }
+  [:full, :closed].each do |state|
+    method = "#{state}?"
 
-    let(:closed?) { event.closed? }
+    describe "##{method}" do
 
-    before do
-      closed?
-    end
+      subject(:method) { FactoryGirl.create(:event).send(method) }
 
-    it { expect(closed?).to be_falsy }
+      it { is_expected.to be_falsy }
 
-    it 'has no error' do
-      expect(event.errors).to be_empty
-    end
+      context "when event is #{state}" do
+        subject(:method) { FactoryGirl.create(:"event_#{state}").send(method) }
 
-    context 'when event is closed' do
-      subject(:event) { FactoryGirl.create(:event_closed) }
-
-      it { expect(closed?).to be_truthy }
-
-      it 'has an error on base' do
-        expect(event.errors.added?(:base, :closed)).to be_truthy
+        it { is_expected.to be_truthy }
       end
     end
   end

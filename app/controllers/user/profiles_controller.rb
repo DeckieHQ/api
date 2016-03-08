@@ -1,8 +1,6 @@
 class User::ProfilesController < ApplicationController
   before_action :authenticate!
 
-  before_action -> { check_parameters_for :profiles }, only: :update
-
   def show
     render json: profile
   end
@@ -21,6 +19,6 @@ class User::ProfilesController < ApplicationController
   end
 
   def profile_params
-    resource_attributes.permit(:nickname, :short_description, :description)
+    attributes(:profiles).permit(:nickname, :short_description, :description)
   end
 end

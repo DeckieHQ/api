@@ -3,8 +3,6 @@ class User::RegistrationsController < Devise::RegistrationsController
 
   before_action :authenticate!, only: :show
 
-  before_action -> { check_parameters_for :users }, only: [:create, :update]
-
   def show
     render json: current_user
   end
@@ -22,24 +20,26 @@ class User::RegistrationsController < Devise::RegistrationsController
       # If current_password is invalid, devise is not setting properly
       # the user (user.valid? will be true but errors will still appear in
       # user.errors).
-      return render_validation_errors(user) unless user.errors.empty?
+      return render_validation_errors(user) if user.errors.present?
 
       render json: user and return
     end
   end
 
   def destroy
+    CleanAccount.new(current_user).call
+
     super { head :no_content and return }
   end
 
   protected
 
   def sign_up_params
-    resource_attributes.permit(shared_attributes)
+    attributes(:users).permit(shared_attributes)
   end
 
   def account_update_params
-    resource_attributes.permit(shared_attributes.push(:current_password))
+    attributes(:users).permit(shared_attributes.push(:current_password))
   end
 
   def shared_attributes

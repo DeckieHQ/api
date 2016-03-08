@@ -5,10 +5,6 @@ RSpec.shared_examples 'an action with sorting' do |owner_name, collection_name, 
 
   let(:collection) { send(owner_name).send(collection_name) }
 
-  let(:sorted_collection) do
-    collection.order(sort.params).pluck(:id).take(page.size)
-  end
-
   let(:params) { Serialize.query(sort: sort_attributes) }
 
   let(:sort) { Sort.new(sort_attributes, accept: accept) }
@@ -20,14 +16,16 @@ RSpec.shared_examples 'an action with sorting' do |owner_name, collection_name, 
   end
 
   context 'with supported sort' do
-    let(:sort_attributes) { accept.shuffle.map(&:to_s).join(',') }
+    let(:sort_attributes) { accept.shuffle.join(',') }
+
+    let(:sorted_collection) do
+      collection.joins(sort.joins).reorder(sort.params).paginate(page.params)
+    end
 
     it { is_expected.to return_status_code 200 }
 
     it "returns a sorted #{owner_name} #{collection_name} list" do
-      expect(json_response[:data].pluck(:id)).to eq(
-        collection.order(sort.params).pluck(:id).take(page.size).map(&:to_s)
-      )
+      expect(response.body).to equal_serialized(sorted_collection)
     end
   end
 end

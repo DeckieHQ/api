@@ -24,4 +24,12 @@ module Fake
       %w(beginner intermediate advanced expert).sample
     end
   end
+
+  module Submission
+    extend self
+
+    def status
+      [:pending, :confirmed].sample
+    end
+  end
 end

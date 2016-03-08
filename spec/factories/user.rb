@@ -56,15 +56,31 @@ FactoryGirl.define do
 
         factory :user_with_hosted_events do
           transient do
-            events_count 5
-            closed_count 2
+            events_count        5
+            events_closed_count 2
           end
 
           after(:create) do |user, e|
-            create_list(:event, e.events_count - e.closed_count, host: user.profile)
-            create_list(:event_closed, e.closed_count, host: user.profile)
+            create_list(:event, e.events_count - e.events_closed_count, host: user.profile)
+            create_list(:event_closed, e.events_closed_count, host: user.profile)
           end
         end
+      end
+    end
+
+    trait :with_submissions do
+      transient do
+        submissions_count        5
+        submissions_closed_count 2
+      end
+
+      after(:create) do |user, e|
+        create_list(:submission,
+          e.submissions_count - e.submissions_closed_count, profile: user.profile
+        )
+        create_list(
+          :submission, e.submissions_closed_count, :to_event_closed, profile: user.profile
+        )
       end
     end
   end

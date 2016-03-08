@@ -4,7 +4,7 @@ class EventSerializer < ActiveModel::Serializer
              :ambiance,
              :level,
              :capacity,
-             :invite_only,
+             :auto_accept,
              :description,
              :begin_at,
              :end_at,

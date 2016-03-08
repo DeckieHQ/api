@@ -32,15 +32,14 @@ en:
 
   activerecord:
     errors:
-      models:
-        user:
-          attributes:
-            base:
-              unverified: 'User must be verified.'
-        event:
-          attributes:
-            base:
-              closed: 'Event is closed.'
+      messages:
+        user_unverified: 'User must be verified.'
+        subscribtion_already_exist: 'Profile already subscribed.'
+        subscribtion_already_confirmed: 'Submission already confirmed.'
+        event_full: 'Event is full.'
+        event_closed: 'Event is closed.'
+        email_already_verified: 'Email is already verified.'
+        phone_number_already_verified: 'Email is already verified.'
   activemodel:
     errors:
       models:
@@ -58,9 +57,11 @@ en:
           attributes:
             base:
               unsupported: 'Unsupported filters. Must be in %{accept}'
+        include:
+          attributes:
+            base:
+              unsupported: 'Unsupported include. Must be in %{accept}'
         verification:
           attributes:
             base:
-              unspecified: "%{target} doesn't have a %{type}."
               unassigned: "%{target} %{type} is unassigned."
-              already_verified: "%{target} %{type} is already verified."

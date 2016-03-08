@@ -70,7 +70,7 @@ RSpec.describe User, :type => :model do
     end
 
     context 'when destroyed' do
-      subject(:user) { FactoryGirl.create(:user_with_hosted_events) }
+      subject(:user) { FactoryGirl.create(:user) }
 
       let(:profile) { user.profile }
 
@@ -80,14 +80,6 @@ RSpec.describe User, :type => :model do
 
       it 'unlinks its profile' do
         expect(profile.reload).to have_attributes({ user_id: nil })
-      end
-
-      it 'removes its opened events' do
-        expect(user.hosted_events.opened).to be_empty
-      end
-
-      it "doesn't remove its closed events" do
-        expect(user.hosted_events).to_not be_empty
       end
     end
   end
@@ -103,32 +95,42 @@ RSpec.describe User, :type => :model do
     token_type: :pin
 
   describe '#verified?' do
-    let(:verified?) { user.verified? }
+    subject(:verified?) { user.verified? }
 
-    before do
-      verified?
-    end
+    before { verified? }
 
     [:email, :phone_number].each do |attribute|
       context "when user #{attribute} is not verified" do
-        subject(:user) { FactoryGirl.create(:"user_with_#{attribute}_verified") }
+        let(:user) { FactoryGirl.create(:"user_with_#{attribute}_verified") }
 
-        it { expect(verified?).to be_falsy }
-
-        it 'has an error on base' do
-          expect(user.errors.added?(:base, :unverified)).to be_truthy
-        end
+        it { is_expected.to be_falsy }
       end
     end
 
     context 'when user is verified' do
-      subject(:user) { FactoryGirl.create(:user_verified) }
+      let(:user) { FactoryGirl.create(:user_verified) }
 
-      it { expect(verified?).to be_truthy }
+      it { is_expected.to be_truthy }
+    end
+  end
 
-      it 'has no error' do
-        expect(user.errors).to be_empty
-      end
+  describe '#opened_hosted_events' do
+    let(:user) { FactoryGirl.create(:user_with_hosted_events) }
+
+    subject { user.opened_hosted_events }
+
+    it 'returns the user opened hosted events' do
+      is_expected.to eq(user.hosted_events.opened)
+    end
+  end
+
+  describe '#opened_submissions' do
+    let(:user) { FactoryGirl.create(:user, :with_submissions) }
+
+    subject { user.opened_submissions }
+
+    it 'returns the user submissions to opened events' do
+      is_expected.to eq(user.submissions.filter({ event: :opened }))
     end
   end
 end

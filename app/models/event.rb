@@ -3,9 +3,13 @@ class Event < ApplicationRecord
 
   belongs_to :host, class_name: 'Profile', foreign_key: 'profile_id'
 
-  has_many :subscriptions, dependent: :destroy
+  has_many :submissions, dependent: :destroy
 
-  has_many :attendees, through: :subscriptions, source: :profile
+  has_many :confirmed_submissions, -> { confirmed }, class_name: 'Submission'
+
+  has_many :pending_submissions, -> { pending }, class_name: 'Submission'
+
+  has_many :attendees, through: :confirmed_submissions, source: :profile
 
   validates :title, :street, presence: true, length: { maximum: 128 }
 
@@ -21,12 +25,10 @@ class Event < ApplicationRecord
     in: %w(beginner intermediate advanced expert)
   }
 
-  validates :capacity, presence: true, numericality: {
-    greater_than: 0, less_than: 1000
+  validates :capacity, presence: true, numericality: { only_integer: true,
+    greater_than: 0, less_than: 1000, greater_than_or_equal_to: ->(e) { e.attendees_count }
   }
-  validates :invite_only, inclusion: {
-    in: [true, false]
-  }
+  validates :auto_accept, inclusion: { in: [true, false] }
 
   validates :begin_at, presence: true, date: { after: Proc.new { Time.now } }
   validates :end_at, date: { after: :begin_at }, allow_nil: true
@@ -52,7 +54,11 @@ class Event < ApplicationRecord
   end
 
   def closed?
-    errors.add(:base, :closed) if begin_at <= Time.now
+    begin_at <= Time.now
+  end
+
+  def full?
+    attendees_count == capacity
   end
 
   protected

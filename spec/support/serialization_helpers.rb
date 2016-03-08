@@ -3,11 +3,13 @@ class Serialized
     @serializer = serializer
   end
 
+  def relationships
+    content['data']['relationships']
+  end
+
   def attributes
     content['data']['attributes']
   end
-
-  private
 
   def content
     @content ||= JSON.parse(
@@ -28,7 +30,7 @@ module Serialize
     }.to_json
   end
 
-  def query(page: nil, filters: nil, sort: nil)
+  def query(page: nil, filters: nil, sort: nil, include: nil)
     query = {}
     if page
       query[:page] = { number: page.number, size: page.size }
@@ -38,6 +40,9 @@ module Serialize
     end
     if sort
       query[:sort] = sort
+    end
+    if include
+      query[:include] = include
     end
     query
   end

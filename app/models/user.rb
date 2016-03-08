@@ -4,14 +4,13 @@ class User < ApplicationRecord
   has_one :profile, dependent: :nullify
 
   delegate :hosted_events, to: :profile
+  delegate :submissions, to: :profile
 
   has_secure_token :authentication_token
 
   after_create :build_profile
 
   after_update :update_profile, if: -> { first_name_changed? || last_name_changed? }
-
-  before_destroy :destroy_opened_events
 
   acts_as_verifiable :email,
     delivery: UserMailer, token: -> { Token.friendly }
@@ -36,10 +35,15 @@ class User < ApplicationRecord
   validates_plausible_phone :phone_number
 
   def verified?
-    unless verified = email_verified? && phone_number_verified?
-      errors.add(:base, :unverified)
-    end
-    verified
+    email_verified? && phone_number_verified?
+  end
+
+  def opened_hosted_events
+    hosted_events.opened
+  end
+
+  def opened_submissions
+    submissions.filter({ event: :opened })
   end
 
   protected
@@ -50,10 +54,6 @@ class User < ApplicationRecord
 
   def update_profile
     profile.update(display_name: display_name)
-  end
-
-  def destroy_opened_events
-    hosted_events.opened.destroy_all
   end
 
   def display_name

@@ -46,6 +46,9 @@ gem 'will_paginate', '~> 3.1'
 # Utility
 gem 'wannabe_bool', '~> 0.5.0'
 
+# Authorizations
+gem 'pundit', '~> 1.1'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'
@@ -64,6 +67,7 @@ group :test do
   gem 'factory_girl_rails', '~> 4.5'
   gem 'webmock', '~> 1.22'
   gem 'faker', '~> 1.6'
+  gem 'pundit-matchers', '~> 1.0'
 end
 
 group :production do

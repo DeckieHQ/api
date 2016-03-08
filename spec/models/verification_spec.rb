@@ -35,32 +35,12 @@ RSpec.describe Verification, :type => :model do
       context "when type is #{attribute}" do
         let(:verification) { Verification.new({ type: attribute }, model: user) }
 
-        context 'when model has no attribute to verify' do
-          let(:user) do
-            FactoryGirl.create(:user) do |u|
-              u.send("#{attribute}=", nil)
-            end
-          end
-
-          include_examples 'fails to send verification for', attribute
-
-          it { expect_validation_error_on(:base, :unspecified, base_options) }
-        end
-
         context "when #{attribute} is unassigned" do
           let(:user_send_instructions?) { false }
 
           it { expect(sent).to be_falsy }
 
           it { expect_validation_error_on(:base, :unassigned, base_options) }
-        end
-
-        context "when #{attribute} is already verified" do
-          let(:user) { FactoryGirl.create(:"user_with_#{attribute}_verified") }
-
-          include_examples 'fails to send verification for', attribute
-
-          it { expect_validation_error_on(:base, :already_verified, base_options) }
         end
 
         context 'when everything is valid' do
@@ -101,15 +81,6 @@ RSpec.describe Verification, :type => :model do
       context "when type is #{attribute}" do
         let(:verification) do
           Verification.new({ type: attribute, token: token }, model: user)
-        end
-
-        context 'when already verified' do
-          let(:user)  { FactoryGirl.create(:"user_with_#{attribute}_verified") }
-          let(:token) {}
-
-          include_examples 'fails to complete verification for', attribute
-
-          it { expect_validation_error_on(:base, :already_verified, base_options) }
         end
 
         context 'when verification token is invalid' do

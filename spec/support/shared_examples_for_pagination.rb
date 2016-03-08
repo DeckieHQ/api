@@ -12,6 +12,8 @@ RSpec.shared_examples 'an action with pagination' do |owner_name, collection_nam
     FactoryGirl.build(:page, number: number, size: size)
   end
 
+  let(:params) { Serialize.query(page: page) }
+
   it { is_expected.to return_status_code 200 }
 
   it "returns the #{owner_name} paginated #{collection_name} list" do
