@@ -45,6 +45,7 @@ gem 'will_paginate', '~> 3.1'
 
 # Utility
 gem 'wannabe_bool', '~> 0.5.0'
+gem 'immutable-struct', '~> 2.2'
 
 # Authorizations
 gem 'pundit', '~> 1.1'

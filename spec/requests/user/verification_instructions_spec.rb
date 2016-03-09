@@ -3,10 +3,12 @@ require 'rails_helper'
 RSpec.describe 'User verification instructions', :type => :request do
   let(:params) { Serialize.params(verification_params, type: :verifications) }
 
-  before do
-    SMSDeliveries.use_fake_provider
+  let(:sms_status) { 200 }
 
-    post user_verifications_path, params: params, headers: json_headers
+  before do
+    SMSDeliveries.use_fake_provider(status: sms_status)
+
+    post user_verification_path, params: params, headers: json_headers
   end
 
   after do
@@ -31,15 +33,15 @@ RSpec.describe 'User verification instructions', :type => :request do
 
       it { is_expected.to return_validation_errors :verification }
 
-      it { is_expected.not_to have_sent_mail }
-      it { is_expected.not_to have_sent_sms  }
+      it { is_expected.to_not have_sent_mail }
+      it { is_expected.to_not have_sent_sms  }
     end
 
     { email: 'Mail', phone_number: 'SMS' }.each do |type, delivery|
       context "with type #{type}" do
         let(:verification_params) { { type: type } }
 
-        context "when user #{type} is not verified" do
+        context "when user's #{type} is not verified" do
           let(:user) { FactoryGirl.create(:user_with_phone_number) }
 
           before do
@@ -48,8 +50,8 @@ RSpec.describe 'User verification instructions', :type => :request do
 
           it { is_expected.to return_no_content }
 
-          it "verifies the user" do
-            expect(user).to_not have_unverified type
+          it "generates verification token for the user" do
+            expect(user).to_not have_unverified(type)
           end
 
           it "sends a #{delivery} with verification instructions" do
@@ -57,19 +59,27 @@ RSpec.describe 'User verification instructions', :type => :request do
 
             carrier = "User#{delivery}er".constantize
 
-            expect(last_delivery).to send("equal_#{delivery.downcase}",
+            expect(last_delivery).to send(
+              "equal_#{delivery.downcase}",
               carrier.send("#{type}_verification_instructions", user)
             )
           end
+
+          if type == :phone_number
+            context "when user's phone_number is unassigned" do
+              let(:sms_status) { 400 }
+
+              it { is_expected.to return_service_error(:phone_number_unassigned) }
+            end
+          end
         end
 
-        context "when user #{type} is already verified" do
+        context "when user's #{type} is already verified" do
           let(:user) { FactoryGirl.create(:"user_with_#{type}_verified") }
 
           it { is_expected.to return_authorization_error(:"#{type}_already_verified") }
 
-          it { is_expected.not_to have_sent_mail }
-          it { is_expected.not_to have_sent_sms  }
+          it { is_expected.to_not send("have_sent_#{delivery.downcase}") }
         end
       end
     end

@@ -44,7 +44,7 @@ RSpec.describe UserMailer do
 
     it 'assigns @email_verification_url' do
       expect(mail.body.encoded).to include(
-        user_verifications_url << "/email?token=#{user.email_verification_token}"
+        user_verification_url << "/email?token=#{user.email_verification_token}"
       )
     end
   end

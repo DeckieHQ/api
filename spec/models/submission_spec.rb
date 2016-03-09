@@ -1,17 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe Submission, :type => :model do
-  it { is_expected.to have_db_index(:event_id) }
-  it { is_expected.to have_db_index(:profile_id) }
+  describe 'Validations' do
+    it { is_expected.to have_db_index(:event_id) }
+    it { is_expected.to have_db_index(:profile_id) }
 
-  it { is_expected.to have_db_index([:event_id, :profile_id]).unique(true) }
+    it { is_expected.to have_db_index([:event_id, :profile_id]).unique(true) }
 
-  it { is_expected.to belong_to(:event) }
-  it { is_expected.to belong_to(:profile) }
-
-  let(:submission) { FactoryGirl.build(:submission, status: status) }
+    it { is_expected.to belong_to(:event) }
+    it { is_expected.to belong_to(:profile) }
+  end
 
   context 'when created' do
+    subject(:submission) { FactoryGirl.build(:submission, status: status) }
+
     context 'with a confirmed status' do
       let(:status) { :confirmed }
 
@@ -30,12 +32,10 @@ RSpec.describe Submission, :type => :model do
   end
 
   context 'when updated' do
+    subject(:submission) { FactoryGirl.create(:submission, status: status) }
+
     context 'when pending' do
       let(:status) { :pending }
-
-      before do
-        submission.save
-      end
 
       context 'with a confirmed status' do
         it 'increases the event attendees_count' do
@@ -46,9 +46,7 @@ RSpec.describe Submission, :type => :model do
   end
 
   context 'when destroyed' do
-    before do
-      submission.save
-    end
+    subject(:submission) { FactoryGirl.create(:submission, status: status) }
 
     context 'when confirmed' do
       let(:status) { :confirmed }

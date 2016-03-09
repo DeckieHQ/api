@@ -11,20 +11,18 @@ RSpec.describe VerificationPolicy do
         let(:user) { FactoryGirl.create(:user_with_phone_number) }
 
         it { is_expected.to permit_action(:create) }
-        it { is_expected.to permit_action(:update) }
       end
 
       context "being a user with verified #{attribute}" do
         let(:user) { FactoryGirl.create(:"user_with_#{attribute}_verified") }
 
-        [:create, :update].each do |action|
-          it { is_expected.to forbid_action(action) }
 
-          it do
-            is_expected.to have_authorization_error(
-              :"#{attribute}_already_verified", on: action
-            )
-          end
+        it { is_expected.to forbid_action(:create) }
+
+        it do
+          is_expected.to have_authorization_error(
+            :"#{attribute}_already_verified", on: :create
+          )
         end
       end
 
@@ -35,14 +33,12 @@ RSpec.describe VerificationPolicy do
           end
         end
 
-        [:create, :update].each do |action|
-          it { is_expected.to forbid_action(action) }
+        it { is_expected.to forbid_action(:create) }
 
-          it do
-            is_expected.to have_authorization_error(
-              :"#{attribute}_unspecified", on: action
-            )
-          end
+        it do
+          is_expected.to have_authorization_error(
+            :"#{attribute}_unspecified", on: :create
+          )
         end
       end
     end

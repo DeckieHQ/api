@@ -28,7 +28,7 @@ end
 
 RSpec::Matchers.define :equal_mail do |expected|
   match do |actual|
-    attributes(actual) == attributes(expected)
+    actual != nil && attributes(actual) == attributes(expected)
   end
 
   def attributes(mail)

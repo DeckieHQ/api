@@ -5,10 +5,6 @@ class VerificationPolicy < ApplicationPolicy
     !user_attribute_unspecified? && !user_attribute_verified?
   end
 
-  def update?
-    create?
-  end
-
   private
 
   def user_attribute_verified?

@@ -12,7 +12,7 @@ class UserMailer < ApplicationMailer
   def email_verification_instructions(user)
     @user = user
     @email_verification_url = front_link_for(
-      action: :verifications, path: '/email',
+      action: :verification, path: '/email',
       params: { token: user.email_verification_token }
     )
     mail to: user.email, subject: I18n.t('verifications.email.subject')
