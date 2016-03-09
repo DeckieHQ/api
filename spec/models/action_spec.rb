@@ -27,7 +27,7 @@ RSpec.describe Action, :type => :model do
   end
 
   describe 'Validations' do
-    it { is_expected.to belong_to(:actor)  }
+    it { is_expected.to belong_to(:actor).with_foreign_key(:profile_id) }
     it { is_expected.to belong_to(:target) }
   end
 end

@@ -4,19 +4,24 @@ RSpec.describe Event, :type => :model do
   describe 'Validations' do
     it { is_expected.to have_db_index(:profile_id) }
 
-    it { is_expected.to belong_to(:host) }
+    it { is_expected.to belong_to(:host).with_foreign_key('profile_id') }
 
     it { is_expected.to have_many(:submissions) }
 
     it do
-      is_expected.to have_many(:confirmed_submissions).conditions(status: :confirmed)
+      is_expected.to have_many(:confirmed_submissions)
+        .conditions(status: :confirmed).class_name('Submission')
     end
 
     it do
-      is_expected.to have_many(:pending_submissions).conditions(status: :pending)
+      is_expected.to have_many(:pending_submissions)
+        .conditions(status: :pending).class_name('Submission')
     end
 
-    it { is_expected.to have_many(:attendees).through(:confirmed_submissions) }
+    it do
+      is_expected.to have_many(:attendees)
+        .through(:confirmed_submissions).source(:profile)
+    end
 
     it { is_expected.to have_many(:actions) }
 

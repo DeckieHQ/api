@@ -7,7 +7,7 @@ class Event < ApplicationRecord
 
   has_many :confirmed_submissions, -> { confirmed }, class_name: 'Submission'
 
-  has_many :pending_submissions, -> { pending }, class_name: 'Submission'
+  has_many :pending_submissions,   -> { pending },   class_name: 'Submission'
 
   has_many :attendees, through: :confirmed_submissions, source: :profile
 

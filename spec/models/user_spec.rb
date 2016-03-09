@@ -11,7 +11,9 @@ RSpec.describe User, :type => :model do
 
     subject { FactoryGirl.build(:user_with_phone_number) }
 
-    it { is_expected.to have_one(:profile) }
+    it { is_expected.to have_one(:profile).dependent(:nullify) }
+
+    it { is_expected.to have_many(:notifications).dependent(:destroy) }
 
     [
       :first_name,  :last_name, :birthday, :email, :password, :culture
@@ -69,20 +71,6 @@ RSpec.describe User, :type => :model do
 
     it 'is not verified' do
       expect(user).not_to be_verified
-    end
-
-    context 'when destroyed' do
-      subject(:user) { FactoryGirl.create(:user) }
-
-      let(:profile) { user.profile }
-
-      before do
-        user.destroy
-      end
-
-      it 'unlinks its profile' do
-        expect(profile.reload).to have_attributes({ user_id: nil })
-      end
     end
   end
 
