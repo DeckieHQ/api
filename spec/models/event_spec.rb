@@ -18,6 +18,8 @@ RSpec.describe Event, :type => :model do
 
     it { is_expected.to have_many(:attendees).through(:confirmed_submissions) }
 
+    it { is_expected.to have_many(:actions) }
+
     [
       :title,  :category, :ambiance, :level, :capacity, :begin_at,
       :street, :postcode, :city, :country

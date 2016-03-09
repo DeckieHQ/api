@@ -11,6 +11,8 @@ class Event < ApplicationRecord
 
   has_many :attendees, through: :confirmed_submissions, source: :profile
 
+  has_many :actions, as: :target
+
   validates :title, :street, presence: true, length: { maximum: 128 }
 
   validates :description, length: { maximum: 8192 }
