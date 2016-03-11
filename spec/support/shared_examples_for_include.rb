@@ -21,18 +21,34 @@ RSpec.shared_examples 'an action with include' do |owner_name, collection_name, 
     it { is_expected.to return_status_code 200 }
 
     accept.each do |relationship|
-      relationship_type = relationship.pluralize
-
-      it "returns the included #{relationship_type}" do
-        data = json_response[:included].select do |member|
-          member[:type] == relationship_type
-        end
-        expect({ data: data }.to_json).to equal_serialized(
-          collection.map(&:"#{relationship}")
-          # This hasn't been tested on many-to-many relationships.
-          # I guess adding .flatten should do the trick.
+      it "returns the included #{relationship.pluralize}" do
+        expect(
+          { data: included_relations_for(relationship) }.to_json
+        ).to equal_serialized(
+          collection_relations_for(relationship)
         )
       end
+    end
+  end
+
+  def included_relations_for(relationship)
+    json_response[:included].select do |member|
+      member[:type] == relation_type(relationship)
+    end
+  end
+
+  # Returns the type of the resource of the relation.
+  # e.g. Event host is a profile object, including 'event.host' should return
+  # objects with type 'profiles' instead of 'hosts'.
+  def relation_type(relationship)
+    collection_relations_for(relationship).first.class.name.downcase.pluralize
+  end
+
+  # This doesn't support hasMany relationships as we should never accept
+  # hasMany relationships as a valid include.
+  def collection_relations_for(relationship)
+    relationship.split('.').inject(collection) do |relations, relation_name|
+      relations.map(&:"#{relation_name}")
     end
   end
 end

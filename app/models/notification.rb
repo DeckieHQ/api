@@ -1,4 +1,6 @@
 class Notification < ApplicationRecord
+  include Filterable
+
   self.inheritance_column = nil
 
   belongs_to :user

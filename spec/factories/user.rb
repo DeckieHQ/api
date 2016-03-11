@@ -83,5 +83,15 @@ FactoryGirl.define do
         )
       end
     end
+
+    trait :with_notifications do
+      transient do
+        notifications_count 5
+      end
+
+      after(:create) do |user, e|
+        create_list(:notification, e.notifications_count, user: user)
+      end
+    end
   end
 end

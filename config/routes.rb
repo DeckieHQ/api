@@ -11,9 +11,10 @@ Rails.application.routes.draw do
 
         resource  :profile,       only: [:show,   :update]
         resource  :password,      only: [:create, :update]
-        resource  :verification, only: [:create, :update]
+        resource  :verification,  only: [:create, :update]
         resources :hosted_events, only: [:index,  :create]
-        resources :submissions, only: :index
+        resources :submissions,   only: :index
+        resources :notifications, only: :index
       end
     end
   end

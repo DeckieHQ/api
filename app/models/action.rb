@@ -1,4 +1,6 @@
 class Action < ApplicationRecord
+  self.inheritance_column = nil
+
   belongs_to :actor, class_name: 'Profile', foreign_key: 'profile_id'
 
   belongs_to :target, polymorphic: true
