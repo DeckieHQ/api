@@ -6,7 +6,8 @@ class CreateNotifications < ActiveRecord::Migration[5.0]
 
       t.index [:user_id, :action_id], unique: true
 
-      t.boolean :sent,   null: false, default: false
+      t.string :type, null: false
+
       t.boolean :viewed, null: false, default: false
 
       t.timestamps null: false

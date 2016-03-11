@@ -32,4 +32,20 @@ module Fake
       [:pending, :confirmed].sample
     end
   end
+
+  module Action
+    extend self
+
+    def type
+      %w(join create).sample
+    end
+  end
+
+  module Notification
+    extend self
+
+    def viewed
+      [true, false].sample
+    end
+  end
 end
