@@ -22,7 +22,9 @@ RSpec::Matchers.define :equal_serialized do |object|
     expected = resource.to_json({
       serialization_context: SerializationContext.new(request)
     })
-    actual == expected
+    result = JSON.parse(actual).except('meta').to_json
+
+    result == expected
   end
 end
 
