@@ -14,6 +14,16 @@ RSpec::Matchers.define :have_serialized_attributes do |attributes|
   end
 end
 
+RSpec::Matchers.define :have_relationship_link_for do |attribute|
+  match do |actual|
+    url_helpers = Rails.application.routes.url_helpers
+    link = actual.relationships[attribute.to_s]["links"]["related"]
+    type = actual.type.singularize
+
+    link == url_helpers.public_send(:"#{type}_#{attribute}_url")
+  end
+end
+
 RSpec::Matchers.define :have_unverified do |attribute|
   match do |actual|
     actual.send("#{attribute}_verification_token").nil? &&

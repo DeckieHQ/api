@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  default_url_options host: 'www.deckie.io'
+  default_url_options host: 'http://0.0.0.0:8080'
 
   # Removes all routes first in order to remove routes unnecessary for an API.
   devise_for :users, skip: :all
@@ -13,7 +13,6 @@ Rails.application.routes.draw do
         resource  :preferences,   only: [:show,   :update]
         resource  :password,      only: [:create, :update]
         resource  :verification,  only: [:create, :update]
-
         resources :hosted_events, only: [:index,  :create]
         resources :submissions,   only: :index
         resources :notifications, only: :index
