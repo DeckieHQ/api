@@ -10,6 +10,8 @@ class User < ApplicationRecord
 
   has_secure_token :authentication_token
 
+  before_validation :format_subscriptions
+
   after_create :build_profile
 
   after_update :update_profile, if: -> { first_name_changed? || last_name_changed? }
@@ -36,6 +38,8 @@ class User < ApplicationRecord
 
   validates_plausible_phone :phone_number
 
+  validate :subscriptions_must_be_supported
+
   def verified?
     email_verified? && phone_number_verified?
   end
@@ -60,5 +64,17 @@ class User < ApplicationRecord
 
   def display_name
     "#{first_name} #{last_name.capitalize.chr}"
+  end
+
+  def format_subscriptions
+    self.subscriptions = (subscriptions || []).uniq
+  end
+
+  def subscriptions_must_be_supported
+    subscriptions.each do |subscription|
+      unless %w(event-update event-subscribe).include?(subscription)
+        errors.add(:subscriptions, :unsupported)
+      end
+    end
   end
 end

@@ -36,6 +36,8 @@ class CreateUsers < ActiveRecord::Migration[5.0]
       t.inet     :current_sign_in_ip
       t.inet     :last_sign_in_ip
 
+      t.text :subscriptions, array: true, default: []
+
       t.timestamps null: false
     end
 
