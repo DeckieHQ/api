@@ -4,7 +4,7 @@ class Page
   attr_accessor :number, :size
 
   validates :number, numericality: { greater_than: 0 }
-  validates :size,   numericality: { greater_than: 0, less_than_or_equal_to: 50 }
+  validates :size,   numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 50 }
 
   def initialize(attributes = {})
     attributes = {} unless attributes.kind_of?(Hash)
