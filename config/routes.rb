@@ -26,4 +26,8 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resources :notifications, only: :show do
+    post 'view', on: :member
+  end
 end
