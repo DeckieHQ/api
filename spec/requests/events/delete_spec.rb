@@ -42,6 +42,10 @@ RSpec.describe 'Event delete', :type => :request do
       let(:authenticate) { FactoryGirl.create(:user) }
 
       it { is_expected.to return_forbidden }
+
+      it "doesn't destroy the event" do
+        expect(event.reload).to be_persisted
+      end
     end
   end
 end

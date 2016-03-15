@@ -25,6 +25,14 @@ RSpec::Matchers.define :have_relationship_link_for do |attribute, object|
   end
 end
 
+RSpec::Matchers.define :have_been_changed do
+  match do |actual|
+    expected = actual.to_json
+
+    actual.reload.to_json != expected
+  end
+end
+
 RSpec::Matchers.define :have_unverified do |attribute|
   match do |actual|
     actual.send("#{attribute}_verification_token").nil? &&

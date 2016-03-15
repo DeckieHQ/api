@@ -7,7 +7,7 @@ RSpec.describe 'Profile update', :type => :request do
   let(:profile_update)        { FactoryGirl.build(:profile) }
   let(:profile_update_params) { profile_update.attributes }
 
-  let(:permited_params) { profile_update.slice(:nickname) }
+  let(:permited_params) { profile_update.slice(:nickname, :short_description, :description) }
 
   before do
     put profile_path(profile), params: params, headers: json_headers
@@ -49,7 +49,7 @@ RSpec.describe 'Profile update', :type => :request do
       it { is_expected.to return_forbidden }
 
       it "doesn't update the profile" do
-        expect(profile.reload).to_not have_attributes(permited_params)
+        expect(profile).to_not have_been_changed
       end
     end
 
