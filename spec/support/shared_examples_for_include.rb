@@ -1,9 +1,18 @@
 RSpec.shared_examples 'an action with include' do |owner_name, collection_name, options|
+  options = options || collection_name
+
   accept = options[:accept]
+  on     = options[:on] || :collection
 
   let(:page) { FactoryGirl.build(:page_default) }
 
-  let(:collection) { send(owner_name).send(collection_name).take(page.size) }
+  let(:collection) do
+    if on == :collection
+      send(owner_name).send(collection_name).take(page.size)
+    else
+      [send(owner_name)]
+    end
+  end
 
   let(:params) { Serialize.query(include: include_attributes) }
 

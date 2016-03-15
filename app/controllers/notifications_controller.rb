@@ -4,7 +4,11 @@ class NotificationsController < ApplicationController
   def show
     authorize notification
 
-    render json: notification
+    included = Include.new(params[:include], accept: %w(action))
+
+    return render_include_errors(included) unless included.valid?
+
+    render json: notification, include: included.params
   end
 
   def view

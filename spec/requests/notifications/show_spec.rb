@@ -3,8 +3,10 @@ require 'rails_helper'
 RSpec.describe 'Show notification', :type => :request do
   let(:notification) { FactoryGirl.create(:notification) }
 
+  let(:params) {}
+
   before do
-    get notification_path(notification), headers: json_headers
+    get notification_path(notification), params: params, headers: json_headers
   end
 
   it_behaves_like 'an action requiring authentication'
@@ -34,6 +36,9 @@ RSpec.describe 'Show notification', :type => :request do
       it 'returns the notification' do
         expect(response.body).to equal_serialized(notification)
       end
+
+      it_behaves_like 'an action with include', :notification,
+        accept: %w(action), on: :member
     end
   end
 end
