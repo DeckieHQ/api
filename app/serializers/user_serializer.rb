@@ -9,7 +9,7 @@ class UserSerializer < ActiveModel::Serializer
              :phone_number_verified
 
   has_one :profile do
-    link :related, UrlHelpers.user_profile
+    link :related, UrlHelpers.profile(object.profile)
     include_data false
   end
 

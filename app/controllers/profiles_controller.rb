@@ -1,11 +1,13 @@
-class User::ProfilesController < ApplicationController
-  before_action :authenticate!
+class ProfilesController < ApplicationController
+  before_action :authenticate!, only: [:update]
 
   def show
     render json: profile
   end
 
   def update
+    authorize profile
+
     unless profile.update(profile_params)
       return render_validation_errors(profile)
     end
@@ -15,10 +17,10 @@ class User::ProfilesController < ApplicationController
   protected
 
   def profile
-    @profile ||= current_user.profile
+    @profile ||= Profile.find(params[:id])
   end
 
   def profile_params
-    attributes(:profiles).permit(:nickname, :short_description, :description)
+    attributes(:profiles).permit(policy(profile).permited_attributes)
   end
 end

@@ -20,8 +20,11 @@ RSpec.describe UserSerializer, :type => :serializer do
       expect(serialized.attributes).to have_serialized_attributes(expected_attributes)
     end
 
-    it 'adds the relationships' do
-      expect(serialized).to have_relationship_link_for :profile
+    it 'adds the profile link' do
+      expect(serialized).to have_relationship_link_for(:profile, user.profile)
+    end
+
+    it 'adds the hosted events link' do
       expect(serialized).to have_relationship_link_for :hosted_events
     end
   end

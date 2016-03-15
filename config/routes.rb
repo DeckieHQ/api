@@ -31,4 +31,6 @@ Rails.application.routes.draw do
   resources :notifications, only: :show do
     post 'view', on: :member
   end
+
+  resources :profiles, only: [:show, :update]
 end
