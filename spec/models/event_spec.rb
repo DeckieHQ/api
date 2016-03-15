@@ -6,7 +6,7 @@ RSpec.describe Event, :type => :model do
 
     it { is_expected.to belong_to(:host).with_foreign_key('profile_id') }
 
-    it { is_expected.to have_many(:submissions) }
+    it { is_expected.to have_many(:submissions).dependent(:destroy) }
 
     it do
       is_expected.to have_many(:confirmed_submissions)
@@ -23,7 +23,7 @@ RSpec.describe Event, :type => :model do
         .through(:confirmed_submissions).source(:profile)
     end
 
-    it { is_expected.to have_many(:actions) }
+    it { is_expected.to have_many(:actions).dependent(:nullify) }
 
     [
       :title,  :category, :ambiance, :level, :capacity, :begin_at,
@@ -111,19 +111,7 @@ RSpec.describe Event, :type => :model do
       end
     end
   end
-
-  context 'when destroyed' do
-    subject(:event) { FactoryGirl.create(:event_with_submissions) }
-
-    before do
-      event.destroy
-    end
-
-    it 'removes its submissions' do
-      expect(event.submissions).to be_empty
-    end
-  end
-
+  
   [:full, :closed].each do |state|
     method = "#{state}?"
 

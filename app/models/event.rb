@@ -11,7 +11,7 @@ class Event < ApplicationRecord
 
   has_many :attendees, through: :confirmed_submissions, source: :profile
 
-  has_many :actions, as: :target
+  has_many :actions, as: :target, dependent: :nullify
 
   validates :title, :street, presence: true, length: { maximum: 128 }
 
