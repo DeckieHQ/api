@@ -52,6 +52,10 @@ RSpec.describe 'User create hosted event', :type => :request do
       let(:params) {}
 
       it { is_expected.to return_authorization_error(:user_unverified) }
+      
+      it "doesn't create the event" do
+        expect(user.hosted_events).to be_empty
+      end
     end
   end
 end
