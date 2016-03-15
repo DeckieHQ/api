@@ -18,7 +18,7 @@ RSpec.describe 'User sign up', :type => :request do
 
     it 'creates a new user with permited parameters' do
       permited_params = user.slice(
-        :first_name, :last_name, :birthday, :phone_number, :culture
+        :first_name, :last_name, :birthday, :phone_number, :culture, :subscriptions
       )
       expect(created_user).to have_attributes(permited_params)
     end

@@ -9,6 +9,8 @@ FactoryGirl.define do
     email    { Faker::Internet.email }
     password { Faker::Internet.password }
 
+    subscriptions { Fake::User.subscriptions }
+
     factory :user_invalid do
       email nil
     end

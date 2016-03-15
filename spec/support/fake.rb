@@ -1,4 +1,17 @@
 module Fake
+  module User
+    extend self
+
+    def subscriptions
+      values = %w(event-update event-subscribe)
+
+      # Injecting duplicates voluntarily in order to have more randomness.
+      (values.length / 2).times.inject([]) do |result|
+        result.push(values.shuffle.first)
+      end.uniq
+    end
+  end
+
   module PhoneNumber
     extend self
 

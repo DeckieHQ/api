@@ -17,9 +17,7 @@ RSpec.describe 'User account update', :type => :request do
     let(:user)         { FactoryGirl.create(:user) }
     let(:authenticate) { user }
 
-    before do
-      user.reload
-    end
+    before { user.reload }
 
     include_examples 'check parameters for', :users
 
@@ -36,7 +34,8 @@ RSpec.describe 'User account update', :type => :request do
 
       it 'updates the user with permited params' do
         permited_params = user_update.slice(
-          :email, :first_name, :last_name, :birthday, :phone_number, :culture
+          :email, :first_name, :last_name, :birthday, :phone_number, :culture,
+          :subscriptions
         )
         expect(user).to have_attributes(permited_params)
       end
