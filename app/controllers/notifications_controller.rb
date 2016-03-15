@@ -1,6 +1,12 @@
 class NotificationsController < ApplicationController
   before_action :authenticate!
 
+  def show
+    authorize notification
+
+    render json: notification
+  end
+
   def view
     authorize notification
 
