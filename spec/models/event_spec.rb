@@ -12,6 +12,8 @@ RSpec.describe Event, :type => :model do
 
     it { is_expected.to have_many(:submissions).dependent(:destroy) }
 
+    it { is_expected.to have_many(:comments).dependent(:destroy) }
+
     it do
       is_expected.to have_many(:confirmed_submissions)
         .conditions(status: :confirmed).class_name('Submission')

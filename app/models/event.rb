@@ -18,6 +18,8 @@ class Event < ApplicationRecord
 
   has_many :actions, as: :resource, dependent: :destroy
 
+  has_many :comments, as: :resource
+
   validates :title, :street, presence: true, length: { maximum: 128 }
 
   validates :description, length: { maximum: 8192 }
