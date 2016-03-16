@@ -1,9 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Show event submission', :type => :request do
-  let(:event) { FactoryGirl.create(:event, :with_pending_submissions) }
-
-  let(:submission) { event.submissions.shuffle.last }
+  let(:submission) { FactoryGirl.create(:submission) }
 
   before do
     get submission_path(submission), headers: json_headers
@@ -29,7 +27,7 @@ RSpec.describe 'Show event submission', :type => :request do
     end
 
     context 'when user is the event host' do
-      let(:user) { event.host.user }
+      let(:user) { submission.event.host.user }
 
       it { is_expected.to return_status_code 200 }
 

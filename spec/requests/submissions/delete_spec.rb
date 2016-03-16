@@ -1,9 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Destroy event submission', :type => :request do
-  let(:event) { FactoryGirl.create(:event, :with_pending_submissions) }
-
-  let(:submission) { event.submissions.shuffle.last }
+  let(:submission) { FactoryGirl.create(:submission) }
 
   before do
     delete submission_path(submission), headers: json_headers
@@ -43,8 +41,8 @@ RSpec.describe 'Destroy event submission', :type => :request do
 
       # Test the service invokation. Therefore we don't need more tests here as
       # the service is heavily tested independantly.
-      context 'when event is closed' do
-        let(:event) { FactoryGirl.create(:event_closed, :with_pending_submissions) }
+      context 'when submission event is closed' do
+        let(:submission) { FactoryGirl.create(:submission, :to_event_closed) }
 
         it { is_expected.to return_authorization_error(:event_closed) }
       end
