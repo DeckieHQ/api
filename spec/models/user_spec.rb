@@ -10,8 +10,8 @@ RSpec.describe User, :type => :model do
     end
 
     it do
-      is_expected.to have_db_column(:subscriptions)
-        .of_type(:text).with_options(array: true, default: [])
+      is_expected.to have_db_column(:preferences)
+        .of_type(:jsonb).with_options(null: false, default: {})
     end
   end
 
@@ -37,33 +37,6 @@ RSpec.describe User, :type => :model do
     it { is_expected.to validate_date_before(:birthday, { limit: 18.year.ago + 1.day }) }
 
     it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en)) }
-
-
-    it { is_expected.to allow_value(%w(event-update)).for(:subscriptions) }
-
-    it { is_expected.to_not allow_value(%w(unsupported)).for(:subscriptions) }
-  end
-
-  describe 'beforeValidation' do
-    subject(:user) { FactoryGirl.build(:user, subscriptions: subscriptions) }
-
-    before { user.valid? }
-
-    context 'when subscriptions is nil' do
-      let(:subscriptions) {}
-
-      it 'replaces subscriptions by an empty array' do
-        expect(user.subscriptions).to eq([])
-      end
-    end
-
-    context 'when subscriptions has duplicates' do
-      let(:subscriptions) { %w(event-update event-update event-subscribe) }
-
-      it 'removes the duplicates' do
-        expect(user.subscriptions).to eq(subscriptions.uniq)
-      end
-    end
   end
 
   context 'when created' do

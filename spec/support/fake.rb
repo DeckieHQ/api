@@ -1,8 +1,8 @@
 module Fake
-  module User
+  module Preferences
     extend self
 
-    def subscriptions
+    def notifications
       values = %w(event-update event-subscribe)
 
       # Injecting duplicates voluntarily in order to have more randomness.
