@@ -65,6 +65,14 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_comments do
+      transient { comments_count 10 }
+
+      after(:create) do |event, evaluator|
+        create_list(:comment, evaluator.comments_count, resource: event)
+      end
+    end
+
     factory :event_with_attendees do
       transient { attendees_count 10 }
 
