@@ -3,7 +3,7 @@ class CreateActions < ActiveRecord::Migration[5.0]
     create_table(:actions) do |t|
       t.belongs_to :profile, index: true
 
-      t.references :target, polymorphic: true, index: true
+      t.references :resource, polymorphic: true, index: true
 
       t.string :title, null: false
 

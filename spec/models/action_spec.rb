@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Action, :type => :model do
   describe 'Database' do
     it { is_expected.to have_db_index(:profile_id) }
-    it { is_expected.to have_db_index([:target_type, :target_id]) }
+    it { is_expected.to have_db_index([:resource_type, :resource_id]) }
 
     it do
       is_expected.to have_db_column(:title)
@@ -28,26 +28,26 @@ RSpec.describe Action, :type => :model do
 
   describe 'Validations' do
     it { is_expected.to belong_to(:actor).with_foreign_key(:profile_id) }
-    it { is_expected.to belong_to(:target) }
+    it { is_expected.to belong_to(:resource) }
   end
 
   context 'when created' do
-    subject(:action) { FactoryGirl.create(:action, target: target) }
+    subject(:action) { FactoryGirl.create(:action, resource: resource) }
 
     {
       event: :title
     }.each do |factory, attribute|
-      context "with #{factory} target" do
-        let(:target) { FactoryGirl.create(:event) }
+      context "with #{factory} resource" do
+        let(:resource) { FactoryGirl.create(:event) }
 
         it "has a title matching #{factory} #{attribute}" do
-          expect(action.title).to eq(target.send(attribute))
+          expect(action.title).to eq(resource.send(attribute))
         end
       end
     end
 
-    context 'with unsupported target' do
-      let(:target) { FactoryGirl.create(:user) }
+    context 'with unsupported resource' do
+      let(:resource) { FactoryGirl.create(:user) }
 
       it 'has an empty title' do
         expect(action.title).to be_empty

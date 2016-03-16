@@ -3,16 +3,16 @@ class Action < ApplicationRecord
 
   belongs_to :actor, class_name: 'Profile', foreign_key: 'profile_id'
 
-  belongs_to :target, polymorphic: true
+  belongs_to :resource, polymorphic: true
 
-  before_create -> { self.title = title_from_target }
+  before_create -> { self.title = title_from_resource }
 
   private
 
-  def title_from_target
-    case target_type
+  def title_from_resource
+    case resource_type
     when 'Event'
-      target.title
+      resource.title
     else
       ''
     end
