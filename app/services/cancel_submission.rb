@@ -1,13 +1,17 @@
-class CancelSubmission
-  def initialize(submission)
-    @submission = submission
+class CancelResourceWithAction
+  def self.for(resources)
+    resources.map { |resource| new(resource) }
+  end
+
+  def initialize(resource)
+    @resource = resource
   end
 
   def call
-    submission.destroy
+    resource.destroy
   end
 
   private
 
-  attr_reader :submission
+  attr_reader :resource
 end

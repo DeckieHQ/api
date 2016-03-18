@@ -1,14 +1,17 @@
 class CleanAccount
-  def initialize(user)
-    @user = user
+  def initialize(account)
+    @account = account
   end
 
   def call
-    user.opened_hosted_events.destroy_all
-    user.opened_submissions.destroy_all
+    CancelResourceWithAction.for(resources_with_action).each(&:call)
   end
 
   private
 
-  attr_reader :user
+  def resources_with_action
+    [].concat(account.opened_hosted_events).concat(account.opened_submissions)
+  end
+
+  attr_reader :account
 end

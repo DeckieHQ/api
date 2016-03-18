@@ -1,32 +1,37 @@
 require 'rails_helper'
 
 RSpec.describe CleanAccount do
-  let(:service) { CleanAccount.new(user) }
+  let(:account) do
+    instance_double('User',
+      opened_hosted_events: Array.new(5),
+      opened_submissions:   Array.new(5)
+    )
+  end
+
+  let(:cancel_resource_services) do
+    Array.new(5).map { double(call: true) }
+  end
+
+  let(:service) { CleanAccount.new(account) }
 
   describe '#call' do
-    before { service.call }
-
-    context 'when user has hosted events' do
-      let(:user) { FactoryGirl.create(:user_with_hosted_events) }
-
-      it 'removes its opened hosted events' do
-        expect(user.opened_hosted_events).to be_empty
-      end
-
-      it "doesn't remove its closed hosted events" do
-        expect(user.hosted_events).to_not be_empty
-      end
+    let!(:cancel_resource) do
+      object_double('CancelResourceWithAction', for: cancel_resource_services).as_stubbed_const
     end
 
-    context 'when user subscribed to some events' do
-      let(:user) { FactoryGirl.create(:user, :with_submissions) }
+    before do
+      service.call
+    end
 
-      it 'removes the submissions to opened events' do
-        expect(user.opened_submissions).to be_empty
-      end
+    it 'creates an array of cancel resource services' do
+      expect(cancel_resource).to have_received(:for).with(
+        [].concat(account.opened_hosted_events).concat(account.opened_submissions)
+      )
+    end
 
-      it "doesn't remove the submissions to closed events" do
-        expect(user.submissions).to_not be_empty
+    it 'call the method #call on every cancel resource services' do
+      cancel_resource_services.each do |cancel_resource_service|
+        expect(cancel_resource_service).to have_received(:call).with(no_args)
       end
     end
   end

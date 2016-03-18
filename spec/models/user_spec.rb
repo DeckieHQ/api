@@ -82,12 +82,12 @@ RSpec.describe User, :type => :model do
   end
 
   include_examples 'acts as verifiable', :email,
-    deliveries: MailDeliveries,
+    carrier: UserMailer,
     faker: -> { Faker::Internet.email },
     token_type: :friendly
 
   include_examples 'acts as verifiable', :phone_number,
-    deliveries: SMSDeliveries,
+    carrier: UserSMSer,
     faker: -> { Fake::PhoneNumber.plausible },
     token_type: :pin
 
