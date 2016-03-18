@@ -44,10 +44,10 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def render_validation_errors(model, on: :attributes)
+  def render_validation_errors(model, on: :attributes, status: :unprocessable_entity)
     errors = ErrorsSerializer.new(model.errors, on: on).serialize
 
-    render json: errors, status: :unprocessable_entity
+    render json: errors, status: status
   end
 
   def render_search_errors(search)
@@ -57,6 +57,10 @@ class ApplicationController < ActionController::API
       )
     end
     render json: { errors: errors }, status: :bad_request
+  end
+
+  def render_include_errors(included)
+    render_validation_errors(included, on: :include, status: :bad_request)
   end
 
   def render_service_error(result)

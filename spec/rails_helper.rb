@@ -6,6 +6,7 @@ require 'rspec/rails'
 require 'shoulda-matchers'
 require 'factory_girl_rails'
 require 'webmock/rspec'
+require 'pundit/rspec'
 
 WebMock.disable_net_connect!(allow: ['codeclimate.com', 'maps.googleapis.com'])
 

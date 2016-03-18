@@ -1,4 +1,4 @@
-class CreateUsers < ActiveRecord::Migration
+class CreateUsers < ActiveRecord::Migration[5.0]
   def up
     create_table(:users) do |t|
       ## Identity
@@ -35,6 +35,8 @@ class CreateUsers < ActiveRecord::Migration
       t.datetime :last_sign_in_at
       t.inet     :current_sign_in_ip
       t.inet     :last_sign_in_ip
+
+      t.jsonb :preferences, null: false, default: '{}'
 
       t.timestamps null: false
     end

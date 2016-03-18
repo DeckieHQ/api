@@ -17,9 +17,7 @@ RSpec.describe 'User account update', :type => :request do
     let(:user)         { FactoryGirl.create(:user) }
     let(:authenticate) { user }
 
-    before do
-      user.reload
-    end
+    before { user.reload }
 
     include_examples 'check parameters for', :users
 

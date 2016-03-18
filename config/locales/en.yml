@@ -44,3 +44,6 @@ en:
           attributes:
             base:
               unsupported: 'Unsupported include. Must be in %{accept}'
+        preferences:
+          attributes:
+            notifications: 'Unsupported unsupported. Must be in %{accept}'

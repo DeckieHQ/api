@@ -10,9 +10,9 @@ end
 
 FactoryGirl.define do
   factory :profile do
-    nickname          { Faker::Name.first_name }
-    short_description { Faker::Lorem.characters(140) }
-    description       { Faker::Lorem.characters(8192) }
+    nickname          { Faker::Team.creature }
+    short_description { Faker::Lorem.sentence }
+    description       { Faker::Lorem.paragraph }
 
     factory :profile_invalid do
       nickname { Faker::Lorem.characters(65) }

@@ -1,4 +1,17 @@
 module Fake
+  module Preferences
+    extend self
+
+    def notifications
+      values = %w(event-update event-subscribe)
+
+      # Injecting duplicates voluntarily in order to have more randomness.
+      (values.length / 2).times.inject([]) do |result|
+        result.push(values.shuffle.first)
+      end.uniq
+    end
+  end
+
   module PhoneNumber
     extend self
 
@@ -30,6 +43,22 @@ module Fake
 
     def status
       [:pending, :confirmed].sample
+    end
+  end
+
+  module Action
+    extend self
+
+    def type
+      %w(join create).sample
+    end
+  end
+
+  module Notification
+    extend self
+
+    def viewed
+      [true, false].sample
     end
   end
 end

@@ -10,7 +10,7 @@ RSpec.describe Page, :type => :model do
 
     xit do
       is_expected.to validate_numericality_of(:size)
-        .is_greater_than(0)
+        .is_greater_than_or_equal_to(0)
         .is_less_than_or_equal_to(50)
     end
 

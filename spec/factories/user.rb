@@ -9,6 +9,10 @@ FactoryGirl.define do
     email    { Faker::Internet.email }
     password { Faker::Internet.password }
 
+    after(:create) do |user|
+      user.update(preferences: build(:preferences).to_json)
+    end
+
     factory :user_invalid do
       email nil
     end
@@ -81,6 +85,16 @@ FactoryGirl.define do
         create_list(
           :submission, e.submissions_closed_count, :to_event_closed, profile: user.profile
         )
+      end
+    end
+
+    trait :with_notifications do
+      transient do
+        notifications_count 5
+      end
+
+      after(:create) do |user, e|
+        create_list(:notification, e.notifications_count, user: user)
       end
     end
   end

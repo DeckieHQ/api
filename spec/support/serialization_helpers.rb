@@ -3,6 +3,10 @@ class Serialized
     @serializer = serializer
   end
 
+  def id
+    content['data']['id']
+  end
+
   def relationships
     content['data']['relationships']
   end

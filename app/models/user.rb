@@ -3,8 +3,10 @@ require 'concerns/acts_as_verifiable'
 class User < ApplicationRecord
   has_one :profile, dependent: :nullify
 
+  has_many :notifications, dependent: :destroy
+
   delegate :hosted_events, to: :profile
-  delegate :submissions, to: :profile
+  delegate :submissions,   to: :profile
 
   has_secure_token :authentication_token
 
