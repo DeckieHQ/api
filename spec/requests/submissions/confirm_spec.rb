@@ -1,9 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Confirm event submission', :type => :request do
-  let(:event) { FactoryGirl.create(:event, :with_pending_submissions) }
-
-  let(:submission) { event.submissions.shuffle.last }
+  let(:submission) { FactoryGirl.create(:submission, :pending) }
 
   before do
     post confirm_submission_path(submission), headers: json_headers
@@ -33,7 +31,7 @@ RSpec.describe 'Confirm event submission', :type => :request do
     end
 
     context 'when user is the event host' do
-      let(:user) { event.host.user }
+      let(:user) { submission.event.host.user }
 
       it { is_expected.to return_status_code 200 }
 
@@ -47,10 +45,14 @@ RSpec.describe 'Confirm event submission', :type => :request do
 
       # Test the service invokation. Therefore we don't need more tests here as
       # the service is heavily tested independantly.
-      context 'when event is closed' do
-        let(:event) { FactoryGirl.create(:event_closed, :with_pending_submissions) }
+      context 'when submission event is closed' do
+        let(:submission) { FactoryGirl.create(:submission, :pending, :to_event_closed) }
 
         it { is_expected.to return_authorization_error(:event_closed) }
+
+        it "doesn't confirm the submission" do
+          expect(submission.reload).to be_pending
+        end
       end
     end
   end
