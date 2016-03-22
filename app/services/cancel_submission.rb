@@ -1,17 +1,22 @@
-class CancelResourceWithAction
-  def self.for(resources)
-    resources.map { |resource| new(resource) }
+class CancelSubmission
+  def self.for(submissions)
+    submissions.map { |submission| new(submission) }
   end
 
-  def initialize(resource)
-    @resource = resource
+  def initialize(submission)
+    @submission = submission
   end
 
   def call
-    resource.destroy
+    if submission.confirmed?
+      Action.create(
+        actor: submission.profile, resource: submission.event, type: :leave
+      )
+    end
+    submission.destroy
   end
 
-  private
+  protected
 
-  attr_reader :resource
+  attr_reader :submission
 end

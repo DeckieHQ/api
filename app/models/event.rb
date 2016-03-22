@@ -63,6 +63,20 @@ class Event < ApplicationRecord
     attendees_count == capacity
   end
 
+  def switched_to_auto_accept?
+    auto_accept_was, auto_accept = previous_changes['auto_accept']
+
+    auto_accept && !auto_accept_was
+  end
+
+  def max_confirmable_submissions
+    pending_submissions.take(capacity - attendees_count)
+  end
+
+  def destroy_pending_submissions
+    pending_submissions.destroy_all
+  end
+
   protected
 
   def address_changed?

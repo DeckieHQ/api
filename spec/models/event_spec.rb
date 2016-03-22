@@ -111,12 +111,11 @@ RSpec.describe Event, :type => :model do
       end
     end
   end
-  
+
   [:full, :closed].each do |state|
     method = "#{state}?"
 
     describe "##{method}" do
-
       subject(:method) { FactoryGirl.create(:event).send(method) }
 
       it { is_expected.to be_falsy }
@@ -126,6 +125,56 @@ RSpec.describe Event, :type => :model do
 
         it { is_expected.to be_truthy }
       end
+    end
+  end
+
+  xdescribe '#max_confirmable_submissions' do
+    let(:event) do
+      FactoryGirl.create(:event_with_submissions, :with_pending_submissions,
+        capacity: capacity, submissions_count: capacity - 1, pendings_count: 1
+      )
+    end
+
+    it do
+
+    end
+  end
+
+  xdescribe '#destroy_pending_submissions' do
+    let(:event) do
+      FactoryGirl.create(:event_with_submissions, :with_pending_submissions)
+    end
+
+    it do
+
+    end
+  end
+
+  describe '#switched_to_auto_accept?' do
+    subject { event.switched_to_auto_accept? }
+
+    let(:event) { FactoryGirl.create(:event) }
+
+    it { is_expected.to be_falsy }
+
+    context 'after switching to auto_accept' do
+      before do
+        event.update(auto_accept: true)
+      end
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'after switching to manual_accept' do
+      let(:event) do
+        FactoryGirl.create(:event, :auto_accept)
+      end
+
+      before do
+        event.update(auto_accept: false)
+      end
+
+      it { is_expected.to be_falsy }
     end
   end
 

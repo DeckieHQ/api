@@ -4,14 +4,12 @@ class CleanAccount
   end
 
   def call
-    CancelResourceWithAction.for(resources_with_action).each(&:call)
+    CancelEvent.for(account, account.opened_hosted_events).each(&:call)
+
+    CancelSubmission.for(account.opened_submissions).each(&:call)
   end
 
-  private
-
-  def resources_with_action
-    [].concat(account.opened_hosted_events).concat(account.opened_submissions)
-  end
+  protected
 
   attr_reader :account
 end

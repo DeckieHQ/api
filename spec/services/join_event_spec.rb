@@ -1,36 +1,62 @@
 require 'rails_helper'
 
 RSpec.describe JoinEvent do
-  let(:service) { JoinEvent.new(user, event) }
+  let(:profile) { double() }
 
-  let(:user) { FactoryGirl.create(:user) }
+  let(:event) { double() }
 
-  let(:event) { FactoryGirl.create(:event) }
+  let(:service) { JoinEvent.new(profile, event) }
 
   describe '#call' do
     subject(:call) { service.call }
 
-    before { call }
+    let(:new_submission) { double() }
 
-    it 'saves and return the submission' do
-      is_expected.to be_persisted
-    end
-
-    it 'links the submission to both event and profile' do
-      is_expected.to have_attributes(
-        profile_id: user.profile.id, event_id: event.id
-      )
-    end
-
-    it 'returns the pending submission' do
-      is_expected.to be_pending
+    before do
+      allow(Submission).to receive(:create).and_return(new_submission)
     end
 
     context 'when event has auto_accept' do
-      let(:event) { FactoryGirl.create(:event, :auto_accept) }
+      let(:event) { double(auto_accept?: true) }
 
-      it 'confirms and return the submission' do
-        is_expected.to be_confirmed
+      let(:confirm_service) { double(call: true) }
+
+      before do
+        allow(ConfirmSubmission).to receive(:new).and_return(confirm_service)
+
+        call
+      end
+
+      it 'return the new submission' do
+        is_expected.to eq(new_submission)
+      end
+
+      it 'uses the confirmation service' do
+        expect(ConfirmSubmission).to have_received(:new).with(new_submission)
+      end
+
+      it 'confirms the submission' do
+        expect(confirm_service).to have_received(:call).with(no_args)
+      end
+    end
+
+    context "when event doesn't have auto_accept" do
+      let(:event) { double(auto_accept?: false) }
+
+      before do
+        allow(Action).to receive(:create)
+
+        call
+      end
+
+      it 'return the new submission' do
+        is_expected.to eq(new_submission)
+      end
+
+      it 'creates an action' do
+        expect(Action).to have_received(:create).with(
+          actor: profile, resource: event, type: :subscribe
+        )
       end
     end
   end

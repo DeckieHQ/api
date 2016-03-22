@@ -17,7 +17,7 @@ class SendVerification
     return Result.new(instructions_sent: true)
   end
 
-  private
+  protected
 
   attr_reader :user, :verification
 end
