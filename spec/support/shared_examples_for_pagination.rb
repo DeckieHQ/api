@@ -1,4 +1,4 @@
-RSpec.shared_examples 'an action with pagination' do |owner_name, collection_name, options|
+RSpec.shared_examples 'an action with pagination' do |owner_name, collection_name|
   let(:collection) { send(owner_name).send(collection_name) }
 
   let(:paginated_collection) do

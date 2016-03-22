@@ -4,9 +4,12 @@ class CommentPolicy < ApplicationPolicy
   def permited_attributes
     [
       :message,
-      :private,
-      :question
+      :private
     ]
+  end
+
+  def create?
+    !comment.private? || comment.resource.member?(user.profile)
   end
 
   def destroy?

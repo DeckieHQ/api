@@ -33,6 +33,11 @@ RSpec.describe Event, :type => :model do
   end
 
   describe 'Validations' do
+    it do
+      is_expected.to have_many(:public_comments)
+        .conditions(private: false).class_name('Comment')
+    end
+
     [
       :title,  :category, :ambiance, :level, :capacity, :begin_at,
       :street, :postcode, :city, :country

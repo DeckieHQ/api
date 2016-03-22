@@ -31,10 +31,10 @@ class ApplicationController < ActionController::API
   end
 
   def authenticate!(options={})
-    authenticate_token || render_error_for(:unauthorized)
+    authenticate || render_error_for(:unauthorized)
   end
 
-  def authenticate_token
+  def authenticate
     authenticate_with_http_token do |token, options|
       user = User.find_by(authentication_token: token)
 

@@ -1,4 +1,4 @@
-RSpec.shared_examples 'an action with sorting' do |owner_name, collection_name, options|
+RSpec.shared_examples 'an action with sorting' do |owner_name, collection_name, options = {}|
   accept = options[:accept]
 
   let(:page) { FactoryGirl.build(:page_default) }
@@ -25,6 +25,7 @@ RSpec.shared_examples 'an action with sorting' do |owner_name, collection_name, 
     it { is_expected.to return_status_code 200 }
 
     it "returns a sorted #{owner_name} #{collection_name} list" do
+    #  sorted_collection.each { p collection }
       expect(response.body).to equal_serialized(sorted_collection)
     end
   end

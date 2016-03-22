@@ -6,7 +6,6 @@ class CreateComments < ActiveRecord::Migration
 
       t.string :message, null: false
       t.boolean :private, null: false, default: false
-      t.boolean :question, null: false, default: false
 
       t.timestamps null: false
     end
