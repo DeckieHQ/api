@@ -128,25 +128,31 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  xdescribe '#max_confirmable_submissions' do
-    let(:event) do
-      FactoryGirl.create(:event_with_submissions, :with_pending_submissions,
-        capacity: capacity, submissions_count: capacity - 1, pendings_count: 1
-      )
-    end
-
-    it do
-
-    end
-  end
-
-  xdescribe '#destroy_pending_submissions' do
+  describe '#max_confirmable_submissions' do
     let(:event) do
       FactoryGirl.create(:event_with_submissions, :with_pending_submissions)
     end
 
-    it do
+    it 'returns the possible confirmable submissions' do
+      expect(event.max_confirmable_submissions).to eq(
+        event.pending_submissions.take(event.capacity - event.attendees_count)
+      )
+    end
+  end
 
+  describe '#destroy_pending_submissions' do
+    let(:event) do
+      FactoryGirl.create(:event_with_submissions, :with_pending_submissions)
+    end
+
+    before { event.destroy_pending_submissions }
+
+    it 'removes the pending submissions' do
+      expect(event.pending_submissions).to be_empty
+    end
+
+    it 'leaves the other submissions' do
+      expect(event.submissions).to_not be_empty
     end
   end
 
