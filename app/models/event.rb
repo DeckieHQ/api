@@ -77,6 +77,19 @@ class Event < ApplicationRecord
     pending_submissions.destroy_all
   end
 
+  def send_notifications_for(action)
+    # case action.type
+    # when 'join'
+    #   # auto_accept ? yes target all but actor, no target all but host
+    # when 'update', 'cancel', 'leave'
+    #   # Target all (host+attendees) but actor
+    # when 'subscribe'
+    #   # Target host only
+    # end.includes(:user).map do |receiver|
+    #   Notification.new(user: user, action: action)
+    # end.save_all
+  end
+
   protected
 
   def address_changed?

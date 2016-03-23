@@ -31,7 +31,7 @@ RSpec.describe Action, :type => :model do
     it { is_expected.to belong_to(:resource) }
   end
 
-  context 'when created' do
+  context 'before create' do
     subject(:action) { FactoryGirl.create(:action, resource: resource) }
 
     {
@@ -49,9 +49,21 @@ RSpec.describe Action, :type => :model do
     context 'with unsupported resource' do
       let(:resource) { FactoryGirl.create(:user) }
 
-      it 'has an empty title' do
-        expect(action.title).to be_empty
-      end
+      it { expect { action }.to raise_error }
+    end
+  end
+
+  context 'after create' do
+    subject(:action) { FactoryGirl.build(:action) }
+
+    before do
+      allow(action.resource).to receive(:send_notifications_for)
+
+      action.save
+    end
+
+    it 'asks the resource to send the notifications' do
+      expect(action.resource).to have_received(:send_notifications_for).with(action)
     end
   end
 end
