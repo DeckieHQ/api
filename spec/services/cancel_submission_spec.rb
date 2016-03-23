@@ -16,13 +16,17 @@ RSpec.describe CancelSubmission do
 
     subject(:call) { service.call }
 
-    context 'when submission is confirmed' do
-      let(:submission) do
-        double(destroy: true, event: double(), profile: double(), confirmed?: true)
-      end
+    let(:submission) do
+      double(destroy: true, event: double(), profile: double())
+    end
 
+    before do
+      allow(Action).to receive(:create)
+    end
+
+    context 'when submission is confirmed' do
       before do
-        allow(Action).to receive(:create)
+        allow(submission).to receive(:confirmed?).and_return(true)
 
         call
       end
@@ -39,12 +43,20 @@ RSpec.describe CancelSubmission do
     end
 
     context 'when submission is not confirmed' do
-      let(:submission) { double(destroy: true, confirmed?: false) }
+      before do
+        allow(submission).to receive(:confirmed?).and_return(false)
 
-      before { call }
+        call
+      end
 
       it 'destroys the submission' do
         expect(submission).to have_received(:destroy).with(no_args)
+      end
+
+      it 'creates an action' do
+        expect(Action).to have_received(:create).with(
+          actor: submission.profile, resource: submission.event, type: :unsubscribe
+        )
       end
     end
   end

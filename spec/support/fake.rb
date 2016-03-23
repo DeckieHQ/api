@@ -49,8 +49,11 @@ module Fake
   module Action
     extend self
 
-    def type
-      %w(join create).sample
+    def type_for(resource_type)
+      case resource_type
+      when 'Event'
+        %w(subscribe unsubscribe join update cancel leave full start end)
+      end.sample
     end
   end
 

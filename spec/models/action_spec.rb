@@ -40,8 +40,8 @@ RSpec.describe Action, :type => :model do
       context "with #{factory} resource" do
         let(:resource) { FactoryGirl.create(:event) }
 
-        it "has a title matching #{factory} #{attribute}" do
-          expect(action.title).to eq(resource.send(attribute))
+        it "has a title matching #{factory} title" do
+          expect(action.title).to eq(resource.title)
         end
       end
     end
@@ -56,14 +56,22 @@ RSpec.describe Action, :type => :model do
   context 'after create' do
     subject(:action) { FactoryGirl.build(:action) }
 
+    let(:notifiers) { FactoryGirl.create_list(:profile, 5) }
+
     before do
-      allow(action.resource).to receive(:send_notifications_for)
+      allow(action.resource).to receive(:notifiers_for).and_return(notifiers)
 
       action.save
     end
 
-    it 'asks the resource to send the notifications' do
-      expect(action.resource).to have_received(:send_notifications_for).with(action)
+    it 'asks the resource to get profiles to notify' do
+      expect(action.resource).to have_received(:notifiers_for).with(action)
+    end
+
+    it 'creates a notification for each profile to notify ' do
+      notifiers.each do |profile|
+        expect(Notification.find_by(action: action, user: profile.user)).to be_present
+      end
     end
   end
 end

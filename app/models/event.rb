@@ -9,6 +9,8 @@ class Event < ApplicationRecord
 
   has_many :pending_submissions,   -> { pending },   class_name: 'Submission'
 
+  has_many :members, through: :submissions, source: :profile
+
   has_many :attendees, through: :confirmed_submissions, source: :profile
 
   has_many :actions, as: :resource, dependent: :nullify
@@ -77,22 +79,39 @@ class Event < ApplicationRecord
     pending_submissions.destroy_all
   end
 
-  def send_notifications_for(action)
-    # case action.type
-    # when 'join'
-    #   # auto_accept ? yes target all but actor, no target all but host
-    # when 'update', 'cancel', 'leave'
-    #   # Target all (host+attendees) but actor
-    # when 'subscribe'
-    #   # Target host only
-    # end.includes(:user).map do |receiver|
-    #   Notification.new(user: user, action: action)
-    # end.save_all
+  def notifiers_for(action)
+    case action.type
+    when 'subscribe', 'unsubscribe'
+      [host]
+    when 'full', 'start', 'end'
+      members_with_host
+    when 'join'
+      attendees_with_host
+    when 'update', 'cancel', 'leave'
+      attendees_with_host_except(action.actor)
+    else
+      throw "Unsupported action: #{action.type}"
+    end
   end
 
   protected
 
   def address_changed?
     street_changed? || city_changed? || state_changed? || country_changed?
+  end
+
+  def members_with_host
+    members.includes(:user).to_a.push(host)
+  end
+
+  def attendees_with_host
+    attendees.includes(:user).to_a.push(host)
+  end
+
+  def attendees_with_host_except(profile)
+    if attendees_with_host.any?(profile)
+      attendees_with_host.delete(profile)
+    end
+    attendees_with_host
   end
 end

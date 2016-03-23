@@ -19,6 +19,11 @@ RSpec.describe Event, :type => :model do
     end
 
     it do
+      is_expected.to have_many(:members)
+        .through(:submissions).source(:profile)
+    end
+
+    it do
       is_expected.to have_many(:attendees)
         .through(:confirmed_submissions).source(:profile)
     end
@@ -181,6 +186,62 @@ RSpec.describe Event, :type => :model do
       end
 
       it { is_expected.to be_falsy }
+    end
+  end
+
+  describe '#notifiers_for' do
+    let(:event) do
+      FactoryGirl.create(:event_with_attendees, :with_pending_submissions)
+    end
+
+    subject(:notifiers_for) { event.notifiers_for(action) }
+
+    %w(subscribe unsubscribe).each do |type|
+      context "with a #{type} action" do
+        let(:action) { double(type: type) }
+
+        it 'returns only the event host' do
+          is_expected.to eq([event.host])
+        end
+      end
+    end
+
+    %w(full start end).each do |type|
+      context "with a #{type} action" do
+        let(:action) { double(type: type) }
+
+        it 'returns the event members + host' do
+          is_expected.to eq(event.members.to_a.push(event.host))
+        end
+      end
+    end
+
+    %w(join).each do |type|
+      context "with a #{type} action" do
+        let(:action) { double(type: type) }
+
+        it 'returns the event attendees' do
+          is_expected.to eq(event.attendees.to_a.push(event.host))
+        end
+      end
+    end
+
+    %w(update cancel leave).each do |type|
+      context "with a #{type} action" do
+        let(:action) { double(type: type, actor: event.host) }
+
+        it 'returns the event attendees + host' do
+          is_expected.to eq(
+            event.attendees.to_a.push(event.host).delete(action.actor)
+          )
+        end
+      end
+    end
+
+    context 'with unsupported type' do
+      it 'raises an error' do
+        expect { notifiers_for }.to raise_error
+      end
     end
   end
 

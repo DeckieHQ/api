@@ -8,15 +8,17 @@ class CancelSubmission
   end
 
   def call
-    if submission.confirmed?
-      Action.create(
-        actor: submission.profile, resource: submission.event, type: :leave
-      )
-    end
+    Action.create(
+      actor: submission.profile, resource: submission.event, type: action_type
+    )
     submission.destroy
   end
 
   protected
 
   attr_reader :submission
+
+  def action_type
+    submission.confirmed? ? :leave : :unsubscribe 
+  end
 end

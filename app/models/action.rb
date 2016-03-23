@@ -5,20 +5,15 @@ class Action < ApplicationRecord
 
   belongs_to :resource, polymorphic: true
 
-  before_create -> { self.title = title_from_resource }
+  before_create -> { self.title = resource.title }
 
   after_create :send_notifications
 
   private
 
-  def title_from_resource
-    case resource_type
-    when 'Event'
-      resource.title
-    end
-  end
-
   def send_notifications
-    resource.send_notifications_for(self)
+    resource.notifiers_for(self).map do |notifier|
+      Notification.create(action: self, user: notifier.user)
+    end
   end
 end
