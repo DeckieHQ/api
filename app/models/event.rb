@@ -94,7 +94,7 @@ class Event < ApplicationRecord
     end
   end
 
-  protected
+  private
 
   def address_changed?
     street_changed? || city_changed? || state_changed? || country_changed?

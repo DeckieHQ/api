@@ -9,7 +9,7 @@ class CleanAccount
     CancelSubmission.for(account.opened_submissions).each(&:call)
   end
 
-  protected
+  private
 
   attr_reader :account
 end

@@ -20,7 +20,7 @@ class Submission < ApplicationRecord
     joins(:event).merge(Event.filter(filters))
   end
 
-  protected
+  private
 
   def update_counter_cache
     event.update(attendees_count: event.attendees.count)

@@ -8,7 +8,7 @@ class CompleteVerification
     user.tap(&:"verify_#{verification.type}!")
   end
 
-  protected
+  private
 
   attr_reader :user, :verification
 end

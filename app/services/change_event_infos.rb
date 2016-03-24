@@ -13,7 +13,7 @@ class ChangeEventInfos
     event
   end
 
-  protected
+  private
 
   attr_reader :actor, :event
 

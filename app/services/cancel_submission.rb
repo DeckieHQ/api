@@ -14,11 +14,11 @@ class CancelSubmission
     submission.destroy
   end
 
-  protected
+  private
 
   attr_reader :submission
 
   def action_type
-    submission.confirmed? ? :leave : :unsubscribe 
+    submission.confirmed? ? :leave : :unsubscribe
   end
 end

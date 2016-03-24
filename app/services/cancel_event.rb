@@ -14,7 +14,7 @@ class CancelEvent
     event.destroy
   end
 
-  protected
+  private
 
   attr_reader :actor, :event
 end

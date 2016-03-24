@@ -28,7 +28,7 @@ class Search
     .paginate(page.params)
   end
 
-  protected
+  private
 
   attr_reader :page, :sort, :filters, :include
 end

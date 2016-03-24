@@ -16,7 +16,7 @@ class Preferences
     instance_values.slice('notifications')
   end
 
-  protected
+  private
 
   def notifications_must_be_supported
     notifications.tap(&:uniq!).each do |notification|

@@ -19,7 +19,7 @@ class ConfirmSubmission
     submission
   end
 
-  protected
+  private
 
   attr_reader :submission
 
