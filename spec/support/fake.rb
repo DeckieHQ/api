@@ -52,7 +52,7 @@ module Fake
     def type_for(resource_type)
       case resource_type
       when 'Event'
-        %w(subscribe unsubscribe join update cancel leave full start end)
+        %w(subscribe unsubscribe join update cancel leave)
       end.sample
     end
   end

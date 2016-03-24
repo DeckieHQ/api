@@ -50,6 +50,9 @@ gem 'immutable-struct', '~> 2.2'
 # Authorizations
 gem 'pundit', '~> 1.1'
 
+# Soft-delete records
+gem 'paranoia', git: 'git://github.com/radar/paranoia', branch: 'core'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'

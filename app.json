@@ -4,6 +4,7 @@
   "image": "heroku/ruby:2.2.3",
   "addons": [
     "heroku-postgresql",
+    "heroku-redis",
     "postmark",
     "blowerio"
   ]

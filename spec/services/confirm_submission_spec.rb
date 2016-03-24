@@ -24,54 +24,24 @@ RSpec.describe ConfirmSubmission do
       allow(Action).to receive(:create)
     end
 
-    context 'when submission event is not full after confirmation' do
-      before do
-        allow(submission.event).to receive(:full?).and_return(false)
+    before do
+      allow(submission.event).to receive(:full?).and_return(false)
 
-        call
-      end
-
-      it 'returns the submission' do
-        is_expected.to eq(submission)
-      end
-
-      it 'confirms the submission' do
-        expect(submission).to have_received(:confirmed!).with(no_args)
-      end
-
-      it 'creates an event action' do
-        expect(Action).to have_received(:create).with(
-          actor: submission.profile, resource: submission.event, type: :join
-        )
-      end
+      call
     end
 
-    context 'when submission event is full after confirmation' do
-      before do
-        allow(submission.event).to receive(:full?).and_return(true)
+    it 'returns the submission' do
+      is_expected.to eq(submission)
+    end
 
-        allow(submission.event).to receive(:destroy_pending_submissions)
+    it 'confirms the submission' do
+      expect(submission).to have_received(:confirmed!).with(no_args)
+    end
 
-        call
-      end
-
-      it 'returns the submission' do
-        is_expected.to eq(submission)
-      end
-
-      it 'confirms the submission' do
-        expect(submission).to have_received(:confirmed!).with(no_args)
-      end
-
-      it 'creates an event join action' do
-        expect(Action).to have_received(:create).with(
-          actor: submission.profile, resource: submission.event, type: :join
-        )
-      end
-
-      it 'destroys all event pending submissions' do
-        expect(submission.event).to have_received(:destroy_pending_submissions)
-      end
-     end
+    it 'creates an event action' do
+      expect(Action).to have_received(:create).with(notify: :later,
+        actor: submission.profile, resource: submission.event, type: :join
+      )
+    end
   end
 end

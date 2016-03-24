@@ -54,24 +54,46 @@ RSpec.describe Action, :type => :model do
   end
 
   context 'after create' do
-    subject(:action) { FactoryGirl.build(:action) }
+    context 'without notify' do
+      subject(:action) { FactoryGirl.create(:action) }
 
-    let(:notifiers) { FactoryGirl.create_list(:profile, 5) }
-
-    before do
-      allow(action.resource).to receive(:notifiers_for).and_return(notifiers)
-
-      action.save
-    end
-
-    it 'asks the resource to get profiles to notify' do
-      expect(action.resource).to have_received(:notifiers_for).with(action)
-    end
-
-    it 'creates a notification for each profile to notify ' do
-      notifiers.each do |profile|
-        expect(Notification.find_by(action: action, user: profile.user)).to be_present
+      it 'does nothing' do
+        is_expected.to be_persisted
       end
+    end
+
+    context 'with notify now' do
+      subject(:action) { FactoryGirl.create(:action, notify: :now) }
+
+      before do
+        allow(ActionNotifierJob).to receive(:perform_now)
+      end
+
+      it 'will create the notifications later'do
+        expect(ActionNotifierJob).to have_received(:perform_now).with(action)
+      end
+    end
+
+    context 'without notify later' do
+      subject(:action) { FactoryGirl.create(:action, notify: :later) }
+
+      before do
+        allow(ActionNotifierJob).to receive(:perform_later)
+      end
+
+      it 'will create the notifications later'do
+        expect(ActionNotifierJob).to have_received(:perform_later).with(action)
+      end
+    end
+  end
+
+  describe '#resource' do
+    let(:action) { FactoryGirl.create(:action) }
+
+    it 'returns also deleted resources' do
+      action.resource.destroy
+
+      expect(action.reload.resource).to be_present
     end
   end
 end

@@ -6,7 +6,7 @@ class ChangeEventInfos
 
   def call(params)
     if event.update(params)
-      Action.create(actor: actor, resource: event, type: :update)
+      Action.create(actor: actor, resource: event, type: :update, notify: :later)
 
       confirm_pending_submissions if event.switched_to_auto_accept?
     end

@@ -36,7 +36,7 @@ RSpec.describe CancelSubmission do
       end
 
       it 'creates an action' do
-        expect(Action).to have_received(:create).with(
+        expect(Action).to have_received(:create).with(notify: :later,
           actor: submission.profile, resource: submission.event, type: :leave
         )
       end
@@ -54,7 +54,7 @@ RSpec.describe CancelSubmission do
       end
 
       it 'creates an action' do
-        expect(Action).to have_received(:create).with(
+        expect(Action).to have_received(:create).with(notify: :later,
           actor: submission.profile, resource: submission.event, type: :unsubscribe
         )
       end

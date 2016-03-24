@@ -1,9 +1,11 @@
 class Event < ApplicationRecord
+  acts_as_paranoid
+
   include Filterable
 
   belongs_to :host, class_name: 'Profile', foreign_key: 'profile_id'
 
-  has_many :submissions, dependent: :destroy
+  has_many :submissions
 
   has_many :confirmed_submissions, -> { confirmed }, class_name: 'Submission'
 
@@ -13,7 +15,7 @@ class Event < ApplicationRecord
 
   has_many :attendees, through: :confirmed_submissions, source: :profile
 
-  has_many :actions, as: :resource, dependent: :nullify
+  has_many :actions, as: :resource
 
   validates :title, :street, presence: true, length: { maximum: 128 }
 
@@ -79,15 +81,15 @@ class Event < ApplicationRecord
     pending_submissions.destroy_all
   end
 
-  def notifiers_for(action)
+  def receivers_for(action)
     case action.type
     when 'subscribe', 'unsubscribe'
-      [host]
-    when 'full', 'start', 'end'
-      members_with_host
+      [ host ]
+    when 'cancel'
+      members.includes(:user)
     when 'join'
       attendees_with_host
-    when 'update', 'cancel', 'leave'
+    when 'update', 'leave'
       attendees_with_host_except(action.actor)
     else
       throw "Unsupported action: #{action.type}"
@@ -100,18 +102,13 @@ class Event < ApplicationRecord
     street_changed? || city_changed? || state_changed? || country_changed?
   end
 
-  def members_with_host
-    members.includes(:user).to_a.push(host)
-  end
-
   def attendees_with_host
-    attendees.includes(:user).to_a.push(host)
+    @attendees_with_host ||= attendees.includes(:user).to_a.push(host)
   end
 
   def attendees_with_host_except(profile)
-    if attendees_with_host.include?(profile)
-      attendees_with_host.delete(profile)
-    end
+    attendees_with_host.delete(profile)
+
     attendees_with_host
   end
 end

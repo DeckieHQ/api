@@ -54,7 +54,7 @@ RSpec.describe JoinEvent do
       end
 
       it 'creates an action' do
-        expect(Action).to have_received(:create).with(
+        expect(Action).to have_received(:create).with(notify: :later,
           actor: profile, resource: event, type: :subscribe
         )
       end

@@ -38,7 +38,7 @@ RSpec.describe ChangeEventInfos do
 
         it 'creates an action' do
           expect(Action).to have_received(:create).with(
-            actor: actor, resource: event, type: :update
+            actor: actor, resource: event, type: :update, notify: :later
           )
         end
 
@@ -66,7 +66,7 @@ RSpec.describe ChangeEventInfos do
 
         it 'creates an action' do
           expect(Action).to have_received(:create).with(
-            actor: actor, resource: event, type: :update
+            actor: actor, resource: event, type: :update, notify: :later,
           )
         end
       end

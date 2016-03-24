@@ -12,20 +12,13 @@ class ConfirmSubmission
   def call
     submission.confirmed!
 
-    Action.create(actor: submission.profile, resource: event, type: :join)
-
-    destroy_pending_submissions if event.full?
-
+    Action.create(notify: :later,
+      actor: submission.profile, resource: event, type: :join
+    )
     submission
   end
 
   private
 
   attr_reader :submission
-
-  def destroy_pending_submissions
-    Action.create(actor: event.host, resource: event, type: :full)
-
-    event.destroy_pending_submissions
-  end
 end

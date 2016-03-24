@@ -28,6 +28,8 @@ class JoinEvent
   end
 
   def create_action
-    Action.create(actor: profile, resource: event, type: :subscribe)
+    Action.create(notify: :later,
+      actor: profile, resource: event, type: :subscribe
+    )
   end
 end

@@ -8,7 +8,7 @@ class CancelSubmission
   end
 
   def call
-    Action.create(
+    Action.create(notify: :later,
       actor: submission.profile, resource: submission.event, type: action_type
     )
     submission.destroy

@@ -6,7 +6,7 @@ RSpec.describe Event, :type => :model do
 
     it { is_expected.to belong_to(:host).with_foreign_key('profile_id') }
 
-    it { is_expected.to have_many(:submissions).dependent(:destroy) }
+    it { is_expected.to have_many(:submissions) }
 
     it do
       is_expected.to have_many(:confirmed_submissions)
@@ -28,7 +28,7 @@ RSpec.describe Event, :type => :model do
         .through(:confirmed_submissions).source(:profile)
     end
 
-    it { is_expected.to have_many(:actions).dependent(:nullify) }
+    it { is_expected.to have_many(:actions) }
 
     [
       :title,  :category, :ambiance, :level, :capacity, :begin_at,
@@ -133,6 +133,14 @@ RSpec.describe Event, :type => :model do
     end
   end
 
+  context 'when destroyed' do
+    subject(:event) { FactoryGirl.create(:event_with_submissions).destroy }
+
+    it { is_expected.to be_persisted }
+
+    it { is_expected.to be_deleted }
+  end
+
   describe '#max_confirmable_submissions' do
     let(:event) do
       FactoryGirl.create(:event_with_submissions, :with_pending_submissions)
@@ -189,12 +197,12 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  describe '#notifiers_for' do
+  describe '#receivers_for' do
     let(:event) do
       FactoryGirl.create(:event_with_attendees, :with_pending_submissions)
     end
 
-    subject(:notifiers_for) { event.notifiers_for(action) }
+    subject(:receivers_for) { event.receivers_for(action) }
 
     %w(subscribe unsubscribe).each do |type|
       context "with a #{type} action" do
@@ -206,12 +214,12 @@ RSpec.describe Event, :type => :model do
       end
     end
 
-    %w(full start end).each do |type|
+    %w(cancel).each do |type|
       context "with a #{type} action" do
         let(:action) { double(type: type) }
 
         it 'returns the event members + host' do
-          is_expected.to eq(event.members.to_a.push(event.host))
+          is_expected.to eq(event.members.to_a)
         end
       end
     end
@@ -226,21 +234,23 @@ RSpec.describe Event, :type => :model do
       end
     end
 
-    %w(update cancel leave).each do |type|
+    %w(update leave).each do |type|
       context "with a #{type} action" do
         let(:action) { double(type: type, actor: event.host) }
 
         it 'returns the event attendees + host' do
-          is_expected.to eq(
-            event.attendees.to_a.push(event.host).delete(action.actor)
-          )
+          expected_profiles = event.attendees.to_a.push(event.host)
+
+          expected_profiles.delete(action.actor)
+
+          is_expected.to eq(expected_profiles)
         end
       end
     end
 
     context 'with unsupported type' do
       it 'raises an error' do
-        expect { notifiers_for }.to raise_error
+        expect { receivers_for }.to raise_error
       end
     end
   end
