@@ -109,7 +109,7 @@ class Event < ApplicationRecord
   end
 
   def attendees_with_host_except(profile)
-    if attendees_with_host.any?(profile)
+    if attendees_with_host.include?(profile)
       attendees_with_host.delete(profile)
     end
     attendees_with_host

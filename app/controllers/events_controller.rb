@@ -8,7 +8,7 @@ class EventsController < ApplicationController
   def update
     authorize event
 
-    result = ChangeEventInfos.new(event).call(event_params)
+    result = ChangeEventInfos.new(current_user.profile, event).call(event_params)
 
     if result.errors.present?
       return render_validation_errors(result)
@@ -19,7 +19,7 @@ class EventsController < ApplicationController
   def destroy
     authorize event
 
-    CancelEvent.new(event).call
+    CancelEvent.new(current_user.profile, event).call
 
     head :no_content
   end

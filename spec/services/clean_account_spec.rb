@@ -3,8 +3,9 @@ require 'rails_helper'
 RSpec.describe CleanAccount do
   let(:account) do
     instance_double('User',
+      profile: double(),
       opened_hosted_events: Array.new(5),
-      opened_submissions:   Array.new(5)
+      opened_submissions:   Array.new(3)
     )
   end
 
@@ -27,7 +28,9 @@ RSpec.describe CleanAccount do
     end
 
     it 'maps each account opened_hosted_events with a cancel event service' do
-      expect(CancelEvent).to have_received(:for).with(account, account.opened_hosted_events)
+      expect(CancelEvent).to have_received(:for).with(
+        account.profile, account.opened_hosted_events
+      )
     end
 
     it 'call the method #call on every cancel event services' do
