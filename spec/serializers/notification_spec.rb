@@ -10,7 +10,7 @@ RSpec.describe NotificationSerializer, :type => :serializer do
 
     it 'serializes the specified attributes' do
       expect(serialized.attributes).to have_serialized_attributes(
-        notification.slice(:type, :created_at, :updated_at)
+        notification.slice(:type, :viewed)
       )
     end
 
