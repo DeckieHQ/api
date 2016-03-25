@@ -25,7 +25,7 @@ RSpec.describe CancelEvent do
     before do
       allow(Action).to receive(:create).and_return(action)
 
-      allow(AfterDestroyEventJob).to receive(:perform_later)
+      allow(AfterEventDestroyJob).to receive(:perform_later)
 
       call
     end
@@ -40,8 +40,8 @@ RSpec.describe CancelEvent do
       )
     end
 
-    it 'add to queue an after destroy event job' do
-      expect(AfterDestroyEventJob).to have_received(:perform_later).with(event, action)
+    it 'add to queue an after event destroy job' do
+      expect(AfterEventDestroyJob).to have_received(:perform_later).with(event, action)
     end
   end
 end

@@ -11,7 +11,7 @@ class CancelEvent
   def call
     event.destroy
 
-    AfterDestroyEventJob.perform_later(event, action)
+    AfterEventDestroyJob.perform_later(event, action)
   end
 
   private
