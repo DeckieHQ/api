@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe AfterDestroyEventJob, :type => :job do
+RSpec.describe AfterEventDestroyJob, :type => :job do
   pending "add some examples to (or delete) #{__FILE__}"
 
 

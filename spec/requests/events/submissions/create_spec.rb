@@ -28,6 +28,8 @@ RSpec.describe 'Create event submission', :type => :request do
       expect(response.body).to equal_serialized(created_submission)
     end
 
+    it { is_expected.to have_created_action(user, event, 'subscribe') }
+
     context 'when event has auto_accept' do
       let(:event) { FactoryGirl.create(:event, :auto_accept) }
 
@@ -36,6 +38,8 @@ RSpec.describe 'Create event submission', :type => :request do
           profile_id: user.profile.id, status: 'confirmed'
         )
       end
+
+      it { is_expected.to have_created_action(user, event, 'join') }
     end
 
     context 'when event is closed' do

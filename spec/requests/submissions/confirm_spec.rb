@@ -43,6 +43,10 @@ RSpec.describe 'Confirm event submission', :type => :request do
         expect(submission.reload).to be_confirmed
       end
 
+      it do
+        is_expected.to have_created_action(submission.profile.user, event, 'join')
+      end
+
       # Test the service invokation. Therefore we don't need more tests here as
       # the service is heavily tested independantly.
       context 'when submission event is closed' do

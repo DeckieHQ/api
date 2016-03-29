@@ -9,7 +9,7 @@ class Action < ApplicationRecord
 
   before_create -> { self.title = resource.title }
 
-  after_create :create_notifications
+  after_commit :create_notifications
 
   def resource
     resource_type.constantize.unscoped { super }

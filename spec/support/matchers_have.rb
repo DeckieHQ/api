@@ -60,3 +60,17 @@ RSpec::Matchers.define :have_authorization_error do |error_code, options|
     policy.user.errors.added?(:base, error_code)
   end
 end
+
+RSpec::Matchers.define :have_created_action do |user, resource, type|
+  match do
+    Action.any? && Action.find_by(actor: user.profile, resource: resource, type: type)
+  end
+end
+
+RSpec::Matchers.define :have_many_actions do |actors, resource, type|
+  match do
+    actions = Action.where(resource: resource, type: type).to_a || []
+
+    actions.reject { |action| actors.include?(action.actor) }.empty?
+  end
+end

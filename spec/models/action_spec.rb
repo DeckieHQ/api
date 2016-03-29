@@ -53,7 +53,7 @@ RSpec.describe Action, :type => :model do
     end
   end
 
-  context 'after create' do
+  context 'after commit' do
     context 'without notify' do
       subject(:action) { FactoryGirl.create(:action) }
 

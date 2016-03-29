@@ -39,6 +39,18 @@ RSpec.describe 'Destroy event submission', :type => :request do
         expect(Submission.find_by(id: submission.id)).to be_nil
       end
 
+      context 'when submissions is pending' do
+        let(:submission) { FactoryGirl.create(:submission, :pending) }
+
+        it { is_expected.to have_created_action(user, submission.event, 'unsubscribe') }
+      end
+
+      context 'when submissions is confirmed' do
+        let(:submission) { FactoryGirl.create(:submission, :confirmed) }
+
+        it { is_expected.to have_created_action(user, submission.event, 'leave') }
+      end
+
       # Test the service invokation. Therefore we don't need more tests here as
       # the service is heavily tested independantly.
       context 'when submission event is closed' do

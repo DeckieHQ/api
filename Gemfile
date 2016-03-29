@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '2.2.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '>= 5.0.0.beta1', '< 5.1'
+gem 'rails', '5.0.0.beta2'
 
 # JSON Serializers
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers'
@@ -56,7 +56,7 @@ gem 'paranoia', git: 'git://github.com/radar/paranoia', branch: 'core'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'
-  gem 'rspec-rails', '~> 3.1'
+  gem 'rspec-rails', '>= 3.5.0.beta2'
 end
 
 group :development do
