@@ -12,16 +12,16 @@ RSpec.describe UserSerializer, :type => :serializer do
     it 'serializes the specified attributes' do
       expected_attributes = user.slice(
         :first_name, :last_name, :birthday, :email, :phone_number, :culture
-      )
-
-      expected_attributes[:email_verified] = user.email_verified?
-      expected_attributes[:phone_number_verified] = user.phone_number_verified?
+      ).merge({
+        email_verified: user.email_verified?,
+        phone_number_verified: user.phone_number_verified?
+      })
 
       expect(serialized.attributes).to have_serialized_attributes(expected_attributes)
     end
 
     it 'adds the profile link' do
-      expect(serialized).to have_relationship_link_for(:profile, user.profile)
+      expect(serialized).to have_relationship_link_for(:profile, source: user.profile)
     end
 
     it 'adds the hosted events link' do

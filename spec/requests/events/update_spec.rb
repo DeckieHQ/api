@@ -7,10 +7,12 @@ RSpec.describe 'Event update', :type => :request do
   let(:event_update)        { FactoryGirl.build(:event)  }
   let(:event_update_params) { event_update.attributes }
 
-  let(:permited_params) { event_update.slice(
-    :title, :category, :ambiance, :level, :capacity, :auto_accept,
-    :description, :street, :postcode, :city, :state, :country
-  ) }
+  let(:permited_params) do
+    event_update.slice(
+      :title, :category, :ambiance, :level, :capacity, :auto_accept,
+      :description, :street, :postcode, :city, :state, :country
+    )
+  end
 
   before do
     put event_path(event), params: params, headers: json_headers

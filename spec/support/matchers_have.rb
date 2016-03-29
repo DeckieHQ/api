@@ -14,14 +14,16 @@ RSpec::Matchers.define :have_serialized_attributes do |attributes|
   end
 end
 
-RSpec::Matchers.define :have_relationship_link_for do |attribute, object|
+RSpec::Matchers.define :have_relationship_link_for do |attribute, options = {}|
   match do |actual|
     url_helpers = Rails.application.routes.url_helpers
-    link = actual.relationships[attribute.to_s]["links"]["related"]
+    link = actual.relationships[attribute.to_s]['links']['related']
     type = actual.type.singularize
-    method = object ? :"#{attribute}_url" : :"#{type}_#{attribute}_url"
+    source = options[:source]
 
-    link == url_helpers.public_send(method, object)
+    method = source ? :"#{attribute}_url" : :"#{type}_#{attribute}_url"
+
+    link == url_helpers.public_send(method, source)
   end
 end
 

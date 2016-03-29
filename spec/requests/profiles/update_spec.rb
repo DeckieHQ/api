@@ -7,7 +7,9 @@ RSpec.describe 'Profile update', :type => :request do
   let(:profile_update)        { FactoryGirl.build(:profile) }
   let(:profile_update_params) { profile_update.attributes }
 
-  let(:permited_params) { profile_update.slice(:nickname, :short_description, :description) }
+  let(:permited_params) do
+    profile_update.slice(:nickname, :short_description, :description)
+  end
 
   before do
     put profile_path(profile), params: params, headers: json_headers
