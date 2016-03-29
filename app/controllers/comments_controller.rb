@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_action :authenticate!, only: [:create, :destroy]
+  before_action :authenticate!, only: [:create, :update, :destroy]
   before_action :authenticate,  only: [:index]
 
   def index
@@ -22,6 +22,15 @@ class CommentsController < ApplicationController
       return return_validation_errors(comment)
     end
     render json: comment, status: :created
+  end
+
+  def update
+    authorize comment
+
+    unless comment.update(comment_params)
+      return render_validation_errors(comment)
+    end
+    render json: comment
   end
 
   def destroy

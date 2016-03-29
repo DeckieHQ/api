@@ -24,5 +24,17 @@ RSpec.describe Comment, :type => :model do
   describe 'Validations' do
     it { is_expected.to belong_to(:author).with_foreign_key(:profile_id) }
     it { is_expected.to belong_to(:resource) }
+    it { is_expected.to validate_length_of(:message).is_at_most(200) }
   end
+
+  # describe '.publics' do
+  #   # let(:comments) { Comment.all }
+  #   # let(:event) { FactoryGirl.create(:event) }
+  #   # let!(:public_comments) { FactoryGirl.create_list(:comment, 5, resource: event) }
+  #   # let!(:private_comments) { FactoryGirl.create_list(:comment, 5, :private, resource: event) }
+  #
+  #   it 'scope' do
+  #     expect(Comment.publics.count).to eq(5)
+  #   end
+  # end
 end

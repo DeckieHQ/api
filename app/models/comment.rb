@@ -5,6 +5,8 @@ class Comment < ApplicationRecord
 
   belongs_to :resource, polymorphic: true
 
+  validates :message, length: { maximum: 200 }
+
   scope :publics, -> { where(private: false) }
 
   def self.privates_only(choice)
