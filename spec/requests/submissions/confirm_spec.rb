@@ -44,7 +44,7 @@ RSpec.describe 'Confirm event submission', :type => :request do
       end
 
       it do
-        is_expected.to have_created_action(submission.profile.user, event, 'join')
+        is_expected.to have_created_action(submission.profile.user, submission.event, 'join')
       end
 
       # Test the service invokation. Therefore we don't need more tests here as

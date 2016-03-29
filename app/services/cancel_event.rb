@@ -9,16 +9,12 @@ class CancelEvent
   end
 
   def call
-    event.destroy
+    Action.create(actor: actor, resource: event, type: :cancel, notify: :later)
 
-    AfterEventDestroyJob.perform_later(event, action)
+    event.destroy
   end
 
   private
 
   attr_reader :actor, :event
-
-  def action
-    @action ||= Action.create(actor: actor, resource: event, type: :cancel)
-  end
 end

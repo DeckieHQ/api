@@ -7,7 +7,9 @@ class Action < ApplicationRecord
 
   belongs_to :resource, polymorphic: true
 
-  before_create -> { self.title = resource.title }
+  before_create :set_title
+
+  before_create :set_receiver_ids
 
   after_commit :create_notifications
 
@@ -16,6 +18,14 @@ class Action < ApplicationRecord
   end
 
   private
+
+  def set_title
+    self.title = resource.title
+  end
+
+  def set_receiver_ids
+    self.receiver_ids = resource.receiver_ids_for(self)
+  end
 
   def create_notifications
     case notify

@@ -3,13 +3,11 @@ class ActionNotifier
     @action = action
   end
 
-  # TODO: send email here
+  # TODO: A tester si le profile est deleted que ça plante pas
   def notify
     Notification.transaction do
-      action.resource.receivers_for(action).map do |receiver|
-        unless receiver.deleted?
-          Notification.create(action: action, user: receiver.user)
-        end
+      User.where(profile_id: action.receiver_ids).map do |user|
+        Notification.create(action: action, user: user)
       end
     end
   end

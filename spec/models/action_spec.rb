@@ -16,6 +16,11 @@ RSpec.describe Action, :type => :model do
     end
 
     it do
+      is_expected.to have_db_column(:receiver_ids)
+        .of_type(:text).with_options(array: true, null: false, default: [])
+    end
+
+    it do
       is_expected.to have_db_column(:created_at)
         .of_type(:datetime).with_options(null: false)
     end
@@ -40,8 +45,22 @@ RSpec.describe Action, :type => :model do
       context "with #{factory} resource" do
         let(:resource) { FactoryGirl.create(:event) }
 
+        let(:fakeIds) { Array.new(5).map { Faker::Number.number(5) } }
+
+        before do
+          allow(resource).to receive(:receiver_ids_for).and_return(fakeIds)
+        end
+
         it "has a title matching #{factory} title" do
           expect(action.title).to eq(resource.title)
+        end
+
+        it 'asks the resource for the receiver ids' do
+          expect(resource).to have_received(:receiver_ids_for).with(action)
+        end
+
+        it 'saves the receiver ids' do
+          expect(action.receiver_ids).to eq(fakeIds)
         end
       end
     end

@@ -6,7 +6,7 @@ RSpec.describe Event, :type => :model do
 
     it { is_expected.to belong_to(:host).with_foreign_key('profile_id') }
 
-    it { is_expected.to have_many(:submissions) }
+    it { is_expected.to have_many(:submissions).dependent(:destroy) }
 
     it do
       is_expected.to have_many(:confirmed_submissions)
@@ -16,11 +16,6 @@ RSpec.describe Event, :type => :model do
     it do
       is_expected.to have_many(:pending_submissions)
         .conditions(status: :pending).class_name('Submission')
-    end
-
-    it do
-      is_expected.to have_many(:members)
-        .through(:submissions).source(:profile)
     end
 
     it do
@@ -197,19 +192,19 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  describe '#receivers_for' do
+  describe '#receiver_ids_for' do
     let(:event) do
       FactoryGirl.create(:event_with_attendees, :with_pending_submissions)
     end
 
-    subject(:receivers_for) { event.receivers_for(action) }
+    subject(:receiver_ids_for) { event.receiver_ids_for(action) }
 
     %w(subscribe unsubscribe).each do |type|
       context "with a #{type} action" do
         let(:action) { double(type: type) }
 
         it 'returns only the event host' do
-          is_expected.to eq([event.host])
+          is_expected.to eq([event.host.id])
         end
       end
     end
@@ -219,7 +214,7 @@ RSpec.describe Event, :type => :model do
         let(:action) { double(type: type) }
 
         it 'returns the event members + host' do
-          is_expected.to eq(event.members.to_a)
+          is_expected.to eq(event.submissions.pluck('profile_id'))
         end
       end
     end
@@ -229,7 +224,7 @@ RSpec.describe Event, :type => :model do
         let(:action) { double(type: type) }
 
         it 'returns the event attendees' do
-          is_expected.to eq(event.attendees.to_a.push(event.host))
+          is_expected.to eq(event.attendees.pluck('id').push(event.host.id))
         end
       end
     end
@@ -239,9 +234,9 @@ RSpec.describe Event, :type => :model do
         let(:action) { double(type: type, actor: event.host) }
 
         it 'returns the event attendees + host' do
-          expected_profiles = event.attendees.to_a.push(event.host)
+          expected_profiles = event.attendees.pluck('id').push(event.host.id)
 
-          expected_profiles.delete(action.actor)
+          expected_profiles.delete(action.actor.id)
 
           is_expected.to eq(expected_profiles)
         end
@@ -250,7 +245,7 @@ RSpec.describe Event, :type => :model do
 
     context 'with unsupported type' do
       it 'raises an error' do
-        expect { receivers_for }.to raise_error
+        expect { receiver_ids_for }.to raise_error
       end
     end
   end

@@ -5,13 +5,11 @@ class Event < ApplicationRecord
 
   belongs_to :host, class_name: 'Profile', foreign_key: 'profile_id'
 
-  has_many :submissions
+  has_many :submissions, dependent: :destroy
 
   has_many :confirmed_submissions, -> { confirmed }, class_name: 'Submission'
 
   has_many :pending_submissions,   -> { pending },   class_name: 'Submission'
-
-  has_many :members, through: :submissions, source: :profile
 
   has_many :attendees, through: :confirmed_submissions, source: :profile
 
@@ -81,16 +79,16 @@ class Event < ApplicationRecord
     pending_submissions.destroy_all
   end
 
-  def receivers_for(action)
+  def receiver_ids_for(action)
     case action.type
     when 'subscribe', 'unsubscribe'
-      [ host ]
+      [ host.id ]
     when 'cancel'
-      members.includes(:user)
+      submissions.pluck('profile_id')
     when 'join'
-      attendees_with_host
+      attendees_with_host_ids
     when 'update', 'leave'
-      attendees_with_host_except(action.actor)
+      attendees_with_host_ids_except(action.actor)
     else
       throw "Unsupported action: #{action.type}"
     end
@@ -102,13 +100,13 @@ class Event < ApplicationRecord
     street_changed? || city_changed? || state_changed? || country_changed?
   end
 
-  def attendees_with_host
-    @attendees_with_host ||= attendees.includes(:user).to_a.push(host)
+  def attendees_with_host_ids
+    @attendees_with_host_ids ||= attendees.pluck('id').push(host.id)
   end
 
-  def attendees_with_host_except(profile)
-    attendees_with_host.delete(profile)
+  def attendees_with_host_ids_except(profile)
+    attendees_with_host_ids.delete(profile.id)
 
-    attendees_with_host
+    attendees_with_host_ids
   end
 end

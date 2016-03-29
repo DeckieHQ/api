@@ -54,7 +54,7 @@ RSpec.describe 'Event update', :type => :request do
           end
         end
 
-        it { is_expected.to have_many_actions(event.members, event, 'join') }
+        it { is_expected.to have_many_actions(event.submissions.map(&:profile), event, 'join') }
       end
 
       context 'when attributes are invalid' do

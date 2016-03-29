@@ -9,6 +9,8 @@ class CreateActions < ActiveRecord::Migration[5.0]
 
       t.string :type, null: false
 
+      t.text :receiver_ids, array: true, null: false, default: []
+
       t.timestamps null: false
     end
   end
