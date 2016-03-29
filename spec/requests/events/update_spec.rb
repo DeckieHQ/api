@@ -3,11 +3,16 @@ require 'rails_helper'
 RSpec.describe 'Event update', :type => :request do
   let(:params) { Serialize.params(event_update_params, type: :events) }
 
+  let(:event)               { FactoryGirl.create(:event) }
+  let(:event_update)        { FactoryGirl.build(:event)  }
   let(:event_update_params) { event_update.attributes }
 
-  let(:event_update) { FactoryGirl.build(:event)  }
-
-  let(:event) { FactoryGirl.create(:event) }
+  let(:permited_params) do
+    event_update.slice(
+      :title, :category, :ambiance, :level, :capacity, :auto_accept,
+      :description, :street, :postcode, :city, :state, :country
+    )
+  end
 
   before do
     put event_path(event), params: params, headers: json_headers
@@ -32,10 +37,6 @@ RSpec.describe 'Event update', :type => :request do
       end
 
       it 'updates the event with permited params' do
-        permited_params = event_update.slice(
-          :title, :category, :ambiance, :level, :capacity, :auto_accept,
-          :description, :street, :postcode, :city, :state, :country
-        )
         expect(event).to have_attributes(permited_params)
 
         expect(event.begin_at).to equal_time(event_update.begin_at)
@@ -67,6 +68,10 @@ RSpec.describe 'Event update', :type => :request do
       let(:authenticate) { FactoryGirl.create(:user) }
 
       it { is_expected.to return_forbidden }
+
+      it "doesn't update the event" do
+        expect(event).to_not have_been_changed
+      end
     end
   end
 end

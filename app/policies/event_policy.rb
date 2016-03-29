@@ -48,10 +48,4 @@ class EventPolicy < ApplicationPolicy
   def submission_already_exist?
     event.submissions.find_by(profile: user.profile)
   end
-
-  class Scope < Scope
-    def resolve
-      scope
-    end
-  end
 end

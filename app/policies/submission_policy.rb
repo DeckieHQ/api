@@ -26,10 +26,4 @@ class SubmissionPolicy < ApplicationPolicy
   def submission_already_confirmed?
     add_error(:submission_already_confirmed) if submission.confirmed?
   end
-
-  class Scope < Scope
-    def resolve
-      scope
-    end
-  end
 end

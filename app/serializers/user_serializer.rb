@@ -8,11 +8,21 @@ class UserSerializer < ActiveModel::Serializer
              :email_verified,
              :phone_number_verified
 
+  has_one :profile do
+    link :related, UrlHelpers.profile(object.profile)
+    include_data false
+  end
+
+  has_many :hosted_events do
+    link :related, UrlHelpers.user_hosted_events
+    include_data false
+  end
+
   def email_verified
-    object.email_verified_at.present?
+    object.email_verified?
   end
 
   def phone_number_verified
-    object.phone_number_verified_at.present?
+    object.phone_number_verified?
   end
 end

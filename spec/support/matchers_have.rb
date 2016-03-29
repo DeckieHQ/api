@@ -14,6 +14,27 @@ RSpec::Matchers.define :have_serialized_attributes do |attributes|
   end
 end
 
+RSpec::Matchers.define :have_relationship_link_for do |attribute, options = {}|
+  match do |actual|
+    url_helpers = Rails.application.routes.url_helpers
+    link = actual.relationships[attribute.to_s]['links']['related']
+    type = actual.type.singularize
+    source = options[:source]
+
+    method = source ? :"#{attribute}_url" : :"#{type}_#{attribute}_url"
+
+    link == url_helpers.public_send(method, source)
+  end
+end
+
+RSpec::Matchers.define :have_been_changed do
+  match do |actual|
+    expected = actual.to_json
+
+    actual.reload.to_json != expected
+  end
+end
+
 RSpec::Matchers.define :have_unverified do |attribute|
   match do |actual|
     actual.send("#{attribute}_verification_token").nil? &&

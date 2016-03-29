@@ -7,6 +7,10 @@ class Serialized
     content['data']['id']
   end
 
+  def type
+    content['data']['type']
+  end
+
   def relationships
     content['data']['relationships']
   end
