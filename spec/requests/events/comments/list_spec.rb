@@ -15,7 +15,7 @@ RSpec.describe 'List event comments', :type => :request do
     it_behaves_like 'an action with sorting',   :event, :comments, accept: %w(created_at)
 
     it_behaves_like 'an action with filtering', :event, :comments,
-      accept: { scopes: [:privates_only] }, try: { privates_only: [true, false, nil, 1, 0] }
+      accept: { scopes: [:privates] }, try: { privates: [true, false, nil, 1, 0] }
   end
 
   context "when user isn't an event's member" do

@@ -27,14 +27,23 @@ RSpec.describe Comment, :type => :model do
     it { is_expected.to validate_length_of(:message).is_at_most(200) }
   end
 
-  # describe '.publics' do
-  #   # let(:comments) { Comment.all }
-  #   # let(:event) { FactoryGirl.create(:event) }
-  #   # let!(:public_comments) { FactoryGirl.create_list(:comment, 5, resource: event) }
-  #   # let!(:private_comments) { FactoryGirl.create_list(:comment, 5, :private, resource: event) }
-  #
-  #   it 'scope' do
-  #     expect(Comment.publics.count).to eq(5)
-  #   end
-  # end
+  describe '.publics' do
+    let(:event) { FactoryGirl.create(:event, :with_comments) }
+
+    it 'returns the public comments' do
+      expect(event.public_comments).to eq(event.comments.where(private: false))
+    end
+  end
+
+  describe '.privates' do
+    let(:event) { FactoryGirl.create(:event, :with_comments) }
+
+    ['true', true, 1].each do |value|
+      context "when parameter equals #{value}" do
+        it 'returns the private comments' do
+          expect(event.comments.privates(value)).to eq(event.comments.where(private: true))
+        end
+      end
+    end
+  end
 end

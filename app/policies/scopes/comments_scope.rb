@@ -9,7 +9,7 @@ class CommentsScope
   end
 
   def filters
-    member? ? { scopes: [:privates_only] } : {}
+    member? ? { scopes: [:privates] } : {}
   end
 
   private

@@ -9,7 +9,7 @@ class Comment < ApplicationRecord
 
   scope :publics, -> { where(private: false) }
 
-  def self.privates_only(choice)
+  def self.privates(choice)
     where(private: choice.to_s.to_b)
   end
 end
