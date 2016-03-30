@@ -18,10 +18,18 @@ RSpec.describe EventSerializer, :type => :serializer do
       )
     end
 
-    %w(host).each do |relation_name|
-      it "serializes the #{relation_name} relation" do
-        expect(serialized.relationships).to have_key(relation_name)
-      end
+    it "serializes the host relation" do
+      expect(serialized.relationships).to have_key('host')
+    end
+
+    it 'adds the comments link' do
+      expect(serialized).to have_relationship_link_for(:comments, source: event)
+    end
+
+    it 'adds the private comments link' do
+      expect(serialized).to have_relationship_link_for(
+        :comments, source: event, key: 'private_comments', args: '?private=true'
+      )
     end
   end
 end
