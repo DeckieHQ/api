@@ -21,6 +21,6 @@ class ProfilesController < ApplicationController
   end
 
   def profile_params
-    attributes(:profiles).permit(policy(profile).permited_attributes)
+    permited_attributes(profile)
   end
 end

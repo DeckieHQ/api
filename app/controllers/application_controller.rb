@@ -22,12 +22,26 @@ class ApplicationController < ActionController::API
   protected
 
   def attributes(resource_type)
-    parameters = Parameters.new(params.to_unsafe_h, resource_type: resource_type.to_s)
+    parameters = Parameters.new(params.to_unsafe_h, resource_type: resource_type)
 
     unless parameters.valid?
       raise ParametersError, errors: parameters.errors
     end
     params.require(:data).require(:attributes)
+  end
+
+  def permited_attributes(record)
+    type = (record.is_a?(Class) ? record : record.class).to_s.downcase.pluralize
+
+    method = "permited_attributes_for_#{params[:action]}"
+
+    record_policy = policy(record)
+
+    permited = record_policy.respond_to?(method) ?
+      record_policy.public_send(method) :
+      record_policy.permited_attributes
+      
+    attributes(type).permit(permited)
   end
 
   def authenticate!(options={})

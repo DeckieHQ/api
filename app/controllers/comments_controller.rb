@@ -52,6 +52,6 @@ class CommentsController < ApplicationController
   end
 
   def comment_params
-    attributes(:comments).permit(policy(Comment).permited_attributes)
+    permited_attributes(Comment)
   end
 end

@@ -13,11 +13,12 @@ class CommentPolicy < ApplicationPolicy
     comment_owner?
   end
 
-  def permited_attributes
-    [
-      :message,
-      :private
-    ]
+  def permited_attributes_for_create
+    [:message, :private]
+  end
+
+  def permited_attributes_for_update
+    [:message]
   end
 
   private
