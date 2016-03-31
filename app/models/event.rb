@@ -85,6 +85,8 @@ class Event < ApplicationRecord
       [ host.id ]
     when 'cancel'
       submissions.pluck('profile_id')
+    when 'full'
+      pending_submissions.pluck('profile_id')
     when 'join'
       attendees_with_host_ids
     when 'update', 'leave'

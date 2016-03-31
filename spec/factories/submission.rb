@@ -22,5 +22,9 @@ FactoryGirl.define do
 
       association :event, factory: :event_full
     end
+
+    trait :to_event_with_one_slot_remaining do
+      association :event, factory: :event_with_one_slot_remaining
+    end
   end
 end

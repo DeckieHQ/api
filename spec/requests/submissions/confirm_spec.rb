@@ -33,22 +33,6 @@ RSpec.describe 'Confirm event submission', :type => :request do
     context 'when user is the event host' do
       let(:user) { submission.event.host.user }
 
-      it { is_expected.to return_status_code 200 }
-
-      it 'returns the submission' do
-        expect(response.body).to equal_serialized(submission.reload)
-      end
-
-      it 'confirms the submission' do
-        expect(submission.reload).to be_confirmed
-      end
-
-      it do
-        is_expected.to have_created_action(submission.profile.user, submission.event, 'join')
-      end
-
-      # Test the service invokation. Therefore we don't need more tests here as
-      # the service is heavily tested independantly.
       context 'when submission event is closed' do
         let(:submission) { FactoryGirl.create(:submission, :pending, :to_event_closed) }
 
@@ -56,6 +40,50 @@ RSpec.describe 'Confirm event submission', :type => :request do
 
         it "doesn't confirm the submission" do
           expect(submission.reload).to be_pending
+        end
+      end
+
+      context 'when event is not full after confirmation' do
+        it { is_expected.to return_status_code 200 }
+
+        it 'returns the submission' do
+          expect(response.body).to equal_serialized(submission.reload)
+        end
+
+        it 'confirms the submission' do
+          expect(submission.reload).to be_confirmed
+        end
+
+        it do
+          is_expected.to have_created_action(submission.profile, submission.event, 'join')
+        end
+
+        it do
+          is_expected.to_not have_created_action(submission.event.host, submission.event, 'full')
+        end
+      end
+
+      context 'when event is full after confirmation' do
+        let(:submission) do
+          FactoryGirl.create(:submission, :pending, :to_event_with_one_slot_remaining)
+        end
+
+        it { is_expected.to return_status_code 200 }
+
+        it 'returns the submission' do
+          expect(response.body).to equal_serialized(submission.reload)
+        end
+
+        it 'confirms the submission' do
+          expect(submission.reload).to be_confirmed
+        end
+
+        it do
+          is_expected.to have_created_action(submission.profile, submission.event, 'join')
+        end
+
+        it do
+          is_expected.to have_created_action(submission.event.host, submission.event, 'full')
         end
       end
     end

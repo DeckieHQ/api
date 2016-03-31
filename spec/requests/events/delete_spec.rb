@@ -19,7 +19,7 @@ RSpec.describe 'Event delete', :type => :request do
         expect(Event.find_by(id: event.id)).to be_nil
       end
 
-      it { is_expected.to have_created_action(authenticate, event, 'cancel') }
+      it { is_expected.to have_created_action(authenticate.profile, event, 'cancel') }
 
       context 'when event is closed' do
         let(:event) { FactoryGirl.create(:event_closed) }

@@ -61,9 +61,9 @@ RSpec::Matchers.define :have_authorization_error do |error_code, options|
   end
 end
 
-RSpec::Matchers.define :have_created_action do |user, resource, type|
+RSpec::Matchers.define :have_created_action do |profile, resource, type|
   match do
-    Action.any? && Action.find_by(actor: user.profile, resource: resource, type: type)
+    Action.any? && Action.find_by(actor: profile, resource: resource, type: type)
   end
 end
 

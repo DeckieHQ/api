@@ -16,32 +16,24 @@ RSpec.describe CancelEvent do
   describe '#call' do
     let(:event) { double(destroy: true) }
 
-    let(:action) { double() }
-
     let(:service) { described_class.new(actor, event) }
 
     subject(:call) { service.call }
 
     before do
-      allow(Action).to receive(:create).and_return(action)
-
-      allow(AfterEventDestroyJob).to receive(:perform_later)
+      allow(Action).to receive(:create)
 
       call
     end
 
-    it 'destroy the resource' do
-      expect(event).to have_received(:destroy).with(no_args)
-    end
-
     it 'creates an action' do
       expect(Action).to have_received(:create).with(
-        actor: actor, resource: event, type: :cancel
+        actor: actor, resource: event, type: :cancel, notify: :later
       )
     end
 
-    it 'add to queue an after event destroy job' do
-      expect(AfterEventDestroyJob).to have_received(:perform_later).with(event, action)
+    it 'destroy the resource' do
+      expect(event).to have_received(:destroy).with(no_args)
     end
   end
 end

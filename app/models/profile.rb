@@ -8,8 +8,4 @@ class Profile < ApplicationRecord
   has_many :submissions
 
   has_many :hosted_events, class_name: :Event
-
-  def deleted?
-    user_id.nil?
-  end
 end

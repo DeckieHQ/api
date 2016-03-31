@@ -42,13 +42,13 @@ RSpec.describe 'Destroy event submission', :type => :request do
       context 'when submissions is pending' do
         let(:submission) { FactoryGirl.create(:submission, :pending) }
 
-        it { is_expected.to have_created_action(user, submission.event, 'unsubscribe') }
+        it { is_expected.to have_created_action(user.profile, submission.event, 'unsubscribe') }
       end
 
       context 'when submissions is confirmed' do
         let(:submission) { FactoryGirl.create(:submission, :confirmed) }
 
-        it { is_expected.to have_created_action(user, submission.event, 'leave') }
+        it { is_expected.to have_created_action(user.profile, submission.event, 'leave') }
       end
 
       # Test the service invokation. Therefore we don't need more tests here as

@@ -41,7 +41,7 @@ RSpec.describe 'Event update', :type => :request do
         expect(event.end_at).to   equal_time(event_update.end_at)
       end
 
-      it { is_expected.to have_created_action(authenticate, event, 'update') }
+      it { is_expected.to have_created_action(authenticate.profile, event, 'update') }
 
       context 'when switching to auto accept' do
         let(:event) { FactoryGirl.create(:event_with_submissions) }

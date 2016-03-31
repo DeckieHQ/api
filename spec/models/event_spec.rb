@@ -112,6 +112,14 @@ RSpec.describe Event, :type => :model do
     end
   end
 
+  context 'when destroyed' do
+    subject(:event) { FactoryGirl.create(:event_with_submissions).destroy }
+
+    it { is_expected.to be_persisted }
+
+    it { is_expected.to be_deleted }
+  end
+
   [:full, :closed].each do |state|
     method = "#{state}?"
 
@@ -126,14 +134,6 @@ RSpec.describe Event, :type => :model do
         it { is_expected.to be_truthy }
       end
     end
-  end
-
-  context 'when destroyed' do
-    subject(:event) { FactoryGirl.create(:event_with_submissions).destroy }
-
-    it { is_expected.to be_persisted }
-
-    it { is_expected.to be_deleted }
   end
 
   describe '#max_confirmable_submissions' do
@@ -203,7 +203,7 @@ RSpec.describe Event, :type => :model do
       context "with a #{type} action" do
         let(:action) { double(type: type) }
 
-        it 'returns only the event host' do
+        it 'returns only the event host id' do
           is_expected.to eq([event.host.id])
         end
       end
@@ -213,7 +213,7 @@ RSpec.describe Event, :type => :model do
       context "with a #{type} action" do
         let(:action) { double(type: type) }
 
-        it 'returns the event members + host' do
+        it 'returns the event submissions profiles ids + host ids' do
           is_expected.to eq(event.submissions.pluck('profile_id'))
         end
       end
@@ -223,7 +223,7 @@ RSpec.describe Event, :type => :model do
       context "with a #{type} action" do
         let(:action) { double(type: type) }
 
-        it 'returns the event attendees' do
+        it 'returns the event attendees ids' do
           is_expected.to eq(event.attendees.pluck('id').push(event.host.id))
         end
       end
@@ -233,12 +233,22 @@ RSpec.describe Event, :type => :model do
       context "with a #{type} action" do
         let(:action) { double(type: type, actor: event.host) }
 
-        it 'returns the event attendees + host' do
+        it 'returns the event attendees + host ids' do
           expected_profiles = event.attendees.pluck('id').push(event.host.id)
 
           expected_profiles.delete(action.actor.id)
 
           is_expected.to eq(expected_profiles)
+        end
+      end
+    end
+
+    %w(full).each do |type|
+      context "with a #{type} action" do
+        let(:action) { double(type: type) }
+
+        it 'returns the pending submissions profile ids' do
+          is_expected.to eq(event.pending_submissions.pluck('profile_id'))
         end
       end
     end
