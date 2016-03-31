@@ -25,6 +25,7 @@ RSpec.describe Comment, :type => :model do
     it { is_expected.to belong_to(:author).with_foreign_key(:profile_id) }
     it { is_expected.to belong_to(:resource) }
     it { is_expected.to validate_length_of(:message).is_at_most(200) }
+    it { is_expected.to have_many(:comments) }
   end
 
   describe '.publics' do

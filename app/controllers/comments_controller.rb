@@ -1,28 +1,5 @@
 class CommentsController < ApplicationController
-  before_action :authenticate!, only: [:create, :update, :destroy]
-  before_action :authenticate,  only: [:index]
-
-  def index
-    scope = CommentsScope.new(current_user, event)
-
-    search = Search.new(params, sort: %w(created_at), filters: scope.filters)
-
-    return render_search_errors(search) unless search.valid?
-
-    render json: search.apply(scope.default)
-  end
-
-  def create
-    comment = Comment.new(comment_params)
-    comment.resource = event
-
-    authorize comment
-
-    unless comment.save
-      return return_validation_errors(comment)
-    end
-    render json: comment, status: :created
-  end
+  before_action :authenticate!, only: [:update, :destroy]
 
   def update
     authorize comment
@@ -43,15 +20,11 @@ class CommentsController < ApplicationController
 
   protected
 
-  def event
-    @event ||= Event.find(params[:event_id])
-  end
-
   def comment
     @comment ||= Comment.find(params[:id])
   end
 
   def comment_params
-    permited_attributes(Comment)
+    permited_attributes(comment)
   end
 end

@@ -1,0 +1,50 @@
+require 'rails_helper'
+
+RSpec.describe 'Answer comment', :type => :request do
+  let(:parent)          { FactoryGirl.create(:comment) }
+  let(:comment_params)  { comment.attributes }
+  let(:params)          { Serialize.params(comment_params, type: :comments) }
+  let(:created_comment) { parent.comments.last }
+
+  before do
+    post comment_comments_path(parent), params: params, headers: json_headers
+  end
+
+  it_behaves_like 'an action requiring authentication'
+
+  context 'when user is authenticated' do
+    context 'when comment parent is public' do
+      let(:authenticate) { FactoryGirl.create(:user) }
+      let(:comment)      { FactoryGirl.build(:comment) }
+
+      it { is_expected.to return_status_code 201 }
+
+      it 'returns the comment created' do
+        expect(response.body).to equal_serialized(created_comment)
+      end
+    end
+
+    context 'when comment parent is private' do
+      context "when user isn't a event's member" do
+        let(:parent)       { FactoryGirl.create(:comment, :private) }
+        let(:authenticate) { FactoryGirl.create(:user) }
+        let(:comment)      { FactoryGirl.build(:comment) }
+
+        it { is_expected.to return_forbidden }
+
+        #TODO: add the test "resource is not created"
+      end
+
+      context "when user is an event's member" do
+        let(:authenticate) { parent.resource.host.user }
+        let(:comment)      { FactoryGirl.build(:comment) }
+
+        it { is_expected.to return_status_code 201 }
+
+        it 'returns the comment created' do
+          expect(response.body).to equal_serialized(created_comment)
+        end
+      end
+    end
+  end
+end
