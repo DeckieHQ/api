@@ -14,5 +14,9 @@ RSpec.describe CommentSerializer, :type => :serializer do
         comment.slice(:message, :private, :created_at)
       )
     end
+
+    it 'adds the comments link' do
+      expect(serialized).to have_relationship_link_for(:comments, source: comment)
+    end
   end
 end

@@ -22,7 +22,7 @@ class ApplicationController < ActionController::API
   protected
 
   def attributes(resource_type)
-    parameters = Parameters.new(params.to_unsafe_h, resource_type: resource_type)
+    parameters = Parameters.new(params.to_unsafe_h, resource_type: resource_type.to_s)
 
     unless parameters.valid?
       raise ParametersError, errors: parameters.errors

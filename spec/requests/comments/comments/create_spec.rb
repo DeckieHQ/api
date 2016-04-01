@@ -5,6 +5,7 @@ RSpec.describe 'Answer comment', :type => :request do
   let(:comment_params)  { comment.attributes }
   let(:params)          { Serialize.params(comment_params, type: :comments) }
   let(:created_comment) { parent.comments.last }
+  let(:comment)         { FactoryGirl.build(:comment) }
 
   before do
     post comment_comments_path(parent), params: params, headers: json_headers
@@ -13,38 +14,46 @@ RSpec.describe 'Answer comment', :type => :request do
   it_behaves_like 'an action requiring authentication'
 
   context 'when user is authenticated' do
-    context 'when comment parent is public' do
-      let(:authenticate) { FactoryGirl.create(:user) }
-      let(:comment)      { FactoryGirl.build(:comment) }
+    let(:authenticate) { FactoryGirl.create(:user) }
 
-      it { is_expected.to return_status_code 201 }
+    context 'when comment parent has a comment parent itself' do
+      let(:parent) { FactoryGirl.create(:comment, of_comment: true) }
 
-      it 'returns the comment created' do
-        expect(response.body).to equal_serialized(created_comment)
+      it { is_expected.to return_forbidden }
+
+      it "doesn't create the comment" do
+        expect(parent.comments).to be_empty
       end
     end
 
-    context 'when comment parent is private' do
-      context "when user isn't a event's member" do
-        let(:parent)       { FactoryGirl.create(:comment, :private) }
-        let(:authenticate) { FactoryGirl.create(:user) }
-        let(:comment)      { FactoryGirl.build(:comment) }
-
-        it { is_expected.to return_forbidden }
-
-        it "doesn't create the comment" do
-          expect(parent.comments).to be_empty
-        end
-      end
-
-      context "when user is an event's member" do
-        let(:authenticate) { parent.resource.host.user }
-        let(:comment)      { FactoryGirl.build(:comment) }
-
+    context 'when comment parent is an event comment' do
+      context 'when comment parent is public' do
         it { is_expected.to return_status_code 201 }
 
         it 'returns the comment created' do
           expect(response.body).to equal_serialized(created_comment)
+        end
+      end
+
+      context 'when comment parent is private' do
+        let(:parent) { FactoryGirl.create(:comment, :private) }
+
+        context "when user isn't a event's member" do
+          it { is_expected.to return_forbidden }
+
+          it "doesn't create the comment" do
+            expect(parent.comments).to be_empty
+          end
+        end
+
+        context "when user is an event's member" do
+          let(:authenticate) { parent.resource.host.user }
+
+          it { is_expected.to return_status_code 201 }
+
+          it 'returns the comment created' do
+            expect(response.body).to equal_serialized(created_comment)
+          end
         end
       end
     end

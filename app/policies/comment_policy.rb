@@ -6,7 +6,8 @@ class CommentPolicy < ApplicationPolicy
   end
 
   def create?
-    !comment.private? || comment.resource.member?(user.profile)
+    !comment.of_comment? &&
+    (!comment.private? || comment.resource.member?(user.profile))
   end
 
   def update?
