@@ -1,38 +1,36 @@
 require 'rails_helper'
 
 RSpec.describe JoinEvent do
-  let(:profile) { double() }
+  let(:profile) { Profile.new }
 
-  let(:event) { double() }
+  let(:event)   { Event.new }
 
   let(:service) { JoinEvent.new(profile, event) }
+
+  it 'has a new submission for this profile/event' do
+    expect(service.new_submission).to be_a(Submission)
+  end
 
   describe '#call' do
     subject(:call) { service.call }
 
-    let(:new_submission) { double() }
-
-    before do
-      allow(Submission).to receive(:create).and_return(new_submission)
-    end
-
     context 'when event has auto_accept' do
-      let(:event) { double(auto_accept?: true) }
-
       let(:confirm_service) { double(call: true) }
 
       before do
+        allow(event).to receive(:auto_accept?).and_return(true)
+
         allow(ConfirmSubmission).to receive(:new).and_return(confirm_service)
 
         call
       end
 
       it 'return the new submission' do
-        is_expected.to eq(new_submission)
+        is_expected.to eq(service.new_submission)
       end
 
       it 'uses the confirmation service' do
-        expect(ConfirmSubmission).to have_received(:new).with(new_submission)
+        expect(ConfirmSubmission).to have_received(:new).with(service.new_submission)
       end
 
       it 'confirms the submission' do
@@ -41,16 +39,22 @@ RSpec.describe JoinEvent do
     end
 
     context "when event doesn't have auto_accept" do
-      let(:event) { double(auto_accept?: false) }
-
       before do
+        allow(event).to receive(:auto_accept?).and_return(false)
+
+        allow(service.new_submission).to receive(:pending!)
+
         allow(Action).to receive(:create)
 
         call
       end
 
       it 'return the new submission' do
-        is_expected.to eq(new_submission)
+        is_expected.to eq(service.new_submission)
+      end
+
+      it "sets the submission to pending" do
+        expect(service.new_submission).to have_received(:pending!)
       end
 
       it 'creates an action' do

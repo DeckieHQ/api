@@ -1,21 +1,20 @@
-class ConfirmSubmission
-  delegate :event, to: :submission
-
+class ConfirmSubmission < ActionService
   def self.for(submissions)
     submissions.map { |submission| new(submission) }
   end
 
   def initialize(submission)
+    super(submission.profile, submission.event)
+
     @submission = submission
   end
 
   def call
     submission.confirmed!
 
-    Action.create(notify: :later,
-      actor: submission.profile, resource: event, type: :join
-    )
-    remove_pending_submissions if event.full?
+    create_action(:join)
+
+    remove_pending_submissions if submission.event.full?
 
     submission
   end
@@ -25,6 +24,6 @@ class ConfirmSubmission
   attr_reader :submission
 
   def remove_pending_submissions
-    EventReady.new(event).call(:full)
+    EventReady.new(submission.event).call(:full)
   end
 end

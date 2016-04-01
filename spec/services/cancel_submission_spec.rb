@@ -2,7 +2,9 @@ require 'rails_helper'
 
 RSpec.describe CancelSubmission do
   describe '.for' do
-    let(:submissions) { Array.new(5).map { double() } }
+    let(:submissions) do
+      Array.new(5).map { double(profile: double(), event: double()) }
+    end
 
     subject(:services) { described_class.for(submissions) }
 
