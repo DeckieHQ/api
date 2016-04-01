@@ -1,5 +1,16 @@
 class Comment::CommentsController < ApplicationController
   before_action :authenticate!, only: [:create]
+  before_action :authenticate,  only: [:index]
+
+  def index
+    authorize parent
+
+    search = Search.new(params, sort: %w(created_at))
+
+    return render_search_errors(search) unless search.valid?
+
+    render json: search.apply(parent.comments)
+  end
 
   def create
     comment = Comment.new(comment_params)

@@ -31,7 +31,9 @@ RSpec.describe 'Create event comment', :type => :request do
 
         it { is_expected.to return_forbidden }
 
-        #TODO: add the test "resource is not created"
+        it "doesn't create the comment" do
+          expect(event.comments).to be_empty
+        end
       end
 
       context "when user is an event's member" do

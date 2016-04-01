@@ -1,6 +1,10 @@
 class CommentPolicy < ApplicationPolicy
   alias_method :comment, :record
 
+  def index?
+    !comment.private? || comment.resource.member?(user.profile)
+  end
+
   def create?
     !comment.private? || comment.resource.member?(user.profile)
   end

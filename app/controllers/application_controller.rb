@@ -40,7 +40,7 @@ class ApplicationController < ActionController::API
     permited = record_policy.respond_to?(method) ?
       record_policy.public_send(method) :
       record_policy.permited_attributes
-      
+
     attributes(type).permit(permited)
   end
 
