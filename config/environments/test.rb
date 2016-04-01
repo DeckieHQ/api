@@ -33,6 +33,8 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  config.active_job.queue_adapter = :test
+
   # In test, the API call will resource a fake web server.
   config.sms_settings = { url: Faker::Internet.url }
 
