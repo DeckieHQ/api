@@ -16,7 +16,7 @@ class ActionNotifier
   attr_reader :action
 
   def users
-    @users ||= Profile.where(id: action.receiver_ids).includes(:user).map(&:user)
+    @users ||= User.joins(:profile).where(profiles: { id: action.receiver_ids })
   end
 end
 
