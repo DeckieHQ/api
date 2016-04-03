@@ -1,30 +1,18 @@
-class ChangeEventInfos
-  def initialize(event)
-    @event = event
-  end
-
+class ChangeEventInfos < ActionService
   def call(params)
-    if event.update(params) && switched_to_auto_accept?
-      confirm_pending_submissions
+    if event.update(params)
+      create_action(:update)
+
+      confirm_pending_submissions if event.switched_to_auto_accept?
     end
     event
   end
 
   private
 
-  attr_reader :event
-
-  def switched_to_auto_accept?
-    auto_accept_was, auto_accept = event.previous_changes['auto_accept']
-
-    auto_accept && !auto_accept_was
-  end
+  alias_method :event, :resource
 
   def confirm_pending_submissions
-    event.pending_submissions.take(
-      event.capacity - event.attendees_count
-    ).each do |submission|
-      ConfirmSubmission.new(submission).call
-    end
+    ConfirmSubmission.for(event.max_confirmable_submissions)
   end
 end

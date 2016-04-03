@@ -1,4 +1,6 @@
 class Event < ApplicationRecord
+  acts_as_paranoid
+
   include Filterable
 
   belongs_to :host, class_name: 'Profile', foreign_key: 'profile_id'
@@ -11,7 +13,7 @@ class Event < ApplicationRecord
 
   has_many :attendees, through: :confirmed_submissions, source: :profile
 
-  has_many :actions, as: :resource, dependent: :nullify
+  has_many :actions, as: :resource
 
   validates :title, :street, presence: true, length: { maximum: 128 }
 
@@ -63,9 +65,50 @@ class Event < ApplicationRecord
     attendees_count == capacity
   end
 
-  protected
+  def switched_to_auto_accept?
+    auto_accept_was, auto_accept = previous_changes['auto_accept']
+
+    auto_accept && !auto_accept_was
+  end
+
+  def max_confirmable_submissions
+    pending_submissions.take(capacity - attendees_count)
+  end
+
+  def destroy_pending_submissions
+    pending_submissions.destroy_all
+  end
+
+  def receiver_ids_for(action)
+    case action.type
+    when 'subscribe', 'unsubscribe'
+      [ host.id ]
+    when 'cancel'
+      submissions.pluck('profile_id')
+    when 'full'
+      pending_submissions.pluck('profile_id')
+    when 'join'
+      attendees_with_host_ids
+    when 'update', 'leave'
+      attendees_with_host_ids_except(action.actor)
+    else
+      throw "Unsupported action: #{action.type}"
+    end
+  end
+
+  private
 
   def address_changed?
     street_changed? || city_changed? || state_changed? || country_changed?
+  end
+
+  def attendees_with_host_ids
+    @attendees_with_host_ids ||= attendees.pluck('id').push(host.id)
+  end
+
+  def attendees_with_host_ids_except(profile)
+    attendees_with_host_ids.delete(profile.id)
+
+    attendees_with_host_ids
   end
 end

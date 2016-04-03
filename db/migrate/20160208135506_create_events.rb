@@ -28,6 +28,10 @@ class CreateEvents < ActiveRecord::Migration[5.0]
 
       t.timestamps null: false
 
+      t.datetime :deleted_at
+
+      t.index :deleted_at
+
       t.belongs_to :profile, index: true
     end
   end

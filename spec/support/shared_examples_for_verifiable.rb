@@ -101,22 +101,32 @@ RSpec.shared_examples 'acts as verifiable' do |attribute, options|
   end
 
   describe "##{send_instructions}" do
-    subject(:model) { FactoryGirl.create(:"#{factory}_with_#{attribute}_verification") }
+    let(:message) { double(deliver_now: Faker::Boolean.boolean) }
+
+    let(:carrier) { options[:carrier] }
+
+    let(:carrier_method) { :"#{attribute}_verification_instructions" }
+
+    let(:model) { FactoryGirl.create(:"#{factory}_with_#{attribute}_verification") }
+
+    subject(:call_send_instructions) { model.send(send_instructions) }
 
     before do
-      @deliveries = options[:deliveries]
+      allow(carrier).to receive(carrier_method).and_return(message)
 
-      @deliveries.use_fake_provider if @deliveries.respond_to?(:use_fake_provider)
+      call_send_instructions
     end
 
-    after do
-      @deliveries.clear
+    it "creates a message with #{attribute }verification instructions" do
+      expect(carrier).to have_received(carrier_method).with(model)
     end
 
-    it "sends a message to the #{attribute} with verification instructions" do
-      deliveries = options[:deliveries]
+    it "it delivers the message with #{attribute} verification instructions" do
+      expect(message).to have_received(:deliver_now).with(no_args)
+    end
 
-      expect { model.send(send_instructions) }.to change { deliveries.count }.by 1
+    it 'returns the status of the delivery' do
+      is_expected.to eq(message.deliver_now)
     end
   end
 end

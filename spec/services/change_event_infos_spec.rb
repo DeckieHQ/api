@@ -1,68 +1,74 @@
 require 'rails_helper'
 
 RSpec.describe ChangeEventInfos do
-  let(:service) { ChangeEventInfos.new(event) }
-
-  let(:event) { FactoryGirl.create(:event, :with_pending_submissions) }
-
   describe '#call' do
-    subject(:call) { service.call(params) }
+    let(:actor) { FactoryGirl.create(:profile) }
 
-    before { call }
+    let(:event) { FactoryGirl.create(:event)   }
 
-    let(:params) do
-      FactoryGirl.build(:event).attributes.slice('title', 'description')
+    subject(:call) { described_class.new(actor, event).call({}) }
+
+    before do
+      allow(ConfirmSubmission).to receive(:for)
     end
 
-    it 'returns the event' do
-      is_expected.to eq(event)
-    end
-
-    it 'updates the event' do
-      expect(event.reload).to have_attributes(params)
-    end
-
-    it "doesn't confirm any submission" do
-      expect(event.confirmed_submissions).to be_empty
-    end
-
-    context 'when switching to auto_accept ' do
-      let(:capacity) { Faker::Number.between(1, 6) }
-
-      # We must have non-pending submissions to ensure that only pending
-      # submissions are confirmed.
-      let(:event) do
-        FactoryGirl.create(:event_with_submissions, :with_pending_submissions,
-          capacity: capacity, submissions_count: capacity - 1, pendings_count: 1
-        )
+    context 'when resource update succeeded' do
+      before do
+        allow(event).to receive(:update).and_return(event)
       end
 
-      let(:params) { { auto_accept: true } }
+      context 'when switched to auto accept' do
+        before do
+          allow(event).to receive(:switched_to_auto_accept?).and_return(true)
+        end
 
-      it 'accepts the maximum allowed of pending submissions' do
-        expect(event.reload).to be_full
+        it 'returns the event' do
+          is_expected.to eq(event)
+        end
+
+        it { is_expected.to have_created_action(actor, event, :update) }
+
+        it 'confirm every submission as possible' do
+          call
+
+          expect(ConfirmSubmission).to have_received(:for).with(
+            event.max_confirmable_submissions
+          )
+        end
       end
 
-      it 'removes the other pending submissions' do
-        expect(event.pending_submissions).to be_empty
+      context 'when not switched to auto accept' do
+        before do
+          allow(event).to receive(:switched_to_auto_accept?).and_return(false)
+        end
+
+        it 'returns the event' do
+          is_expected.to eq(event)
+        end
+
+        it { is_expected.to have_created_action(actor, event, :update) }
+
+        it "doesnt't confirm any submission" do
+          call
+
+          expect(ConfirmSubmission).to_not have_received(:for)
+        end
       end
     end
 
-    context 'when switching to manual_accept' do
-      let(:event) { FactoryGirl.create(:event, :auto_accept, :with_pending_submissions) }
-
-      let(:params) { { auto_accept: false } }
-
-      it "doesn't confirm any submission" do
-        expect(event.confirmed_submissions).to be_empty
+    context 'when resource update failed' do
+      before do
+        allow(event).to receive(:update).and_return(nil)
       end
-    end
 
-    context 'when parameters are invalid' do
-      let(:params) { { title: nil } }
+      it 'returns the event' do
+        is_expected.to eq(event)
+      end
 
-      it "doesn't confirm any submission" do
-        expect(event.confirmed_submissions).to be_empty
+      it "doesnt't confirm any submission" do
+        call
+
+        expect(ConfirmSubmission).to_not have_received(:for)
       end
     end
   end

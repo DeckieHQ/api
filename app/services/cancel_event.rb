@@ -1,13 +1,15 @@
-class CancelEvent
-  def initialize(event)
-    @event = event
+class CancelEvent < ActionService
+  def self.for(profile, events)
+    events.map { |event| new(profile, event).call }
   end
 
   def call
+    create_action(:cancel)
+
     event.destroy
   end
 
   private
 
-  attr_reader :event
+  alias_method :event, :resource
 end

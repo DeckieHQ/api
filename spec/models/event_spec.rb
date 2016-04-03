@@ -23,7 +23,7 @@ RSpec.describe Event, :type => :model do
         .through(:confirmed_submissions).source(:profile)
     end
 
-    it { is_expected.to have_many(:actions).dependent(:nullify) }
+    it { is_expected.to have_many(:actions) }
 
     [
       :title,  :category, :ambiance, :level, :capacity, :begin_at,
@@ -111,12 +111,19 @@ RSpec.describe Event, :type => :model do
       end
     end
   end
-  
+
+  context 'when destroyed' do
+    subject(:event) { FactoryGirl.create(:event_with_submissions).destroy }
+
+    it { is_expected.to be_persisted }
+
+    it { is_expected.to be_deleted }
+  end
+
   [:full, :closed].each do |state|
     method = "#{state}?"
 
     describe "##{method}" do
-
       subject(:method) { FactoryGirl.create(:event).send(method) }
 
       it { is_expected.to be_falsy }
@@ -125,6 +132,130 @@ RSpec.describe Event, :type => :model do
         subject(:method) { FactoryGirl.create(:"event_#{state}").send(method) }
 
         it { is_expected.to be_truthy }
+      end
+    end
+  end
+
+  describe '#max_confirmable_submissions' do
+    let(:event) do
+      FactoryGirl.create(:event_with_submissions, :with_pending_submissions)
+    end
+
+    it 'returns the possible confirmable submissions' do
+      expect(event.max_confirmable_submissions).to eq(
+        event.pending_submissions.take(event.capacity - event.attendees_count)
+      )
+    end
+  end
+
+  describe '#destroy_pending_submissions' do
+    let(:event) do
+      FactoryGirl.create(:event_with_submissions, :with_pending_submissions)
+    end
+
+    before { event.destroy_pending_submissions }
+
+    it 'removes the pending submissions' do
+      expect(event.pending_submissions).to be_empty
+    end
+
+    it 'leaves the other submissions' do
+      expect(event.submissions).to_not be_empty
+    end
+  end
+
+  describe '#switched_to_auto_accept?' do
+    subject { event.switched_to_auto_accept? }
+
+    let(:event) { FactoryGirl.create(:event) }
+
+    it { is_expected.to be_falsy }
+
+    context 'after switching to auto_accept' do
+      before do
+        event.update(auto_accept: true)
+      end
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'after switching to manual_accept' do
+      let(:event) do
+        FactoryGirl.create(:event, :auto_accept)
+      end
+
+      before do
+        event.update(auto_accept: false)
+      end
+
+      it { is_expected.to be_falsy }
+    end
+  end
+
+  describe '#receiver_ids_for' do
+    let(:event) do
+      FactoryGirl.create(:event_with_attendees, :with_pending_submissions)
+    end
+
+    subject(:receiver_ids_for) { event.receiver_ids_for(action) }
+
+    %w(subscribe unsubscribe).each do |type|
+      context "with a #{type} action" do
+        let(:action) { double(type: type) }
+
+        it 'returns only the event host id' do
+          is_expected.to eq([event.host.id])
+        end
+      end
+    end
+
+    %w(cancel).each do |type|
+      context "with a #{type} action" do
+        let(:action) { double(type: type) }
+
+        it 'returns the event submissions profiles ids + host ids' do
+          is_expected.to eq(event.submissions.pluck('profile_id'))
+        end
+      end
+    end
+
+    %w(join).each do |type|
+      context "with a #{type} action" do
+        let(:action) { double(type: type) }
+
+        it 'returns the event attendees ids' do
+          is_expected.to eq(event.attendees.pluck('id').push(event.host.id))
+        end
+      end
+    end
+
+    %w(update leave).each do |type|
+      context "with a #{type} action" do
+        let(:action) { double(type: type, actor: event.host) }
+
+        it 'returns the event attendees + host ids' do
+          expected_profiles = event.attendees.pluck('id').push(event.host.id)
+
+          expected_profiles.delete(action.actor.id)
+
+          is_expected.to eq(expected_profiles)
+        end
+      end
+    end
+
+    %w(full).each do |type|
+      context "with a #{type} action" do
+        let(:action) { double(type: type) }
+
+        it 'returns the pending submissions profile ids' do
+          is_expected.to eq(event.pending_submissions.pluck('profile_id'))
+        end
+      end
+    end
+
+    context 'with unsupported type' do
+      it 'raises an error' do
+        expect { receiver_ids_for }.to raise_error
       end
     end
   end

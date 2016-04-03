@@ -1,37 +1,47 @@
 require 'rails_helper'
 
 RSpec.describe JoinEvent do
-  let(:service) { JoinEvent.new(user, event) }
-
-  let(:user) { FactoryGirl.create(:user) }
-
-  let(:event) { FactoryGirl.create(:event) }
 
   describe '#call' do
-    subject(:call) { service.call }
+    let(:profile) { FactoryGirl.create(:profile) }
 
-    before { call }
+    let(:event)   { FactoryGirl.create(:event)   }
 
-    it 'saves and return the submission' do
-      is_expected.to be_persisted
-    end
-
-    it 'links the submission to both event and profile' do
-      is_expected.to have_attributes(
-        profile_id: user.profile.id, event_id: event.id
-      )
-    end
-
-    it 'returns the pending submission' do
-      is_expected.to be_pending
-    end
+    subject(:call) { JoinEvent.new(profile, event).call }
 
     context 'when event has auto_accept' do
-      let(:event) { FactoryGirl.create(:event, :auto_accept) }
-
-      it 'confirms and return the submission' do
-        is_expected.to be_confirmed
+      before do
+        allow(event).to receive(:auto_accept?).and_return(true)
       end
+
+      it 'creates, confirms and return the new submission' do
+        confirm_service = double(call: double())
+
+        allow(ConfirmSubmission).to receive(:new) do |submission|
+          expect(submission.attributes).to eql(
+            Submission.new(profile: profile, event: event).attributes
+          )
+          confirm_service
+        end
+
+        is_expected.to eq(confirm_service.call)
+      end
+    end
+
+    context "when event doesn't have auto_accept" do
+      let(:new_submission) do
+        Submission.find_by!(profile: profile, event: event, status: 'pending')
+      end
+
+      before do
+        allow(event).to receive(:auto_accept?).and_return(false)
+      end
+
+      it 'creates and return the new pending submission' do
+        is_expected.to eq(new_submission)
+      end
+
+      it { is_expected.to have_created_action(profile, event, :subscribe) }
     end
   end
 end

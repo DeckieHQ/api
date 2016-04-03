@@ -1,23 +1,29 @@
-class ConfirmSubmission
+class ConfirmSubmission < ActionService
+  def self.for(submissions)
+    submissions.map { |submission| new(submission).call }
+  end
+
   def initialize(submission)
+    super(submission.profile, submission.event)
+
     @submission = submission
-    @event      = submission.event
   end
 
   def call
     submission.confirmed!
 
-    destroy_pending_submissions if event.full?
+    create_action(:join)
+
+    remove_pending_submissions if submission.event.full?
 
     submission
   end
 
   private
 
-  attr_reader :submission, :event
+  attr_reader :submission
 
-  # TODO: send notification to removed submissions.
-  def destroy_pending_submissions
-    event.pending_submissions.destroy_all
+  def remove_pending_submissions
+    EventReady.new(submission.event).call(:full)
   end
 end

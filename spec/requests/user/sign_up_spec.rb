@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'User sign up', :type => :request do
-  let(:params)         { Serialize.params(sign_up_params, type: :users) }
+  let(:params) { Serialize.params(sign_up_params, type: :users) }
+
   let(:sign_up_params) { user.attributes.merge(password: user.password) }
 
   before do

@@ -1,5 +1,5 @@
 class NotificationSerializer < ActiveModel::Serializer
-  attributes :type, :created_at, :updated_at
+  attributes :type, :viewed
 
   belongs_to :user
   belongs_to :action

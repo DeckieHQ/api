@@ -16,6 +16,11 @@ RSpec.describe Action, :type => :model do
     end
 
     it do
+      is_expected.to have_db_column(:receiver_ids)
+        .of_type(:text).with_options(array: true, null: false, default: [])
+    end
+
+    it do
       is_expected.to have_db_column(:created_at)
         .of_type(:datetime).with_options(null: false)
     end
@@ -31,7 +36,7 @@ RSpec.describe Action, :type => :model do
     it { is_expected.to belong_to(:resource) }
   end
 
-  context 'when created' do
+  context 'before create' do
     subject(:action) { FactoryGirl.create(:action, resource: resource) }
 
     {
@@ -40,8 +45,22 @@ RSpec.describe Action, :type => :model do
       context "with #{factory} resource" do
         let(:resource) { FactoryGirl.create(:event) }
 
-        it "has a title matching #{factory} #{attribute}" do
-          expect(action.title).to eq(resource.send(attribute))
+        let(:fakeIds) { Array.new(5).map { Faker::Number.number(5) } }
+
+        before do
+          allow(resource).to receive(:receiver_ids_for).and_return(fakeIds)
+        end
+
+        it "has a title matching #{factory} title" do
+          expect(action.title).to eq(resource.title)
+        end
+
+        it 'asks the resource for the receiver ids' do
+          expect(resource).to have_received(:receiver_ids_for).with(action)
+        end
+
+        it 'saves the receiver ids' do
+          expect(action.receiver_ids).to eq(fakeIds)
         end
       end
     end
@@ -49,9 +68,51 @@ RSpec.describe Action, :type => :model do
     context 'with unsupported resource' do
       let(:resource) { FactoryGirl.create(:user) }
 
-      it 'has an empty title' do
-        expect(action.title).to be_empty
+      it { expect { action }.to raise_error }
+    end
+  end
+
+  context 'after commit' do
+    context 'without notify' do
+      subject(:action) { FactoryGirl.create(:action) }
+
+      it 'does nothing' do
+        is_expected.to be_persisted
       end
+    end
+
+    context 'with notify now' do
+      subject(:action) { FactoryGirl.create(:action, notify: :now) }
+
+      before do
+        allow(ActionNotifierJob).to receive(:perform_now)
+      end
+
+      it 'will create the notifications later'do
+        expect(ActionNotifierJob).to have_received(:perform_now).with(action)
+      end
+    end
+
+    context 'without notify later' do
+      subject(:action) { FactoryGirl.create(:action, notify: :later) }
+
+      before do
+        allow(ActionNotifierJob).to receive(:perform_later)
+      end
+
+      it 'will create the notifications later'do
+        expect(ActionNotifierJob).to have_received(:perform_later).with(action)
+      end
+    end
+  end
+
+  describe '#resource' do
+    let(:action) { FactoryGirl.create(:action) }
+
+    it 'returns also deleted resources' do
+      action.resource.destroy
+
+      expect(action.reload.resource).to be_present
     end
   end
 end

@@ -14,6 +14,12 @@ class Notification < ApplicationRecord
     update(viewed: true)
   end
 
+  def send_email
+    if user.preferences[:notifications].include?(type)
+      UserMailer.send_notification(self).deliver_later
+    end
+  end
+
   private
 
   def set_type

@@ -1,29 +1,27 @@
-class JoinEvent
-  def initialize(user, event)
-    @user  = user
-    @event = event
+class JoinEvent < ActionService
+  def initialize(profile, event)
+    super(profile, event)
+
+    @new_submission = Submission.new(event: event, profile: profile)
   end
 
   def call
-    # Using the submission service is mandatory to automatically send
-    # notifications to event's attendees on success.
-    confirm_new_submission if event.auto_accept?
+    if event.auto_accept?
+      confirm_new_submission!
+    else
+      create_action(:subscribe)
 
-    # TODO: Send notification to host regardless of the status.
-    new_submission
+      new_submission.tap(&:pending!)
+    end
   end
 
   private
 
-  attr_reader :user, :event
+  alias_method :event, :resource
 
-  def new_submission
-    @new_submission ||= Submission.create(
-      event: event, profile: user.profile, status: :pending
-    )
-  end
+  attr_reader :new_submission
 
-  def confirm_new_submission
+  def confirm_new_submission!
     ConfirmSubmission.new(new_submission).call
   end
 end

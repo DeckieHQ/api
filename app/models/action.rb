@@ -1,20 +1,38 @@
 class Action < ApplicationRecord
   self.inheritance_column = nil
 
+  attr_accessor :notify
+
   belongs_to :actor, class_name: 'Profile', foreign_key: 'profile_id'
 
   belongs_to :resource, polymorphic: true
 
-  before_create -> { self.title = title_from_resource }
+  before_create :set_title
+
+  before_create :set_receiver_ids
+
+  after_commit :create_notifications
+
+  def resource
+    resource_type.constantize.unscoped { super }
+  end
 
   private
 
-  def title_from_resource
-    case resource_type
-    when 'Event'
-      resource.title
-    else
-      ''
+  def set_title
+    self.title = resource.title
+  end
+
+  def set_receiver_ids
+    self.receiver_ids = resource.receiver_ids_for(self)
+  end
+
+  def create_notifications
+    case notify
+    when :now
+      ActionNotifierJob.perform_now(self)
+    when :later
+      ActionNotifierJob.perform_later(self)
     end
   end
 end

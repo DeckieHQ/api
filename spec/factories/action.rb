@@ -4,6 +4,10 @@ FactoryGirl.define do
 
     association :resource, factory: :event
 
-    type { Fake::Action.type }
+    notify :never
+
+    after(:build) do |action|
+      action.type = Fake::Action.type_for(action.resource_type)
+    end
   end
 end

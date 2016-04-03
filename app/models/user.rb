@@ -48,7 +48,7 @@ class User < ApplicationRecord
     submissions.filter({ event: :opened })
   end
 
-  protected
+  private
 
   def build_profile
     create_profile(display_name: display_name)

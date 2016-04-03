@@ -1,33 +1,31 @@
 require 'rails_helper'
 
 RSpec.describe CleanAccount do
-  let(:service) { CleanAccount.new(user) }
+  let(:account) do
+    instance_double('User', profile: double(),
+      opened_hosted_events: Array.new(5),
+      opened_submissions:   Array.new(3)
+    )
+  end
+
+  let(:service) { CleanAccount.new(account) }
 
   describe '#call' do
-    before { service.call }
+    before do
+      allow(CancelEvent).to      receive(:for)
+      allow(CancelSubmission).to receive(:for)
 
-    context 'when user has hosted events' do
-      let(:user) { FactoryGirl.create(:user_with_hosted_events) }
-
-      it 'removes its opened hosted events' do
-        expect(user.opened_hosted_events).to be_empty
-      end
-
-      it "doesn't remove its closed hosted events" do
-        expect(user.hosted_events).to_not be_empty
-      end
+      service.call
     end
 
-    context 'when user subscribed to some events' do
-      let(:user) { FactoryGirl.create(:user, :with_submissions) }
+    it 'cancels each user opened hosted events' do
+      expect(CancelEvent).to have_received(:for).with(
+        account.profile, account.opened_hosted_events
+      )
+    end
 
-      it 'removes the submissions to opened events' do
-        expect(user.opened_submissions).to be_empty
-      end
-
-      it "doesn't remove the submissions to closed events" do
-        expect(user.submissions).to_not be_empty
-      end
+    it 'cancels each user opened subsmissions' do
+      expect(CancelSubmission).to have_received(:for).with(account.opened_submissions)
     end
   end
 end

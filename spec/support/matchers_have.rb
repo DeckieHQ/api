@@ -60,3 +60,31 @@ RSpec::Matchers.define :have_authorization_error do |error_code, options|
     policy.user.errors.added?(:base, error_code)
   end
 end
+
+RSpec::Matchers.define :have_created_action do |profile, resource, type|
+  match do
+    return false unless Action.any?
+
+    action = Action.find_by(actor: profile, resource: resource, type: type)
+
+    return false unless action
+
+    has_notification_job?(action)
+  end
+end
+
+RSpec::Matchers.define :have_many_actions do |actors, resource, type|
+  match do
+    actions = Action.where(resource: resource, type: type).to_a || []
+
+    actions.reject do |action|
+      actors.include?(action.actor) && has_notification_job?(action)
+    end.empty?
+  end
+end
+
+def has_notification_job?(action)
+  enqueued_jobs.include?({ job: ActionNotifierJob, queue: 'notifications',
+    args: [{ '_aj_globalid' => action.to_global_id.to_s }]
+  })
+end
