@@ -1,6 +1,6 @@
 class CancelSubmission < ActionService
   def self.for(submissions)
-    submissions.map { |submission| new(submission) }
+    submissions.map { |submission| new(submission).call }
   end
 
   def initialize(submission)

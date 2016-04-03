@@ -4,12 +4,26 @@ RSpec.describe CancelEvent do
   let(:profile) { double() }
 
   describe '.for' do
-    let(:events) { Array.new(5).map { double() } }
+    let(:events)   { Array.new(5).map { double() } }
 
-    subject(:services) { described_class.for(profile, events) }
+    let(:services) { Array.new(5).map { double(call: true) } }
 
-    it 'maps an array of events with this service' do
-      expect(services).to all be_a(described_class)
+    before do
+      allow(described_class).to receive(:new).and_return(*services)
+
+      described_class.for(profile, events)
+    end
+
+    it "gets an instance of #{described_class} for given profile and each given event" do
+      events.each do |event|
+        expect(described_class).to have_received(:new).with(profile, event)
+      end
+    end
+
+    it "call on each services of #{described_class}" do
+      services.each do |service|
+        expect(service).to have_received(:call).with(no_args)
+      end
     end
   end
 

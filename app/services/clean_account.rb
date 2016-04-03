@@ -4,9 +4,9 @@ class CleanAccount
   end
 
   def call
-    CancelEvent.for(account.profile, account.opened_hosted_events).each(&:call)
+    CancelEvent.for(account.profile, account.opened_hosted_events)
 
-    CancelSubmission.for(account.opened_submissions).each(&:call)
+    CancelSubmission.for(account.opened_submissions)
   end
 
   private

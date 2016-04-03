@@ -22,12 +22,8 @@ RSpec.describe ChangeEventInfos do
           double(switched_to_auto_accept?: true, max_confirmable_submissions: Array.new(5))
         end
 
-        let(:confirm_resource_services) do
-          event.max_confirmable_submissions.map { double(call: true) }
-        end
-
         before do
-          allow(ConfirmSubmission).to receive(:for).and_return(confirm_resource_services)
+          allow(ConfirmSubmission).to receive(:for)
 
           call
         end
@@ -46,12 +42,6 @@ RSpec.describe ChangeEventInfos do
           expect(ConfirmSubmission).to have_received(:for).with(
             event.max_confirmable_submissions
           )
-        end
-
-        it 'confirms each possible submissions' do
-          confirm_resource_services.each do |confirm_resource_service|
-            expect(confirm_resource_service).to have_received(:call).with(no_args)
-          end
         end
       end
 

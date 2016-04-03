@@ -1,6 +1,6 @@
 class CancelEvent < ActionService
   def self.for(profile, events)
-    events.map { |event| new(profile, event) }
+    events.map { |event| new(profile, event).call }
   end
 
   def call

@@ -13,6 +13,6 @@ class ChangeEventInfos < ActionService
   alias_method :event, :resource
 
   def confirm_pending_submissions
-    ConfirmSubmission.for(event.max_confirmable_submissions).each(&:call)
+    ConfirmSubmission.for(event.max_confirmable_submissions)
   end
 end
