@@ -26,52 +26,30 @@ RSpec.describe CancelSubmission do
   end
 
   describe '#call' do
-    let(:service) { described_class.new(submission) }
-
-    subject(:call) { service.call }
-
-    let(:submission) do
-      double(destroy: true, event: double(), profile: double())
-    end
-
-    before do
-      allow(Action).to receive(:create)
-    end
+    subject(:service) { described_class.new(submission) }
 
     context 'when submission is confirmed' do
-      before do
-        allow(submission).to receive(:confirmed?).and_return(true)
+      let(:submission) { FactoryGirl.create(:submission, :confirmed) }
 
-        call
-      end
+      before { service.call }
 
       it 'destroys the submission' do
-        expect(submission).to have_received(:destroy).with(no_args)
+        expect(submission).to_not be_persisted
       end
 
-      it 'creates an action' do
-        expect(Action).to have_received(:create).with(notify: :later,
-          actor: submission.profile, resource: submission.event, type: :leave
-        )
-      end
+      it { is_expected.to have_created_action(submission.profile, submission.event, :leave) }
     end
 
     context 'when submission is not confirmed' do
-      before do
-        allow(submission).to receive(:confirmed?).and_return(false)
+      let(:submission) { FactoryGirl.create(:submission, :pending) }
 
-        call
-      end
+      before { service.call }
 
       it 'destroys the submission' do
-        expect(submission).to have_received(:destroy).with(no_args)
+        expect(submission).to_not be_persisted
       end
 
-      it 'creates an action' do
-        expect(Action).to have_received(:create).with(notify: :later,
-          actor: submission.profile, resource: submission.event, type: :unsubscribe
-        )
-      end
+      it { is_expected.to have_created_action(submission.profile, submission.event, :unsubscribe) }
     end
   end
 end

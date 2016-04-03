@@ -1,6 +1,4 @@
 class JoinEvent < ActionService
-  attr_reader :new_submission
-
   def initialize(profile, event)
     super(profile, event)
 
@@ -11,16 +9,17 @@ class JoinEvent < ActionService
     if event.auto_accept?
       confirm_new_submission!
     else
-      new_submission.pending!
-
       create_action(:subscribe)
+
+      new_submission.tap(&:pending!)
     end
-    new_submission
   end
 
   private
 
   alias_method :event, :resource
+
+  attr_reader :new_submission
 
   def confirm_new_submission!
     ConfirmSubmission.new(new_submission).call

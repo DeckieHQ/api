@@ -26,68 +26,50 @@ RSpec.describe ConfirmSubmission do
   end
 
   describe '#call' do
-    let(:service) { described_class.new(submission) }
+    subject(:call) { described_class.new(submission).call }
 
-    let(:submission) do
-      double(confirmed!: true, event: event, profile: double())
-    end
+    let(:submission) { FactoryGirl.create(:submission, :pending) }
 
-    subject(:call) { service.call }
+    let(:event_ready_service) { double(call: true) }
 
     before do
-      allow(Action).to receive(:create)
+      allow(EventReady).to receive(:new).and_return(event_ready_service)
     end
 
     context 'when event is not full after confirmation' do
-      let(:event) { double(host: double(), full?: false) }
-
-      before { call }
-
-      it 'returns the submission' do
-        is_expected.to eq(submission)
+      before do
+        allow(submission.event).to receive(:full?).and_return(false)
       end
 
-      it 'confirms the submission' do
-        expect(submission).to have_received(:confirmed!).with(no_args)
+      it 'confirms and return the submission' do
+        is_expected.to eq(submission.reload).and be_confirmed
       end
 
-      it 'creates an event action' do
-        expect(Action).to have_received(:create).with(notify: :later,
-          actor: submission.profile, resource: submission.event, type: :join
-        )
+      it { is_expected.to have_created_action(submission.profile, submission.event, :join) }
+
+      it "doesn't call the event ready service" do
+        call
+
+        expect(EventReady).to_not have_received(:new)
       end
     end
 
     context 'when event is full after confirmation' do
-      let(:event) { double(host: double(), full?: true) }
-
-      let(:event_ready_service) { double(call: true) }
-
       before do
-        allow(EventReady).to receive(:new).and_return(event_ready_service)
+        allow(submission.event).to receive(:full?).and_return(true)
+      end
 
+      it 'confirms and return the submission' do
+        is_expected.to eq(submission.reload).and be_confirmed
+      end
+
+      it { is_expected.to have_created_action(submission.profile, submission.event, :join) }
+
+      it 'calls the event ready service with this event' do
         call
-      end
 
-      it 'returns the submission' do
-        is_expected.to eq(submission)
-      end
+        expect(EventReady).to have_received(:new).with(submission.event)
 
-      it 'confirms the submission' do
-        expect(submission).to have_received(:confirmed!).with(no_args)
-      end
-
-      it 'creates an event action' do
-        expect(Action).to have_received(:create).with(notify: :later,
-          actor: submission.profile, resource: submission.event, type: :join
-        )
-      end
-
-      it 'uses the event ready service' do
-        expect(EventReady).to have_received(:new).with(event)
-      end
-
-      it 'calls the event ready service' do
         expect(event_ready_service).to have_received(:call).with(:full)
       end
     end

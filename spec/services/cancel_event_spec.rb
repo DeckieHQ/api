@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe CancelEvent do
-  let(:profile) { double() }
-
   describe '.for' do
+    let(:profile) { double() }
+
     let(:events)   { Array.new(5).map { double() } }
 
     let(:services) { Array.new(5).map { double(call: true) } }
@@ -28,26 +28,19 @@ RSpec.describe CancelEvent do
   end
 
   describe '#call' do
-    let(:event) { double(destroy: true) }
+    let(:profile) { FactoryGirl.create(:profile) }
+    let(:event)   { FactoryGirl.create(:event)   }
 
-    let(:service) { described_class.new(profile, event) }
+    subject(:service) { described_class.new(profile, event) }
 
     subject(:call) { service.call }
 
-    before do
-      allow(Action).to receive(:create)
+    before { service.call }
 
-      call
-    end
-
-    it 'creates an action' do
-      expect(Action).to have_received(:create).with(
-        actor: profile, resource: event, type: :cancel, notify: :later
-      )
-    end
+    it { is_expected.to have_created_action(profile, event, :cancel) }
 
     it 'destroy the resource' do
-      expect(event).to have_received(:destroy).with(no_args)
+      expect(event).to be_deleted
     end
   end
 end

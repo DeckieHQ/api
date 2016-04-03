@@ -1,32 +1,25 @@
 require 'rails_helper'
 
 RSpec.describe EventReady do
-  let(:actor) { double() }
-
   describe '#call' do
-    let(:event) { double(host: double(), destroy_pending_submissions: true) }
+    let(:event) { FactoryGirl.create(:event) }
 
-    let(:service) { described_class.new(event) }
+    subject(:service) { described_class.new(event) }
 
     before do
-      allow(Action).to receive(:create)
+      allow(event).to receive(:destroy_pending_submissions)
     end
 
-    [:full, :start].each do |reason|
-      context "with reason #{reason}" do
-        subject(:call) { service.call(reason) }
+    [:full].each do |reason|
+      context "with reason :#{reason}" do
 
-        before { call }
+        before { service.call(reason) }
 
         it 'destroy the event pending submissions' do
           expect(event).to have_received(:destroy_pending_submissions).with(no_args)
         end
 
-        it 'creates an action' do
-          expect(Action).to have_received(:create).with(
-            actor: event.host, resource: event, type: reason, notify: :later
-          )
-        end
+        it { is_expected.to have_created_action(event.host, event, reason) }
       end
     end
   end

@@ -1,67 +1,47 @@
 require 'rails_helper'
 
 RSpec.describe JoinEvent do
-  let(:profile) { Profile.new }
-
-  let(:event)   { Event.new }
-
-  let(:service) { JoinEvent.new(profile, event) }
-
-  it 'has a new submission for this profile/event' do
-    expect(service.new_submission).to be_a(Submission)
-  end
 
   describe '#call' do
-    subject(:call) { service.call }
+    let(:profile) { FactoryGirl.create(:profile) }
+
+    let(:event)   { FactoryGirl.create(:event)   }
+
+    subject(:call) { JoinEvent.new(profile, event).call }
 
     context 'when event has auto_accept' do
-      let(:confirm_service) { double(call: true) }
-
       before do
         allow(event).to receive(:auto_accept?).and_return(true)
-
-        allow(ConfirmSubmission).to receive(:new).and_return(confirm_service)
-
-        call
       end
 
-      it 'return the new submission' do
-        is_expected.to eq(service.new_submission)
-      end
+      it 'creates, confirms and return the new submission' do
+        confirm_service = double(call: double())
 
-      it 'uses the confirmation service' do
-        expect(ConfirmSubmission).to have_received(:new).with(service.new_submission)
-      end
+        allow(ConfirmSubmission).to receive(:new) do |submission|
+          expect(submission.attributes).to eql(
+            Submission.new(profile: profile, event: event).attributes
+          )
+          confirm_service
+        end
 
-      it 'confirms the submission' do
-        expect(confirm_service).to have_received(:call).with(no_args)
+        is_expected.to eq(confirm_service.call)
       end
     end
 
     context "when event doesn't have auto_accept" do
+      let(:new_submission) do
+        Submission.find_by!(profile: profile, event: event, status: 'pending')
+      end
+
       before do
         allow(event).to receive(:auto_accept?).and_return(false)
-
-        allow(service.new_submission).to receive(:pending!)
-
-        allow(Action).to receive(:create)
-
-        call
       end
 
-      it 'return the new submission' do
-        is_expected.to eq(service.new_submission)
+      it 'creates and return the new pending submission' do
+        is_expected.to eq(new_submission)
       end
 
-      it "sets the submission to pending" do
-        expect(service.new_submission).to have_received(:pending!)
-      end
-
-      it 'creates an action' do
-        expect(Action).to have_received(:create).with(notify: :later,
-          actor: profile, resource: event, type: :subscribe
-        )
-      end
+      it { is_expected.to have_created_action(profile, event, :subscribe) }
     end
   end
 end
