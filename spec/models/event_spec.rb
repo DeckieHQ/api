@@ -8,6 +8,8 @@ RSpec.describe Event, :type => :model do
   describe 'Relationships' do
     it { is_expected.to belong_to(:host).with_foreign_key('profile_id') }
 
+    it { is_expected.to include_deleted(:host) }
+
     it { is_expected.to have_many(:submissions).dependent(:destroy) }
 
     it do

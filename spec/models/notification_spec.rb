@@ -31,6 +31,8 @@ RSpec.describe Notification, :type => :model do
   describe 'Validations' do
     it { is_expected.to belong_to(:user)   }
     it { is_expected.to belong_to(:action) }
+
+    it { is_expected.to include_deleted(:action) }
   end
 
   context 'when created' do

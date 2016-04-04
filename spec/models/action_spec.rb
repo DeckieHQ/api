@@ -33,6 +33,9 @@ RSpec.describe Action, :type => :model do
 
   describe 'Relationships' do
     it { is_expected.to belong_to(:actor).with_foreign_key(:profile_id) }
+
+    it { is_expected.to include_deleted(:actor) }
+
     it { is_expected.to belong_to(:resource) }
   end
 

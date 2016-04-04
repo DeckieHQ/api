@@ -10,7 +10,10 @@ RSpec.describe Submission, :type => :model do
 
   describe 'Relationships' do
     it { is_expected.to belong_to(:event) }
+
     it { is_expected.to belong_to(:profile) }
+
+    it { is_expected.to include_deleted(:profile) }
   end
 
   context 'after create' do
