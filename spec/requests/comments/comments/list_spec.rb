@@ -8,15 +8,17 @@ RSpec.describe 'List comment answers', :type => :request do
   end
 
   context "when comment is public" do
-    let(:parent) { FactoryGirl.create(:comment) }
+    let(:parent) { FactoryGirl.create(:comment, :with_comments) }
 
     it_behaves_like 'an action with pagination', :parent, :comments
 
     it_behaves_like 'an action with sorting', :parent, :comments, accept: %w(created_at)
+
+    it_behaves_like 'an action with include', :parent, :comments, accept: %w(author)
   end
 
   context "when comment is private" do
-    let(:parent) { FactoryGirl.create(:comment, :private) }
+    let(:parent) { FactoryGirl.create(:comment, :private, :with_comments) }
 
     context "when user isn't an event's member" do
       let(:authenticate) { FactoryGirl.create(:user) }
@@ -30,6 +32,8 @@ RSpec.describe 'List comment answers', :type => :request do
       it_behaves_like 'an action with pagination', :parent, :comments
 
       it_behaves_like 'an action with sorting', :parent, :comments, accept: %w(created_at)
+
+      it_behaves_like 'an action with include', :parent, :comments, accept: %w(author)
     end
   end
 end

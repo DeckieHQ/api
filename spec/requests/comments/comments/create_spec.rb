@@ -17,7 +17,7 @@ RSpec.describe 'Answer comment', :type => :request do
     let(:authenticate) { FactoryGirl.create(:user) }
 
     context 'when comment parent has a comment parent itself' do
-      let(:parent) { FactoryGirl.create(:comment, of_comment: true) }
+      let(:parent) { FactoryGirl.create(:comment, :of_comment) }
 
       it { is_expected.to return_forbidden }
 

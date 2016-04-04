@@ -5,7 +5,7 @@ RSpec.describe CommentPolicy do
 
   context 'being the comment owner' do
     let(:comment) { FactoryGirl.create(:comment) }
-    let(:user) { comment.author.user }
+    let(:user)    { comment.author.user }
 
     it { is_expected.to permit_action(:update) }
     it { is_expected.to permit_action(:destroy) }
@@ -13,7 +13,7 @@ RSpec.describe CommentPolicy do
 
   context 'being another user' do
     let(:comment) { FactoryGirl.create(:comment) }
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user)    { FactoryGirl.create(:user) }
 
     it { is_expected.to forbid_action(:update) }
     it { is_expected.to forbid_action(:destroy) }
@@ -21,7 +21,7 @@ RSpec.describe CommentPolicy do
 
   context 'posting a public comment' do
     let(:comment) { FactoryGirl.create(:comment) }
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user)    { FactoryGirl.create(:user) }
 
     it { is_expected.to permit_action(:create) }
   end

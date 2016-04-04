@@ -5,11 +5,11 @@ class Comment::CommentsController < ApplicationController
   def index
     authorize parent
 
-    search = Search.new(params, sort: %w(created_at))
+    search = Search.new(params, sort: %w(created_at), include: %w(author))
 
     return render_search_errors(search) unless search.valid?
 
-    render json: search.apply(parent.comments)
+    render json: search.apply(parent.comments), include: search.included
   end
 
   def create

@@ -5,11 +5,11 @@ class Event::CommentsController < ApplicationController
   def index
     scope = CommentsScope.new(current_user, event)
 
-    search = Search.new(params, sort: %w(created_at), filters: scope.filters)
+    search = Search.new(params, sort: %w(created_at), include: %w(author), filters: scope.filters)
 
     return render_search_errors(search) unless search.valid?
 
-    render json: search.apply(scope.default)
+    render json: search.apply(scope.default), include: search.included
   end
 
   def create

@@ -15,6 +15,10 @@ RSpec.describe CommentSerializer, :type => :serializer do
       )
     end
 
+    it "serializes the author relation" do
+      expect(serialized.relationships).to have_key(:author)
+    end
+
     it 'adds the comments link' do
       expect(serialized).to have_relationship_link_for(:comments, source: comment)
     end
