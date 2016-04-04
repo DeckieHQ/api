@@ -14,7 +14,8 @@ RSpec.describe 'Answer comment', :type => :request do
   it_behaves_like 'an action requiring authentication'
 
   context 'when user is authenticated' do
-    let(:authenticate) { FactoryGirl.create(:user) }
+    let(:user)         { FactoryGirl.create(:user) }
+    let(:authenticate) { user }
 
     context 'when comment parent has a comment parent itself' do
       let(:parent) { FactoryGirl.create(:comment, :of_comment) }
@@ -29,6 +30,13 @@ RSpec.describe 'Answer comment', :type => :request do
     context 'when comment parent is an event comment' do
       context 'when comment parent is public' do
         it { is_expected.to return_status_code 201 }
+
+        it 'creates a new comment with permited parameters' do
+          permited_params = comment.slice(:message)
+
+          expect(created_comment).to have_attributes(permited_params)
+          expect(created_comment.author).to eq(user.profile)
+        end
 
         it 'returns the comment created' do
           expect(response.body).to equal_serialized(created_comment)
@@ -47,9 +55,16 @@ RSpec.describe 'Answer comment', :type => :request do
         end
 
         context "when user is an event's member" do
-          let(:authenticate) { parent.resource.host.user }
+          let(:user) { parent.resource.host.user }
 
           it { is_expected.to return_status_code 201 }
+
+          it 'creates a new comment with permited parameters' do
+            permited_params = comment.slice(:message)
+
+            expect(created_comment).to have_attributes(permited_params)
+            expect(created_comment.author).to eq(user.profile)
+          end
 
           it 'returns the comment created' do
             expect(response.body).to equal_serialized(created_comment)

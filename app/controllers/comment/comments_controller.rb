@@ -15,6 +15,7 @@ class Comment::CommentsController < ApplicationController
   def create
     comment = Comment.new(comment_params)
     comment.resource = parent
+    comment.author = current_user.profile
 
     authorize parent
 

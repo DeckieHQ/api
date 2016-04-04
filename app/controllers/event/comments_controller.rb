@@ -15,6 +15,7 @@ class Event::CommentsController < ApplicationController
   def create
     comment = Comment.new(comment_params)
     comment.resource = event
+    comment.author = current_user.profile
 
     authorize comment
 
