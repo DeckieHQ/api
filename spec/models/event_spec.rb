@@ -1,9 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Event, :type => :model do
-  describe 'Validations' do
+  describe 'Database' do
     it { is_expected.to have_db_index(:profile_id) }
+  end
 
+  describe 'Relationships' do
     it { is_expected.to belong_to(:host).with_foreign_key('profile_id') }
 
     it { is_expected.to have_many(:submissions).dependent(:destroy) }
@@ -24,7 +26,9 @@ RSpec.describe Event, :type => :model do
     end
 
     it { is_expected.to have_many(:actions).dependent(:destroy) }
+  end
 
+  describe 'Validations' do
     [
       :title,  :category, :ambiance, :level, :capacity, :begin_at,
       :street, :postcode, :city, :country
@@ -79,7 +83,7 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  context 'when created' do
+  context 'after create' do
     subject(:event) { FactoryGirl.create(:event) }
 
     it 'retrieves the event coordinates' do
@@ -87,7 +91,7 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  context 'when updated' do
+  context 'after update' do
     subject(:event) { FactoryGirl.create(:event) }
 
     [:street, :postcode, :city, :state, :country].each do |field|
@@ -112,7 +116,7 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  it_behaves_like 'acts as paranoid' 
+  it_behaves_like 'acts as paranoid'
 
   [:full, :closed].each do |state|
     method = "#{state}?"
