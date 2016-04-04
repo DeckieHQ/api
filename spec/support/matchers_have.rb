@@ -63,9 +63,9 @@ end
 
 RSpec::Matchers.define :have_created_action do |profile, resource, type|
   match do
-    return false unless Action.any?
+    return false unless Action.with_deleted.any?
 
-    action = Action.find_by(actor: profile, resource: resource, type: type)
+    action = Action.with_deleted.find_by(actor: profile, resource: resource, type: type)
 
     return false unless action
 
@@ -75,7 +75,7 @@ end
 
 RSpec::Matchers.define :have_many_actions do |actors, resource, type|
   match do
-    actions = Action.where(resource: resource, type: type).to_a || []
+    actions = Action.with_deleted.where(resource: resource, type: type).to_a || []
 
     actions.reject do |action|
       actors.include?(action.actor) && has_notification_job?(action)

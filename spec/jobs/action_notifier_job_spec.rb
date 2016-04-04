@@ -39,6 +39,14 @@ RSpec.describe ActionNotifierJob, :type => :job do
     end
   end
 
+  context 'when action has been deleted' do
+    before { action.destroy }
+
+    it 'retrieves the deleted action' do
+      expect { perform }.to_not raise_error
+    end
+  end
+
   def notification_of(user)
     Notification.find_by!(user_id: user.id, action_id: action.id, viewed: false)
   end
