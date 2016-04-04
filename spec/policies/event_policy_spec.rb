@@ -8,7 +8,7 @@ RSpec.describe EventPolicy do
   context 'being an unverified user' do
     let(:user) { FactoryGirl.create(:user) }
 
-    it { is_expected.to permit_action(:subscribe)     }
+    it { is_expected.to permit_action(:submit)        }
     it { is_expected.to forbid_action(:create)        }
     it { is_expected.to forbid_action(:update)        }
     it { is_expected.to forbid_action(:destroy)       }
@@ -22,10 +22,10 @@ RSpec.describe EventPolicy do
       context "when event is #{type}" do
         let(:event) { FactoryGirl.create(:"event_#{type}") }
 
-        it { is_expected.to forbid_action(:subscribe)  }
+        it { is_expected.to forbid_action(:submit)  }
 
         it do
-          is_expected.to have_authorization_error(:"event_#{type}", on: :subscribe)
+          is_expected.to have_authorization_error(:"event_#{type}", on: :submit)
         end
       end
     end
@@ -42,8 +42,8 @@ RSpec.describe EventPolicy do
 
     it { is_expected.to permit_action(:update)        }
     it { is_expected.to permit_action(:destroy)       }
-    it { is_expected.to permit_action(:submissions) }
-    it { is_expected.to forbid_action(:subscribe)     }
+    it { is_expected.to permit_action(:submissions)   }
+    it { is_expected.to forbid_action(:submit)        }
 
     context 'when event is closed' do
       let(:event) { FactoryGirl.create(:event_closed) }
@@ -56,14 +56,22 @@ RSpec.describe EventPolicy do
     end
   end
 
-  context 'being an event subscriber' do
+  context 'being an event submitter' do
     let(:event) { FactoryGirl.create(:event_with_attendees) }
 
     let(:user) { event.attendees.first.user }
 
-    it { is_expected.to forbid_action(:subscribe)     }
+    it { is_expected.to forbid_action(:submit)        }
     it { is_expected.to forbid_action(:update)        }
     it { is_expected.to forbid_action(:destroy)       }
-    it { is_expected.to forbid_action(:submissions) }
+    it { is_expected.to forbid_action(:submissions)   }
+
+    context 'after submission cancellation' do
+      let(:submission) { user.submissions.find_by(event_id: event.id) }
+
+      before { submission.destroy }
+
+      it { is_expected.to permit_action(:submit) }
+    end
   end
 end

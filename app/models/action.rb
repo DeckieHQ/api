@@ -1,9 +1,11 @@
 class Action < ApplicationRecord
+  acts_as_paranoid
+
   self.inheritance_column = nil
 
   attr_accessor :notify
 
-  belongs_to :actor, class_name: 'Profile', foreign_key: 'profile_id'
+  belongs_to :actor, -> { with_deleted }, class_name: 'Profile', foreign_key: 'profile_id'
 
   belongs_to :resource, polymorphic: true
 
@@ -12,10 +14,6 @@ class Action < ApplicationRecord
   before_create :set_receiver_ids
 
   after_commit :create_notifications
-
-  def resource
-    resource_type.constantize.unscoped { super }
-  end
 
   private
 

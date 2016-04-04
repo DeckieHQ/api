@@ -3,17 +3,20 @@ class Event < ApplicationRecord
 
   include Filterable
 
-  belongs_to :host, class_name: 'Profile', foreign_key: 'profile_id'
+  belongs_to :host, -> { with_deleted }, class_name: 'Profile', foreign_key: 'profile_id'
 
   has_many :submissions, dependent: :destroy
 
-  has_many :confirmed_submissions, -> { confirmed }, class_name: 'Submission'
+  has_many :pending_submissions, -> { pending }, class_name: 'Submission'
 
-  has_many :pending_submissions,   -> { pending },   class_name: 'Submission'
+  # There is an issue on has_many :through with paranoid associations, causing it
+  # to return a collection including the deleted resources. Using the without_deleted
+  # scope resolves this issue.
+  has_many :confirmed_submissions, -> { confirmed.without_deleted }, class_name: 'Submission'
 
   has_many :attendees, through: :confirmed_submissions, source: :profile
 
-  has_many :actions, as: :resource
+  has_many :actions, as: :resource, dependent: :destroy
 
   validates :title, :street, presence: true, length: { maximum: 128 }
 

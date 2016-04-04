@@ -18,14 +18,14 @@ RSpec.describe User, :type => :model do
   describe 'Validations' do
     subject { FactoryGirl.build(:user_with_phone_number) }
 
-    it { is_expected.to have_one(:profile).dependent(:nullify) }
-
-    it { is_expected.to have_many(:notifications).dependent(:destroy) }
-
     [
       :first_name,  :last_name, :birthday, :email, :password, :culture
     ].each do |attribute|
       it { is_expected.to validate_presence_of(attribute) }
+    end
+
+    it do
+      is_expected.to validate_uniqueness_of(:email).case_insensitive
     end
 
     it { is_expected.to validate_length_of(:first_name).is_at_most(64) }
@@ -39,7 +39,13 @@ RSpec.describe User, :type => :model do
     it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en)) }
   end
 
-  context 'when created' do
+  describe 'Relationships' do
+    it { is_expected.to have_one(:profile).dependent(:destroy) }
+
+    it { is_expected.to have_many(:notifications).dependent(:destroy) }
+  end
+
+  context 'after create' do
     subject(:user) { FactoryGirl.create(:user) }
 
     it 'has an authentication token' do
@@ -48,28 +54,6 @@ RSpec.describe User, :type => :model do
 
     it 'has a profile' do
       expect_profile_propagation
-    end
-
-    context 'when updated' do
-      let(:user_update) { FactoryGirl.build(:user) }
-
-      [:first_name, :last_name].each do |attribute|
-        context "with #{attribute}" do
-          before do
-            user.update(attribute => user_update.send(attribute))
-          end
-
-          it 'updates its profile' do
-            expect_profile_propagation
-          end
-        end
-      end
-    end
-
-    def expect_profile_propagation
-      expect(user.profile).to have_attributes({
-        display_name: "#{user.first_name} #{user.last_name.capitalize[0]}"
-      })
     end
 
     it 'has a shortcut to its profile hosted_events' do
@@ -81,12 +65,38 @@ RSpec.describe User, :type => :model do
     end
   end
 
-  include_examples 'acts as verifiable', :email,
+  context 'after update' do
+    subject(:user) { FactoryGirl.create(:user) }
+
+    let(:user_update) { FactoryGirl.build(:user) }
+
+    [:first_name, :last_name].each do |attribute|
+      context "with #{attribute}" do
+        before do
+          user.update(attribute => user_update.send(attribute))
+        end
+
+        it 'updates its profile' do
+          expect_profile_propagation
+        end
+      end
+    end
+  end
+
+  def expect_profile_propagation
+    expect(user.profile).to have_attributes({
+      display_name: "#{user.first_name} #{user.last_name.capitalize[0]}"
+    })
+  end
+
+  it_behaves_like 'acts as paranoid'
+
+  it_behaves_like 'acts as verifiable', :email,
     carrier: UserMailer,
     faker: -> { Faker::Internet.email },
     token_type: :friendly
 
-  include_examples 'acts as verifiable', :phone_number,
+  it_behaves_like 'acts as verifiable', :phone_number,
     carrier: UserSMSer,
     faker: -> { Fake::PhoneNumber.plausible },
     token_type: :pin

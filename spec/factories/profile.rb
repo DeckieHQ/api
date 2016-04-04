@@ -1,7 +1,7 @@
 def bind(profile, factory_name)
   user = create(factory_name)
 
-  user.profile.destroy
+  user.profile.really_destroy!
 
   profile.user_id = user.id
 

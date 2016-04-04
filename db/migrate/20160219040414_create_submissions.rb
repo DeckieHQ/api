@@ -6,9 +6,13 @@ class CreateSubmissions < ActiveRecord::Migration[5.0]
 
       t.integer :status, null: false
 
-      t.index [:event_id, :profile_id], unique: true
+      t.index [:event_id, :profile_id], unique: true, where: 'deleted_at IS NULL'
 
       t.timestamps null: false
+
+      t.datetime :deleted_at
+
+      t.index :deleted_at
     end
   end
 

@@ -34,7 +34,7 @@ RSpec.describe CancelSubmission do
       before { service.call }
 
       it 'destroys the submission' do
-        expect(submission).to_not be_persisted
+        expect(submission).to be_deleted
       end
 
       it { is_expected.to have_created_action(submission.profile, submission.event, :leave) }
@@ -46,7 +46,7 @@ RSpec.describe CancelSubmission do
       before { service.call }
 
       it 'destroys the submission' do
-        expect(submission).to_not be_persisted
+        expect(submission).to be_deleted
       end
 
       it { is_expected.to have_created_action(submission.profile, submission.event, :unsubscribe) }

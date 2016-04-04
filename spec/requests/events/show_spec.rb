@@ -3,8 +3,10 @@ require 'rails_helper'
 RSpec.describe 'Event show', :type => :request do
   let(:event) { FactoryGirl.create(:event) }
 
+  let(:params) {}
+
   before do
-    get event_path(event), headers: json_headers
+    get event_path(event), params: params, headers: json_headers
   end
 
   it { is_expected.to return_status_code 200 }
@@ -12,6 +14,9 @@ RSpec.describe 'Event show', :type => :request do
   it 'returns the event attributes' do
     expect(response.body).to equal_serialized(event)
   end
+
+  it_behaves_like 'an action with include', :event,
+    accept: %w(host), on: :member
 
   context "when event doesn't exist" do
     let(:event) { { id: 0 } }

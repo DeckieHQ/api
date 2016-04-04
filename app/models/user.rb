@@ -1,7 +1,9 @@
 require 'concerns/acts_as_verifiable'
 
 class User < ApplicationRecord
-  has_one :profile, dependent: :nullify
+  acts_as_paranoid
+
+  has_one :profile, dependent: :destroy
 
   has_many :notifications, dependent: :destroy
 

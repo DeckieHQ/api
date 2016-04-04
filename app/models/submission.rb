@@ -1,8 +1,11 @@
 class Submission < ApplicationRecord
+  acts_as_paranoid
+
   include Filterable
 
   belongs_to :event
-  belongs_to :profile
+
+  belongs_to :profile, -> { with_deleted }
 
   enum status: [:pending, :confirmed]
 
