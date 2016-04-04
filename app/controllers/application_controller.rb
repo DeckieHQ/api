@@ -37,11 +37,11 @@ class ApplicationController < ActionController::API
 
     record_policy = policy(record)
 
-    permited = record_policy.respond_to?(method) ?
-      record_policy.public_send(method) :
-      record_policy.permited_attributes
-
-    attributes(type).permit(permited)
+    attributes(type).permit(
+      record_policy.public_send(
+        record_policy.respond_to?(method) ? method : :permited_attributes
+      )
+    )
   end
 
   def authenticate!(options={})

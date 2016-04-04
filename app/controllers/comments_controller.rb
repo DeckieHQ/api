@@ -13,7 +13,7 @@ class CommentsController < ApplicationController
   def destroy
     authorize comment
 
-    CancelComment.new(comment).call
+    comment.destroy
 
     head :no_content
   end

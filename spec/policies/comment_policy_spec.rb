@@ -30,7 +30,11 @@ RSpec.describe CommentPolicy do
     let(:comment) { FactoryGirl.create(:comment, :private) }
 
     context 'being a member of the event' do
-      let(:user) { comment.resource.host.user }
+      let(:user) { FactoryGirl.create(:user) }
+
+      before do
+        allow(comment.resource).to receive(:member?).with(user.profile).and_return(true)
+      end
 
       it { is_expected.to permit_action(:create) }
     end

@@ -42,8 +42,8 @@ FactoryGirl.define do
       transient { comments_count 10 }
 
       after(:create) do |event, evaluator|
-        create_list(:comment, evaluator.comments_count/2, resource: event)
-        create_list(:comment, evaluator.comments_count/2, :private, resource: event)
+        create_list(:comment, evaluator.comments_count / 2, resource: event)
+        create_list(:comment, evaluator.comments_count / 2, :private, resource: event)
       end
     end
 

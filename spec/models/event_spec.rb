@@ -32,6 +32,7 @@ RSpec.describe Event, :type => :model do
     it { is_expected.to have_many(:actions).dependent(:destroy) }
   end
 
+
   describe 'Validations' do
     it do
       is_expected.to have_many(:public_comments)
