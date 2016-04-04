@@ -39,13 +39,17 @@ class CreateUsers < ActiveRecord::Migration[5.0]
       t.jsonb :preferences, null: false, default: '{}'
 
       t.timestamps null: false
+
+      t.datetime :deleted_at
+
+      t.index :deleted_at
+
+      t.index :email, unique: true, where: 'deleted_at IS NULL'
+
+      t.index :reset_password_token,            unique: true, where: 'deleted_at IS NULL'
+      t.index :email_verification_token,        unique: true, where: 'deleted_at IS NULL'
+      t.index :phone_number_verification_token, unique: true, where: 'deleted_at IS NULL'
     end
-
-    add_index :users, :email, unique: true
-
-    add_index :users, :reset_password_token,            unique: true
-    add_index :users, :email_verification_token,        unique: true
-    add_index :users, :phone_number_verification_token, unique: true
   end
 
   def down

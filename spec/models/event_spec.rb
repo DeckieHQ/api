@@ -23,7 +23,7 @@ RSpec.describe Event, :type => :model do
         .through(:confirmed_submissions).source(:profile)
     end
 
-    it { is_expected.to have_many(:actions) }
+    it { is_expected.to have_many(:actions).dependent(:destroy) }
 
     [
       :title,  :category, :ambiance, :level, :capacity, :begin_at,
@@ -112,13 +112,7 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  context 'when destroyed' do
-    subject(:event) { FactoryGirl.create(:event_with_submissions).destroy }
-
-    it { is_expected.to be_persisted }
-
-    it { is_expected.to be_deleted }
-  end
+  it_behaves_like 'acts as paranoid' 
 
   [:full, :closed].each do |state|
     method = "#{state}?"

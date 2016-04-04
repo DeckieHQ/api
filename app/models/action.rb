@@ -1,4 +1,6 @@
 class Action < ApplicationRecord
+  acts_as_paranoid
+
   self.inheritance_column = nil
 
   attr_accessor :notify
@@ -12,10 +14,6 @@ class Action < ApplicationRecord
   before_create :set_receiver_ids
 
   after_commit :create_notifications
-
-  def resource
-    resource_type.constantize.unscoped { super }
-  end
 
   private
 

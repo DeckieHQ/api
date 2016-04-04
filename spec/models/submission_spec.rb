@@ -1,17 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe Submission, :type => :model do
-  describe 'Validations' do
+  describe 'Database' do
     it { is_expected.to have_db_index(:event_id) }
     it { is_expected.to have_db_index(:profile_id) }
 
     it { is_expected.to have_db_index([:event_id, :profile_id]).unique(true) }
+  end
 
+  describe 'Relationships' do
     it { is_expected.to belong_to(:event) }
     it { is_expected.to belong_to(:profile) }
   end
 
-  context 'when created' do
+  context 'after create' do
     subject(:submission) { FactoryGirl.build(:submission, status: status) }
 
     context 'with a confirmed status' do
@@ -31,7 +33,7 @@ RSpec.describe Submission, :type => :model do
     end
   end
 
-  context 'when updated' do
+  context 'after update' do
     subject(:submission) { FactoryGirl.create(:submission, status: status) }
 
     context 'when pending' do
@@ -45,7 +47,7 @@ RSpec.describe Submission, :type => :model do
     end
   end
 
-  context 'when destroyed' do
+  context 'after destroy' do
     subject(:submission) { FactoryGirl.create(:submission, status: status) }
 
     context 'when confirmed' do
@@ -64,6 +66,8 @@ RSpec.describe Submission, :type => :model do
       end
     end
   end
+
+  it_behaves_like 'acts as paranoid'
 
   describe '.status' do
     before do

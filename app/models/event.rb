@@ -13,7 +13,7 @@ class Event < ApplicationRecord
 
   has_many :attendees, through: :confirmed_submissions, source: :profile
 
-  has_many :actions, as: :resource
+  has_many :actions, as: :resource, dependent: :destroy
 
   validates :title, :street, presence: true, length: { maximum: 128 }
 

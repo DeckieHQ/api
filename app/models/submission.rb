@@ -1,4 +1,6 @@
 class Submission < ApplicationRecord
+  acts_as_paranoid
+
   include Filterable
 
   belongs_to :event

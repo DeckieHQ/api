@@ -31,7 +31,7 @@ RSpec.describe Action, :type => :model do
     end
   end
 
-  describe 'Validations' do
+  describe 'Relationships' do
     it { is_expected.to belong_to(:actor).with_foreign_key(:profile_id) }
     it { is_expected.to belong_to(:resource) }
   end
@@ -51,7 +51,7 @@ RSpec.describe Action, :type => :model do
           allow(resource).to receive(:receiver_ids_for).and_return(fakeIds)
         end
 
-        it "has a title matching #{factory} title" do
+        it "set a title matching #{factory} title" do
           expect(action.title).to eq(resource.title)
         end
 
@@ -106,13 +106,5 @@ RSpec.describe Action, :type => :model do
     end
   end
 
-  describe '#resource' do
-    let(:action) { FactoryGirl.create(:action) }
-
-    it 'returns also deleted resources' do
-      action.resource.destroy
-
-      expect(action.reload.resource).to be_present
-    end
-  end
+  it_behaves_like 'acts as paranoid'
 end
