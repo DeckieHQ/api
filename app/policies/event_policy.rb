@@ -16,7 +16,7 @@ class EventPolicy < ApplicationPolicy
     update?
   end
 
-  def subscribe?
+  def submit?
     !event_host? && !submission_already_exist? && !event_closed? && !event_full?
   end
 

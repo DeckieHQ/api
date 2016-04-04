@@ -13,7 +13,7 @@ class SubmissionsController < ApplicationController
   end
 
   def create
-    authorize event, :subscribe?
+    authorize event, :submit?
 
     subscribtion = JoinEvent.new(current_user.profile, event).call
 
