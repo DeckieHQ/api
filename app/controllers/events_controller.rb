@@ -2,7 +2,11 @@ class EventsController < ApplicationController
   before_action :authenticate!, only: [:update, :destroy]
 
   def show
-    render json: event
+    included = Include.new(params[:include], accept: %w(host))
+
+    return render_include_errors(included) unless included.valid?
+
+    render json: event, include: included.params
   end
 
   def update

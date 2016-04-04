@@ -15,4 +15,6 @@ class EventSerializer < ActiveModel::Serializer
              :city,
              :state,
              :country
+
+  belongs_to :host
 end
