@@ -28,7 +28,7 @@ RSpec.describe Notification, :type => :model do
     end
   end
 
-  describe 'Validations' do
+  describe 'Relationships' do
     it { is_expected.to belong_to(:user)   }
     it { is_expected.to belong_to(:action) }
 

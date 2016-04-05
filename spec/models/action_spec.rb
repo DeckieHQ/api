@@ -109,5 +109,5 @@ RSpec.describe Action, :type => :model do
     end
   end
 
-  it_behaves_like 'acts as paranoid'
+  it_behaves_like 'acts as paranoid', without_default_scope: true
 end

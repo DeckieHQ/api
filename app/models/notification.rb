@@ -4,7 +4,7 @@ class Notification < ApplicationRecord
   self.inheritance_column = nil
 
   belongs_to :user
-  belongs_to :action, -> { with_deleted }
+  belongs_to :action
 
   before_create :set_type
 
