@@ -7,7 +7,7 @@ RSpec.describe CommentPolicy do
   subject { CommentPolicy.new(user, comment) }
 
   context 'being the comment owner' do
-    let(:user)    { comment.author.user }
+    let(:user) { comment.author.user }
 
     it { is_expected.to permit_action(:update) }
     it { is_expected.to permit_action(:destroy) }
@@ -16,6 +16,12 @@ RSpec.describe CommentPolicy do
   context 'being another user' do
     it { is_expected.to forbid_action(:update) }
     it { is_expected.to forbid_action(:destroy) }
+  end
+
+  context 'being the host of the event' do
+    let(:user) { comment.resource.host.user }
+
+    it { is_expected.to permit_action(:destroy) }
   end
 
   context 'posting a comment of comment' do

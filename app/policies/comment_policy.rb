@@ -2,12 +2,11 @@ class CommentPolicy < ApplicationPolicy
   alias_method :comment, :record
 
   def index?
-    !comment.private? || comment.resource.member?(user.profile)
+    !comment.private? || member?
   end
 
   def create?
-    !comment.of_comment? &&
-    (!comment.private? || comment.resource.member?(user.profile))
+    !comment.of_comment? && (!comment.private? || member?)
   end
 
   def update?
@@ -15,7 +14,7 @@ class CommentPolicy < ApplicationPolicy
   end
 
   def destroy?
-    comment_owner?
+    comment_owner? || comment.resource.host == user.profile
   end
 
   def permited_attributes_for_create
@@ -27,6 +26,10 @@ class CommentPolicy < ApplicationPolicy
   end
 
   private
+
+  def member?
+    comment.resource.member?(user.profile)
+  end
 
   def comment_owner?
     user.profile == comment.author

@@ -39,5 +39,15 @@ RSpec.describe 'Destroy event comment', :type => :request do
         expect(Comment.find_by(id: comment.id)).to be_nil
       end
     end
+
+    context 'when event belongs to the user' do
+      let(:user) { comment.resource.host.user }
+
+      it { is_expected.to return_no_content }
+
+      it 'destroys the comment' do
+        expect(Comment.find_by(id: comment.id)).to be_nil
+      end
+    end
   end
 end
