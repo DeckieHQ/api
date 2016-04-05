@@ -1,4 +1,6 @@
 class Comment < ApplicationRecord
+  acts_as_paranoid
+
   include Filterable
 
   belongs_to :author, class_name: 'Profile', foreign_key: 'profile_id'

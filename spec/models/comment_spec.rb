@@ -28,6 +28,8 @@ RSpec.describe Comment, :type => :model do
     it { is_expected.to have_many(:comments) }
   end
 
+  it_behaves_like 'acts as paranoid'
+
   describe '.publics' do
     let(:event) { FactoryGirl.create(:event, :with_comments) }
 
