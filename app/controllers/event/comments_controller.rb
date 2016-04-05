@@ -19,10 +19,12 @@ class Event::CommentsController < ApplicationController
 
     authorize comment
 
-    unless comment.save
-      return return_validation_errors(comment)
+    result = AddComment.new(comment).call
+
+    if result.errors.present?
+      return render_validation_errors(result)
     end
-    render json: comment, status: :created
+    render json: result, status: :created
   end
 
   protected

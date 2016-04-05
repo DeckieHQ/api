@@ -96,7 +96,7 @@ class Event < ApplicationRecord
       pending_submissions.pluck('profile_id')
     when 'join'
       attendees_with_host_ids
-    when 'update', 'leave'
+    when 'update', 'leave', 'comment'
       attendees_with_host_ids_except(action.actor)
     else
       throw "Unsupported action: #{action.type}"

@@ -237,7 +237,7 @@ RSpec.describe Event, :type => :model do
       end
     end
 
-    %w(update leave).each do |type|
+    %w(update leave comment).each do |type|
       context "with a #{type} action" do
         let(:action) { double(type: type, actor: event.host) }
 

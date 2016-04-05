@@ -53,4 +53,20 @@ RSpec.describe Comment, :type => :model do
       end
     end
   end
+
+  describe '#receiver_ids_for comment' do
+    let(:comment) { FactoryGirl.create(:comment, :with_comments) }
+    let(:profile) { FactoryGirl.create(:profile) }
+    let(:action)  { double(type: 'comment', actor: profile) }
+
+    subject(:receiver_ids_for) { comment.receiver_ids_for(action) }
+
+    it 'returns the profile ids in the comment thread except the author' do
+      expected_profiles = comment.comments.pluck('profile_id').push(comment.author.id)
+
+      expected_profiles.delete(action.actor.id)
+
+      is_expected.to eq(expected_profiles)
+    end
+  end
 end

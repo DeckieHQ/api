@@ -13,6 +13,18 @@ class Comment < ApplicationRecord
 
   scope :publics, -> { where(private: false) }
 
+  def title
+    message[0...40]
+  end
+
+  def receiver_ids_for(action)
+    ids = comments.pluck(:profile_id).push(author.id)
+
+    ids.delete(action.actor.id)
+
+    ids
+  end
+
   def self.privates(choice)
     where(private: choice.to_s.to_b)
   end
