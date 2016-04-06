@@ -28,9 +28,13 @@ module EventSearch
           end_at.to_i
         end
 
+        attribute :full do
+          full?
+        end
+
         attributesToIndex ['unordered(title)', 'unordered(description)']
 
-        customRanking ['desc(attendees_count)']
+        customRanking ['desc(attendees_count / capacity)']
 
         geoloc :latitude, :longitude
       end
