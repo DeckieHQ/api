@@ -5,10 +5,14 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'shoulda-matchers'
 require 'factory_girl_rails'
-require 'webmock/rspec'
+require 'algolia/webmock'
 require 'pundit/rspec'
 
-WebMock.disable_net_connect!(allow: ['codeclimate.com', 'maps.googleapis.com'])
+def disable_net_connect!
+  WebMock.disable_net_connect!(allow: %w(codeclimate.com maps.googleapis.com))
+end
+
+disable_net_connect!
 
 Geocoder.configure(lookup: :test)
 
@@ -39,4 +43,32 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
 
   config.infer_spec_type_from_file_location!
+
+  search_configured = AlgoliaSearch.configuration[:application_id].present? &&
+                      AlgoliaSearch.configuration[:api_key].present?
+
+  config.filter_run_excluding type: :search unless search_configured
+
+  # Search tests requires accessing a real algolia server. Reindexing is quite
+  # long, therefore it's mandatory to create records in a before(:all) hook
+  # and indexing them only once per index.
+  config.before(:all, type: :search) do
+    @request_stubs = WebMock::StubRegistry.instance.request_stubs
+
+    WebMock.reset!
+
+    WebMock.allow_net_connect!
+
+    config.use_transactional_fixtures = false
+  end
+
+  config.after(:all, type: :search) do
+    DatabaseCleaner.clean_with(:truncation)
+
+    config.use_transactional_fixtures = true
+
+    WebMock::StubRegistry.instance.request_stubs = @request_stubs
+
+    disable_net_connect!
+  end
 end
