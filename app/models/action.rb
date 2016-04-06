@@ -1,5 +1,5 @@
 class Action < ApplicationRecord
-  acts_as_paranoid
+  acts_as_paranoid without_default_scope: true
 
   self.inheritance_column = nil
 
