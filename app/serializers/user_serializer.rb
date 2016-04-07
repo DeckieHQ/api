@@ -10,11 +10,13 @@ class UserSerializer < ActiveModel::Serializer
 
   has_one :profile do
     link :related, UrlHelpers.profile(object.profile)
+
     include_data false
   end
 
   has_many :hosted_events do
     link :related, UrlHelpers.user_hosted_events
+
     include_data false
   end
 

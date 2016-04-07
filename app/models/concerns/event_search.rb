@@ -22,16 +22,20 @@ module EventSearch
                    :country,
                    :attendees_count
 
+        attribute :opened do
+          !closed?
+        end
+
+        attribute :full do
+          full?
+        end
+
         attribute :begin_at_i do
           begin_at.to_i
         end
 
         attribute :end_at_i do
           end_at.to_i
-        end
-
-        attribute :full do
-          full?
         end
 
         attributesToIndex [

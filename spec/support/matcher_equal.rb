@@ -46,10 +46,10 @@ end
 
 RSpec::Matchers.define :equal_search do |records|
   match do |results|
-    actualIds   = results.pluck('id')
+    resultIds = results.pluck('id').sort
 
-    expectedIds = records.pluck('id')
+    recordIds = records.pluck('id').sort
 
-    actualIds.all? { |id| expectedIds.include?(id) }
+    expect(resultIds).to eq(recordIds)
   end
 end

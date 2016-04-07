@@ -20,11 +20,25 @@ RSpec.describe 'Event search', :type => :search do
 
   let(:event) { Event.opened.sample }
 
-  xit 'has selected attributes' do
+  it 'has serialized attributes' do
+    result = Event.raw_search('')['hits'].sample
 
+    expect(result).to include_serialized_attributes(
+      Event.find(result['objectID'])
+    )
   end
 
-  xit "indexes attribute"
+  [:title, :state, :city, :country, :description].each do |attribute|
+    it "has an index on #{attribute}" do
+      value = event.public_send(attribute).split(' ').sample
+
+      results = Event.search(value)
+
+      expect(results).to include_records(
+        Event.opened.where("#{attribute} LIKE ?", "%#{value}%")
+      )
+    end
+  end
 
   [:category, :ambiance, :level].each do |attribute|
     it "has faceting on #{attribute}" do
@@ -40,7 +54,7 @@ RSpec.describe 'Event search', :type => :search do
   end
 
   [:auto_accept, :full].each do |attribute|
-    it "has filtering on #{attribute}" do
+    it "has boolean filtering on #{attribute}" do
       value = Faker::Number.between(0, 1)
 
       results = Event.search('', {
@@ -54,15 +68,22 @@ RSpec.describe 'Event search', :type => :search do
     end
   end
 
-  [:begin_at, :end_at].each do |attribute|
-    it "has date filtering on #{attribute}" do
+  [:begin_at, :end_at, :capacity, :attendees_count].each do |attribute|
+    it "has numeric filtering on #{attribute}" do
       value = event.public_send(attribute)
 
-      results = Event.search('', {
-        numericFilters: "#{attribute}_i>#{value.to_i}"
-      })
-      expect(results).to equal_search(
-        Event.opened.where("#{attribute} > ?", value)
+      sign = '>='
+
+      numericFilters = if value.is_a?(Integer)
+        "#{attribute}#{sign}#{value}"
+      else
+        "#{attribute}_i#{sign}#{value.to_i}"
+      end
+
+      expect(
+        Event.search('', { numericFilters: numericFilters })
+      ).to equal_search(
+        Event.opened.where("#{attribute} #{sign} ?", value)
       )
     end
   end
