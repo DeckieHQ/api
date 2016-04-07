@@ -13,6 +13,11 @@ RSpec.describe User, :type => :model do
       is_expected.to have_db_column(:preferences)
         .of_type(:jsonb).with_options(null: false, default: {})
     end
+
+    it do
+      is_expected.to have_db_column(:notifications_count)
+        .of_type(:integer).with_options(null: false, default: 0)
+    end
   end
 
   describe 'Validations' do

@@ -42,6 +42,8 @@ class CreateUsers < ActiveRecord::Migration[5.0]
 
       t.datetime :deleted_at
 
+      t.integer :notifications_count, null: false, default: 0
+
       t.index :deleted_at
 
       t.index :email, unique: true, where: 'deleted_at IS NULL'
