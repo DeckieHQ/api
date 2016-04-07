@@ -41,6 +41,8 @@ RSpec.describe 'Answer comment', :type => :request do
         it 'returns the comment created' do
           expect(response.body).to equal_serialized(created_comment)
         end
+
+        it { is_expected.to have_created_action(user.profile, parent, :comment) }
       end
 
       context 'when comment parent is private' do
@@ -69,6 +71,8 @@ RSpec.describe 'Answer comment', :type => :request do
           it 'returns the comment created' do
             expect(response.body).to equal_serialized(created_comment)
           end
+
+          it { is_expected.to have_created_action(user.profile, parent, :comment) }
         end
       end
     end

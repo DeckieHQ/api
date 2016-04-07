@@ -15,7 +15,7 @@ RSpec.describe 'Create event comment', :type => :request do
   context 'when user is authenticated' do
     let(:user)            { FactoryGirl.create(:user) }
     let(:authenticate)    { user }
-    
+
     context 'when comment is public' do
       let(:comment)      { FactoryGirl.build(:comment) }
 
@@ -31,6 +31,8 @@ RSpec.describe 'Create event comment', :type => :request do
       it 'returns the comment created' do
         expect(response.body).to equal_serialized(created_comment)
       end
+
+      it { is_expected.to have_created_action(user.profile, event, :comment) }
     end
 
     context 'when comment is private' do
@@ -60,6 +62,8 @@ RSpec.describe 'Create event comment', :type => :request do
         it 'returns the comment created' do
           expect(response.body).to equal_serialized(created_comment)
         end
+
+        it { is_expected.to have_created_action(user.profile, event, :comment) }
       end
 
       context "when user is the event host" do
@@ -78,6 +82,8 @@ RSpec.describe 'Create event comment', :type => :request do
         it 'returns the comment created' do
           expect(response.body).to equal_serialized(created_comment)
         end
+
+        it { is_expected.to have_created_action(user.profile, event, :comment) }
       end
     end
   end
