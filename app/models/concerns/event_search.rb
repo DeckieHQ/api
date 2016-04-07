@@ -4,21 +4,23 @@ module EventSearch
       include AlgoliaSearch
 
       algoliasearch per_environment: true, unless: :closed? do
-        attribute :title,
-                  :category,
-                  :ambiance,
-                  :level,
-                  :capacity,
-                  :auto_accept,
-                  :description,
-                  :begin_at,
-                  :end_at,
-                  :street,
-                  :postcode,
-                  :city,
-                  :state,
-                  :country,
-                  :attendees_count
+        attributes :title,
+                   :category,
+                   :ambiance,
+                   :level,
+                   :capacity,
+                   :auto_accept,
+                   :description,
+                   :begin_at,
+                   :end_at,
+                   :latitude,
+                   :longitude,
+                   :street,
+                   :postcode,
+                   :city,
+                   :state,
+                   :country,
+                   :attendees_count
 
         attribute :begin_at_i do
           begin_at.to_i
@@ -32,7 +34,15 @@ module EventSearch
           full?
         end
 
-        attributesToIndex ['unordered(title)', 'unordered(description)']
+        attributesToIndex [
+          'unordered(title)',
+          'unordered(state)',
+          'unordered(city)',
+          'unordered(country)',
+          'unordered(description)'
+        ]
+
+        attributesForFaceting ['category', 'ambiance', 'level']
 
         customRanking ['desc(attendees_count / capacity)']
 

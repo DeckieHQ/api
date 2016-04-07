@@ -1,9 +1,8 @@
 GIT
-  remote: git://github.com/foliea/algoliasearch-client-ruby
-  revision: 4f1cb587a7d8d8c8aeb50052981a65cb4093b82f
-  branch: patch-1
+  remote: git://github.com/algolia/algoliasearch-client-ruby
+  revision: bdd04c3a05366ab924e234fe2f5587f0d85252cb
   specs:
-    algoliasearch (1.7.0)
+    algoliasearch (1.8.0)
       httpclient (~> 2.7.1)
       json (>= 1.5.1)
 

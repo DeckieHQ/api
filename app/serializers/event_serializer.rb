@@ -14,7 +14,8 @@ class EventSerializer < ActiveModel::Serializer
              :postcode,
              :city,
              :state,
-             :country
+             :country,
+             :attendees_count
 
   belongs_to :host
 

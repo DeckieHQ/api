@@ -54,7 +54,7 @@ gem 'pundit', '~> 1.1'
 gem 'paranoia', git: 'git://github.com/radar/paranoia', branch: 'core'
 
 # Search
-gem 'algoliasearch', git: 'git://github.com/foliea/algoliasearch-client-ruby', branch: 'patch-1'
+gem 'algoliasearch', git: 'git://github.com/algolia/algoliasearch-client-ruby'
 gem 'algoliasearch-rails', '~> 1.14'
 
 group :development, :test do

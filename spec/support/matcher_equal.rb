@@ -43,3 +43,13 @@ RSpec::Matchers.define :equal_sms do |expected|
     actual.options == expected.options
   end
 end
+
+RSpec::Matchers.define :equal_search do |records|
+  match do |results|
+    actualIds   = results.pluck('id')
+
+    expectedIds = records.pluck('id')
+
+    actualIds.all? { |id| expectedIds.include?(id) }
+  end
+end
