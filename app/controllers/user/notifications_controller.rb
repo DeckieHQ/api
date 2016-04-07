@@ -8,4 +8,8 @@ class User::NotificationsController < ApplicationController
 
     render json: search.apply(current_user.notifications), include: search.included
   end
+
+  def reset_count
+    render json: current_user.tap(&:reset_notifications_count!)
+  end
 end

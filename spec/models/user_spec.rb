@@ -145,4 +145,14 @@ RSpec.describe User, :type => :model do
       is_expected.to eq(user.submissions.filter({ event: :opened }))
     end
   end
+
+  describe '#reset_notifications_count!' do
+    let(:user) do
+      FactoryGirl.create(:user, notifications_count: Faker::Number.between(1, 5))
+    end
+
+    it 'sets the notifications_count to 0' do
+      expect { user.reset_notifications_count! }.to change { user.notifications_count }.to(0)
+    end
+  end
 end
