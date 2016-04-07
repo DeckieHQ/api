@@ -15,9 +15,9 @@ class SubmissionsController < ApplicationController
   def create
     authorize event, :submit?
 
-    subscribtion = JoinEvent.new(current_user.profile, event).call
+    submission = JoinEvent.new(current_user.profile, event).call
 
-    render json: subscribtion, status: :created
+    render json: submission, status: :created
   end
 
   def show

@@ -12,6 +12,8 @@ RSpec.describe Event, :type => :model do
 
     it { is_expected.to have_many(:submissions).dependent(:destroy) }
 
+    it { is_expected.to have_many(:comments).dependent(:destroy) }
+
     it do
       is_expected.to have_many(:confirmed_submissions)
         .conditions(status: :confirmed).class_name('Submission')
@@ -30,7 +32,13 @@ RSpec.describe Event, :type => :model do
     it { is_expected.to have_many(:actions).dependent(:destroy) }
   end
 
+
   describe 'Validations' do
+    it do
+      is_expected.to have_many(:public_comments)
+        .conditions(private: false).class_name('Comment')
+    end
+
     [
       :title,  :category, :ambiance, :level, :capacity, :begin_at,
       :street, :postcode, :city, :country
@@ -229,7 +237,7 @@ RSpec.describe Event, :type => :model do
       end
     end
 
-    %w(update leave).each do |type|
+    %w(update leave comment).each do |type|
       context "with a #{type} action" do
         let(:action) { double(type: type, actor: event.host) }
 

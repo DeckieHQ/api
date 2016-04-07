@@ -29,12 +29,12 @@ RSpec.describe EventPolicy do
         end
       end
     end
+  end
 
-    context 'after verificaton' do
-      let(:user) { FactoryGirl.create(:user_verified) }
+  context 'being a verified user' do
+    let(:user) { FactoryGirl.create(:user_verified) }
 
-      it { is_expected.to permit_action(:create) }
-    end
+    it { is_expected.to permit_action(:create) }
   end
 
   context 'being the event host' do

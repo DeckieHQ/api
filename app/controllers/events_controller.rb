@@ -35,6 +35,6 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    attributes(:events).permit(policy(event).permited_attributes)
+    permited_attributes(event)
   end
 end

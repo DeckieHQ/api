@@ -38,6 +38,15 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_comments do
+      transient { comments_count 10 }
+
+      after(:create) do |event, evaluator|
+        create_list(:comment, evaluator.comments_count / 2, resource: event)
+        create_list(:comment, evaluator.comments_count / 2, :private, resource: event)
+      end
+    end
+
     factory :event_closed do
       begin_at { Faker::Time.backward(5, :all) }
 

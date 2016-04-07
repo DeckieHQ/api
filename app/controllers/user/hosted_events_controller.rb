@@ -23,6 +23,6 @@ class User::HostedEventsController < ApplicationController
   protected
 
   def event_params
-    attributes(:events).permit(policy(Event).permited_attributes)
+    permited_attributes(Event)
   end
 end

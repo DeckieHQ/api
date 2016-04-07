@@ -1,11 +1,11 @@
-RSpec.shared_examples 'an action with filtering' do |owner_name, collection_name, options|
-  try    = options[:try]
+RSpec.shared_examples 'an action with filtering' do |owner_name, collection_name, options = {}|
   accept = options[:accept]
+  try    = accept.empty? ? {} : options[:try]
 
   let(:page) { FactoryGirl.build(:page_default) }
 
   let(:collection) { send(owner_name).send(collection_name) }
-
+  
   let(:params) { Serialize.query(filters: filters) }
 
   context 'when filters are empty' do

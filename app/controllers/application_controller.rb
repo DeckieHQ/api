@@ -30,11 +30,25 @@ class ApplicationController < ActionController::API
     params.require(:data).require(:attributes)
   end
 
-  def authenticate!(options={})
-    authenticate_token || render_error_for(:unauthorized)
+  def permited_attributes(record)
+    type = (record.is_a?(Class) ? record : record.class).to_s.downcase.pluralize
+
+    method = "permited_attributes_for_#{params[:action]}"
+
+    record_policy = policy(record)
+
+    attributes(type).permit(
+      record_policy.public_send(
+        record_policy.respond_to?(method) ? method : :permited_attributes
+      )
+    )
   end
 
-  def authenticate_token
+  def authenticate!(options={})
+    authenticate || render_error_for(:unauthorized)
+  end
+
+  def authenticate
     authenticate_with_http_token do |token, options|
       user = User.find_by(authentication_token: token)
 

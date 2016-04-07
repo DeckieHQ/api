@@ -18,6 +18,10 @@ class Event < ApplicationRecord
 
   has_many :actions, as: :resource, dependent: :destroy
 
+  has_many :comments, as: :resource, dependent: :destroy
+
+  has_many :public_comments, -> { publics }, as: :resource, class_name: 'Comment'
+
   validates :title, :street, presence: true, length: { maximum: 128 }
 
   validates :description, length: { maximum: 8192 }
@@ -92,11 +96,15 @@ class Event < ApplicationRecord
       pending_submissions.pluck('profile_id')
     when 'join'
       attendees_with_host_ids
-    when 'update', 'leave'
+    when 'update', 'leave', 'comment'
       attendees_with_host_ids_except(action.actor)
     else
       throw "Unsupported action: #{action.type}"
     end
+  end
+
+  def member? (profile)
+    profile == host || attendees.include?(profile)
   end
 
   private

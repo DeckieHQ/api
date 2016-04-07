@@ -25,8 +25,13 @@ Rails.application.routes.draw do
       resources :submissions, only: [:index, :create, :show, :destroy] do
         post 'confirm', on: :member
       end
+      resources :comments, only: [:index, :create], controller: 'event/comments', shallow: true do
+        resources :comments, only: [:index, :create], controller: 'comment/comments'
+      end
     end
   end
+
+  resources :comments, only: [:update, :destroy]
 
   resources :notifications, only: :show do
     post 'view', on: :member

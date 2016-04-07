@@ -1,4 +1,4 @@
-RSpec.shared_examples 'an action with sorting' do |owner_name, collection_name, options|
+RSpec.shared_examples 'an action with sorting' do |owner_name, collection_name, options = {}|
   accept = options[:accept]
 
   let(:page) { FactoryGirl.build(:page_default) }
