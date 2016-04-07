@@ -47,18 +47,6 @@ RSpec.describe Notification, :type => :model do
     end
   end
 
-  describe '.remainings_count' do
-    subject { Notification.remainings_count }
-
-    before do
-      FactoryGirl.create_list(:notification, 10)
-    end
-
-    it 'returns the unviewed notifications count' do
-      is_expected.to eq(Notification.where(viewed: false).count)
-    end
-  end
-
   describe '#viewed!' do
     let(:notification) { FactoryGirl.create(:notification, viewed: false) }
 

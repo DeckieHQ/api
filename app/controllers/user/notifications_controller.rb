@@ -6,7 +6,6 @@ class User::NotificationsController < ApplicationController
 
     return render_search_errors(search) unless search.valid?
 
-    render json: search.apply(current_user.notifications), include: search.included,
-      meta: { remainings_count: current_user.notifications.remainings_count }
+    render json: search.apply(current_user.notifications), include: search.included
   end
 end

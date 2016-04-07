@@ -8,8 +8,6 @@ class Notification < ApplicationRecord
 
   before_create :set_type
 
-  scope :remainings_count, -> { where(viewed: false).count }
-
   def viewed!
     update(viewed: true)
   end
