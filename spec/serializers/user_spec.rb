@@ -16,7 +16,6 @@ RSpec.describe UserSerializer, :type => :serializer do
         email_verified: user.email_verified?,
         phone_number_verified: user.phone_number_verified?
       })
-
       expect(serialized.attributes).to have_serialized_attributes(expected_attributes)
     end
 

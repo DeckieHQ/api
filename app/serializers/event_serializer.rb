@@ -14,7 +14,10 @@ class EventSerializer < ActiveModel::Serializer
              :postcode,
              :city,
              :state,
-             :country
+             :country,
+             :attendees_count,
+             :opened,
+             :full
 
   belongs_to :host
 
@@ -26,5 +29,13 @@ class EventSerializer < ActiveModel::Serializer
   has_many :comments, key: :private_comments do
     link :related, UrlHelpers.event_comments(object) + '?private=true'
     include_data false
+  end
+
+  def opened
+    !object.closed?
+  end
+
+  def full
+    object.full?
   end
 end

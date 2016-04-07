@@ -53,6 +53,10 @@ gem 'pundit', '~> 1.1'
 # Soft-delete records
 gem 'paranoia', git: 'git://github.com/radar/paranoia', branch: 'core'
 
+# Search
+gem 'algoliasearch', git: 'git://github.com/algolia/algoliasearch-client-ruby'
+gem 'algoliasearch-rails', '~> 1.14'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'
@@ -72,6 +76,7 @@ group :test do
   gem 'webmock', '~> 1.22'
   gem 'faker', '~> 1.6'
   gem 'pundit-matchers', '~> 1.0'
+  gem 'database_cleaner', '~> 1.5'
 end
 
 group :production do

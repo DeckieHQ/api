@@ -15,3 +15,28 @@ RSpec::Matchers.define :include_deleted do |relationship|
     FactoryGirl.create_list(described_class.to_s.downcase, 3)
   end
 end
+
+RSpec::Matchers.define :include_serialized_attributes do |model, options = {}|
+  match do |actual|
+    except = options[:except] || []
+
+    attributes = "#{model.class}Serializer".constantize.new(model).attributes
+
+    except.each do |attribute|
+      attributes.delete(attribute)
+    end
+
+    expect(actual).to include(JSON.parse(attributes.to_json))
+  end
+end
+
+
+RSpec::Matchers.define :include_records do |records|
+  match do |results|
+    resultIds = results.pluck('id')
+
+    recordIds = records.pluck('id')
+
+    recordIds.all? { |id| resultIds.include?(id) }
+  end
+end

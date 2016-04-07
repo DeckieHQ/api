@@ -8,7 +8,7 @@ class SearchOption
     @accept     = accept
   end
 
-  protected
+  private
 
   attr_reader :attributes, :accept
 

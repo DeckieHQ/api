@@ -1,6 +1,8 @@
 class Event < ApplicationRecord
   acts_as_paranoid
 
+  include EventSearch
+
   include Filterable
 
   belongs_to :host, -> { with_deleted }, class_name: 'Profile', foreign_key: 'profile_id'
