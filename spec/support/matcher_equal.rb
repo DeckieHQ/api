@@ -43,13 +43,3 @@ RSpec::Matchers.define :equal_sms do |expected|
     actual.options == expected.options
   end
 end
-
-RSpec::Matchers.define :equal_search do |records|
-  match do |results|
-    resultIds = results.pluck('id').sort
-
-    recordIds = records.pluck('id').sort
-
-    expect(resultIds).to eq(recordIds)
-  end
-end

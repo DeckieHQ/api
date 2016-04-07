@@ -16,11 +16,17 @@ RSpec::Matchers.define :include_deleted do |relationship|
   end
 end
 
-RSpec::Matchers.define :include_serialized_attributes do |model|
+RSpec::Matchers.define :include_serialized_attributes do |model, options = {}|
   match do |actual|
-    serializer = "#{model.class}Serializer".constantize.new(model)
+    except = options[:except] || []
 
-    expect(actual).to include(JSON.parse(serializer.attributes.to_json))
+    attributes = "#{model.class}Serializer".constantize.new(model).attributes
+
+    except.each do |attribute|
+      attributes.delete(attribute)
+    end
+
+    expect(actual).to include(JSON.parse(attributes.to_json))
   end
 end
 

@@ -24,7 +24,7 @@ RSpec.describe 'Event search', :type => :search do
     result = Event.raw_search('')['hits'].sample
 
     expect(result).to include_serialized_attributes(
-      Event.find(result['objectID'])
+      Event.find(result['objectID']), except: [:opened]
     )
   end
 
@@ -47,7 +47,7 @@ RSpec.describe 'Event search', :type => :search do
       results = Event.search('', {
         facets: attribute, facetFilters: ["#{attribute}:#{value}"]
       })
-      expect(results).to equal_search(
+      expect(results).to have_records(
         Event.opened.where("#{attribute} = ?", value)
       )
     end
@@ -60,7 +60,7 @@ RSpec.describe 'Event search', :type => :search do
       results = Event.search('', {
         numericFilters: "#{attribute}=#{value}"
       })
-      expect(results).to equal_search(
+      expect(results).to have_records(
         Event.opened.select do |event|
           event.public_send("#{attribute}?") == value.to_b
         end
@@ -82,17 +82,10 @@ RSpec.describe 'Event search', :type => :search do
 
       expect(
         Event.search('', { numericFilters: numericFilters })
-      ).to equal_search(
+      ).to have_records(
         Event.opened.where("#{attribute} #{sign} ?", value)
       )
     end
-  end
-
-  xit 'has ranking'
-  # TODO: test attributes presence
-
-  xit 'has custom ranking' do
-
   end
 
   it 'has geo-search' do
@@ -100,9 +93,5 @@ RSpec.describe 'Event search', :type => :search do
       aroundLatLng: "#{event.latitude}, #{event.longitude}", aroundRadius: 50
     })
     expect(results.first.id).to eql(event.id)
-  end
-
-  xit do
-    byebug
   end
 end

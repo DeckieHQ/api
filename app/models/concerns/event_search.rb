@@ -22,10 +22,6 @@ module EventSearch
                    :country,
                    :attendees_count
 
-        attribute :opened do
-          !closed?
-        end
-
         attribute :full do
           full?
         end
@@ -48,7 +44,7 @@ module EventSearch
 
         attributesForFaceting ['category', 'ambiance', 'level']
 
-        customRanking ['desc(attendees_count / capacity)']
+        customRanking ['asc(begin_at_i)', 'desc(attendees_count / capacity)']
 
         geoloc :latitude, :longitude
       end

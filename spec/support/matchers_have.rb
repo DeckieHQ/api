@@ -93,3 +93,13 @@ def has_notification_job?(action)
     args: [{ '_aj_globalid' => action.to_global_id.to_s }]
   })
 end
+
+RSpec::Matchers.define :have_records do |records|
+  match do |results|
+    resultIds = results.pluck('id').sort
+
+    recordIds = records.pluck('id').sort
+
+    expect(resultIds).to eq(recordIds)
+  end
+end
