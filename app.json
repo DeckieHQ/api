@@ -6,6 +6,7 @@
     "heroku-postgresql",
     "heroku-redis",
     "postmark",
-    "blowerio"
+    "blowerio",
+    "algoliasearch"
   ]
 }
