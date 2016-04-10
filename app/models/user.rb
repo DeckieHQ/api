@@ -50,6 +50,10 @@ class User < ApplicationRecord
     submissions.filter({ event: :opened })
   end
 
+  def reset_notifications_count!
+    update(notifications_count: 0)
+  end
+
   private
 
   def build_profile

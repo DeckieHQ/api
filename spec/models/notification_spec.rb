@@ -35,8 +35,12 @@ RSpec.describe Notification, :type => :model do
     it { is_expected.to include_deleted(:action) }
   end
 
-  context 'when created' do
-    subject(:notification) { FactoryGirl.create(:notification) }
+  context 'after create' do
+    let(:user) do
+      FactoryGirl.create(:user, notifications_count: Faker::Number.between(0, 5))
+    end
+
+    subject(:notification) { FactoryGirl.create(:notification, user: user) }
 
     it 'sets the type according to action attributes' do
       action = notification.action
@@ -45,17 +49,9 @@ RSpec.describe Notification, :type => :model do
         "#{action.resource_type.downcase}-#{action.type}"
       )
     end
-  end
 
-  describe '.remainings_count' do
-    subject { Notification.remainings_count }
-
-    before do
-      FactoryGirl.create_list(:notification, 10)
-    end
-
-    it 'returns the unviewed notifications count' do
-      is_expected.to eq(Notification.where(viewed: false).count)
+    it 'increments user notifications_count' do
+      expect { notification }.to change { user.notifications_count }.by(1)
     end
   end
 

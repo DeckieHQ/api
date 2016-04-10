@@ -8,7 +8,7 @@ class Notification < ApplicationRecord
 
   before_create :set_type
 
-  scope :remainings_count, -> { where(viewed: false).count }
+  after_create :increment_counter_cache
 
   def viewed!
     update(viewed: true)
@@ -21,6 +21,10 @@ class Notification < ApplicationRecord
   end
 
   private
+
+  def increment_counter_cache
+    user.update(notifications_count: user.notifications_count + 1)
+  end
 
   def set_type
     self.type = "#{action.resource_type.downcase}-#{action.type}"

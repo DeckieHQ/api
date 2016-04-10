@@ -6,7 +6,8 @@ class UserSerializer < ActiveModel::Serializer
              :phone_number,
              :culture,
              :email_verified,
-             :phone_number_verified
+             :phone_number_verified,
+             :notifications_count
 
   has_one :profile do
     link :related, UrlHelpers.profile(object.profile)
