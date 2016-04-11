@@ -32,7 +32,6 @@ RSpec.describe Event, :type => :model do
     it { is_expected.to have_many(:actions).dependent(:destroy) }
   end
 
-
   describe 'Validations' do
     it do
       is_expected.to have_many(:public_comments)
@@ -127,6 +126,8 @@ RSpec.describe Event, :type => :model do
   end
 
   it_behaves_like 'acts as paranoid'
+
+  it_behaves_like 'an indexable resource'
 
   [:full, :closed].each do |state|
     method = "#{state}?"

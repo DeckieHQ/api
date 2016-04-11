@@ -3,7 +3,7 @@ module EventSearch
     base.class_eval do
       include AlgoliaSearch
 
-      algoliasearch per_environment: true, unless: :closed? do
+      algoliasearch per_environment: true, enqueue: :index_worker, unless: :closed? do
         attributes :title,
                    :category,
                    :ambiance,
@@ -47,6 +47,10 @@ module EventSearch
         customRanking ['asc(begin_at_i)', 'desc(attendees_count / capacity)']
 
         geoloc :latitude, :longitude
+      end
+
+      def self.index_worker(record, remove)
+        RecordIndexJob.perform_later(record.id, record.class.name, remove)
       end
     end
   end
