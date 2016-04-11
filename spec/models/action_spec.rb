@@ -42,11 +42,9 @@ RSpec.describe Action, :type => :model do
   context 'before create' do
     subject(:action) { FactoryGirl.create(:action, resource: resource) }
 
-    {
-      event: :title
-    }.each do |factory, attribute|
+    [:event, :comment].each do |factory|
       context "with #{factory} resource" do
-        let(:resource) { FactoryGirl.create(:event) }
+        let(:resource) { FactoryGirl.create(:factory) }
 
         let(:fakeIds) { Array.new(5).map { Faker::Number.number(5) } }
 
@@ -54,7 +52,7 @@ RSpec.describe Action, :type => :model do
           allow(resource).to receive(:receiver_ids_for).and_return(fakeIds)
         end
 
-        it "set a title matching #{factory} title" do
+        it "sets title to #{factory} title" do
           expect(action.title).to eq(resource.title)
         end
 
