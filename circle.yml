@@ -1,6 +1,7 @@
 machine:
   pre:
     - sudo pip install -U docker-compose==1.5.2
+    - sudo wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
   services:
     - docker
 
@@ -13,5 +14,13 @@ database:
     - echo "Skipping database preparation..."
 
 test:
+  pre:
+    - ./scripts/heroku.sh env test
   override:
     - make test
+
+deployment:
+  staging:
+    branch: master
+    commands:
+      - ./scripts/heroku.sh deploy staging
