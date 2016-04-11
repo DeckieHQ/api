@@ -1,4 +1,4 @@
-.PHONY: all re build migrations test up detach shell clean
+.PHONY: all re build migrations test up worker detach shell clean
 
 compose := docker-compose -f docker-compose.yml
 
@@ -21,8 +21,11 @@ test:
 up: migrations
 	$(compose) up web
 
+worker:
+	$(compose) up worker
+
 detach:
-	$(compose) up -d web
+	$(compose) up -d web worker
 
 shell: build
 	$(compose) run --service-port shell

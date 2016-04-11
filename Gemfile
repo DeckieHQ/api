@@ -54,6 +54,9 @@ gem 'algoliasearch-rails', '~> 1.14'
 # Env
 gem 'dotenv-rails', '~> 2.1'
 
+# Jobs
+gem 'sidekiq', '~> 4.1'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'
