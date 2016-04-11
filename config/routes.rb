@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  default_url_options host: 'http://0.0.0.0:8080'
+  default_url_options host: ENV['API_URL']
 
   # Removes all routes first in order to remove routes unnecessary for an API.
   devise_for :users, skip: :all
