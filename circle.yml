@@ -15,7 +15,7 @@ database:
 
 test:
   pre:
-    - ./scripts/heroku.sh env test
+    - bash scripts/heroku.sh env test
   override:
     - make test
 
@@ -23,4 +23,4 @@ deployment:
   staging:
     branch: master
     commands:
-      - ./scripts/heroku.sh deploy staging
+      - bash scripts/heroku.sh deploy staging

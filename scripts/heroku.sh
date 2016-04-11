@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 cmd="$1"
@@ -7,7 +7,7 @@ build="$2"
 
 app="$build-deckie-api"
 
-if [ $CUSTOM_DOMAIN ]; then
+if [ "$CUSTOM_DOMAIN" ]; then
     if [ $build == "production" ]; then
         api_domain_name="api.$CUSTOM_DOMAIN"
         front_domain_name="www.$CUSTOM_DOMAIN"
@@ -36,7 +36,7 @@ function deploy() {
 
     heroku domains:clear --app $app
 
-    if [ $CUSTOM_DOMAIN ]; then
+    if [ "$CUSTOM_DOMAIN" ]; then
         heroku domains:add --app $app $api_domain_name
     fi
 
@@ -56,7 +56,7 @@ function env() {
 
 for supported_cmd in init deploy env
 do
-    if [ $cmd == $supported_cmd ]; then
+    if [ "$cmd" == $supported_cmd ]; then
         if [ ! $build ]; then
             echo "Please specify a build type."
 
