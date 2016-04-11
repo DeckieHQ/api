@@ -7,17 +7,19 @@ machine:
 
 dependencies:
   override:
-    - docker-compose --version
+    - bash scripts/heroku.sh provision_ci ci-$CIRCLE_BUILD_NUM
 
 database:
   override:
-    - echo "Skipping database preparation..."
+    - make migrations
 
 test:
   pre:
-    - bash scripts/heroku.sh env test
+    - bash scripts/heroku.sh env ci-$CIRCLE_BUILD_NUM
   override:
     - make test
+  post:
+    - bash scripts/heroku.sh clean ci-$CIRCLE_BUILD_NUM
 
 deployment:
   staging:

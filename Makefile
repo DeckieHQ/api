@@ -15,7 +15,7 @@ migrations: build
 	$(compose) run web bundle exec rake db:migrate
 	$(compose) run web bundle exec rake db:seed
 
-test: migrations
+test:
 	$(compose) -f docker-compose.test.yml run test
 
 up: migrations

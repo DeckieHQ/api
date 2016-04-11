@@ -54,7 +54,17 @@ function env() {
     heroku config --app $app -s > .env
 }
 
-for supported_cmd in init deploy env
+function clean() {
+    heroku apps:destroy --app $app --confirm $app
+}
+
+function provision_ci() {
+    eval init
+
+    heroku addons:create --app $app "algoliasearch"
+}
+
+for supported_cmd in init deploy env clean provision_ci
 do
     if [ "$cmd" == $supported_cmd ]; then
         if [ ! $build ]; then
