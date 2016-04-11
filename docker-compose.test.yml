@@ -11,6 +11,8 @@ test:
     - PORT=8080
     - DATABASE_URL=postgres://postgres:@herokuPostgresql:5432/postgres
     - CODECLIMATE_REPO_TOKEN
+    - ALGOLIASEARCH_APPLICATION_ID
+    - ALGOLIASEARCH_API_KEY
   ports:
     - '8080:8080'
   links:
