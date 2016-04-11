@@ -56,6 +56,7 @@ gem 'dotenv-rails', '~> 2.1'
 
 # Jobs
 gem 'sidekiq', '~> 4.1'
+gem 'sinatra', git: 'git://github.com/sinatra/sinatra', require: nil
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

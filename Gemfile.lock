@@ -34,6 +34,15 @@ GIT
       activemodel (>= 4.0)
       railties (>= 4.0)
 
+GIT
+  remote: git://github.com/sinatra/sinatra
+  revision: 4c7d38eb1b2cc02ce51029f28e0c3c34ca12ccfd
+  specs:
+    sinatra (2.0.0.pre.alpha)
+      rack (= 2.0.0.alpha)
+      rack-protection (~> 1.5)
+      tilt (~> 2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -153,6 +162,8 @@ GEM
     rack (2.0.0.alpha)
       json
     rack-cors (0.4.0)
+    rack-protection (1.5.3)
+      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.0.0.beta2)
@@ -229,6 +240,7 @@ GEM
       sprockets (>= 3.0.0)
     thor (0.19.1)
     thread_safe (0.3.5)
+    tilt (2.0.2)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     unf (0.1.4)
@@ -277,6 +289,7 @@ DEPENDENCIES
   rspec-rails (>= 3.5.0.beta2)
   shoulda-matchers (~> 3.1)
   sidekiq (~> 4.1)
+  sinatra!
   spring (~> 1.6)
   tzinfo-data (~> 1.2)
   wannabe_bool (~> 0.5.0)

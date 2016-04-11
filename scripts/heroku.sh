@@ -32,7 +32,7 @@ function deploy() {
 
     heroku maintenance:on --app $app
 
-    heroku docker:release --app $app
+    # TODO: reload domain / urls only if necessary
 
     heroku domains:clear --app $app
 
@@ -42,6 +42,8 @@ function deploy() {
 
     heroku config:set --app $app API_URL="http://$api_domain_name" \
                                  FRONT_URL="http://$front_domain_name"
+
+    heroku docker:release --app $app
 
     heroku run --app $app bundle exec rake db:migrate
 
