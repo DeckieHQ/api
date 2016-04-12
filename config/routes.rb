@@ -36,6 +36,10 @@ Rails.application.routes.draw do
       resources :submissions, only: [:index, :create, :show, :destroy] do
         post 'confirm', on: :member
       end
+      resource :submission, only: :show, controller: 'event/submissions'
+
+      resources :attendees, only: :index, controller: 'event/attendees'
+
       resources :comments, only: [:index, :create], controller: 'event/comments', shallow: true do
         resources :comments, only: [:index, :create], controller: 'comment/comments'
       end

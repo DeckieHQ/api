@@ -16,7 +16,7 @@ class Comment < ApplicationRecord
   scope :publics, -> { where(private: false) }
 
   def title
-    message[0...40]
+    message.first(40)
   end
 
   def receivers_ids_for(action)
