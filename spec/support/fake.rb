@@ -3,7 +3,7 @@ module Fake
     extend self
 
     def notifications
-      values = %w(event-update event-subscribe)
+      values = %w(event-update event-submit)
 
       # Injecting duplicates voluntarily in order to have more randomness.
       (values.length / 2).times.inject([]) do |result|
@@ -52,7 +52,7 @@ module Fake
     def type_for(resource_type)
       case resource_type
       when 'Event'
-        %w(subscribe unsubscribe join update cancel leave)
+        %w(submit unsubmit join update cancel leave)
       when 'Comment'
         %w(comment)
       end.sample

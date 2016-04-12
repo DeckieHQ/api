@@ -3,9 +3,9 @@ RSpec.shared_examples 'acts as paranoid' do |options = {}|
 
   factory_name = described_class.to_s.downcase
 
-  subject(:model) { FactoryGirl.create(factory_name).destroy }
-
   context 'when destroyed' do
+    subject(:model) { FactoryGirl.create(factory_name).destroy }
+
     before { model.destroy }
 
     it { is_expected.to be_persisted }
@@ -13,8 +13,8 @@ RSpec.shared_examples 'acts as paranoid' do |options = {}|
     it { is_expected.to be_deleted }
   end
 
-  context '.default_scope' do
-    let(:count) { 3 }
+  describe '.default_scope' do
+    let(:count) { Faker::Number.between(1, 3) }
 
     before do
       FactoryGirl.create_list(factory_name, count).last.destroy

@@ -1,5 +1,5 @@
 class ReindexEventsJob < ApplicationJob
-  queue_as :default
+  queue_as :scheduler
 
   def perform
     Event.reindex!

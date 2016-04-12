@@ -313,7 +313,7 @@ RSpec.describe Event, :type => :model do
     end
 
     it 'returns the event with submissions' do
-      expect(Event.with_submissions).to eq(events_with_submissions)
+      expect(Event.with_submissions).to have_records(events_with_submissions)
     end
   end
 end

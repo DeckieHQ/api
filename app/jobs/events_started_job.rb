@@ -1,5 +1,5 @@
 class EventsStartedJob < ApplicationJob
-  queue_as :default
+  queue_as :scheduler
 
   def perform
     Event.opened(false).with_submissions.each do |event|
