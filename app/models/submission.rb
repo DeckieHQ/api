@@ -3,7 +3,7 @@ class Submission < ApplicationRecord
 
   include Filterable
 
-  belongs_to :event
+  belongs_to :event, counter_cache: true
 
   belongs_to :profile, -> { with_deleted }
 

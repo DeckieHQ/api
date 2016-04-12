@@ -3,6 +3,16 @@ require 'rails_helper'
 RSpec.describe Event, :type => :model do
   describe 'Database' do
     it { is_expected.to have_db_index(:profile_id) }
+
+    it do
+      is_expected.to have_db_column(:attendees_count)
+        .of_type(:integer).with_options(null: false, default: 0)
+    end
+
+    it do
+      is_expected.to have_db_column(:submissions_count)
+        .of_type(:integer).with_options(null: false, default: 0)
+    end
   end
 
   describe 'Relationships' do
