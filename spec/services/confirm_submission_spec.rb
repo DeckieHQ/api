@@ -30,10 +30,8 @@ RSpec.describe ConfirmSubmission do
 
     let(:submission) { FactoryGirl.create(:submission, :pending) }
 
-    let(:event_ready_service) { double(call: true) }
-
     before do
-      allow(EventReady).to receive(:new).and_return(event_ready_service)
+      allow(CancelSubmission).to receive(:for)
     end
 
     context 'when event is not full after confirmation' do
@@ -47,10 +45,10 @@ RSpec.describe ConfirmSubmission do
 
       it { is_expected.to have_created_action(submission.profile, submission.event, :join) }
 
-      it "doesn't call the event ready service" do
+      it "doesn't remove the pending submissions" do
         call
 
-        expect(EventReady).to_not have_received(:new)
+        expect(CancelSubmission).to_not have_received(:for)
       end
     end
 
@@ -65,12 +63,11 @@ RSpec.describe ConfirmSubmission do
 
       it { is_expected.to have_created_action(submission.profile, submission.event, :join) }
 
-      it 'calls the event ready service with this event' do
+      it 'removes the pending submissiosn' do
         call
 
-        expect(EventReady).to have_received(:new).with(submission.event)
-
-        expect(event_ready_service).to have_received(:call).with(:full)
+        expect(CancelSubmission).to have_received(:for)
+          .with(submission.event.pending_submissions, reason: :remove_full)
       end
     end
   end

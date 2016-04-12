@@ -1,6 +1,6 @@
 class CancelSubmission < ActionService
-  def self.for(submissions)
-    submissions.map { |submission| new(submission).call }
+  def self.for(submissions, reason: :quit)
+    submissions.map { |submission| new(submission).call(reason) }
   end
 
   def initialize(submission)
@@ -9,9 +9,12 @@ class CancelSubmission < ActionService
     @submission = submission
   end
 
-  def call
-    create_action(submission.confirmed? ? :leave : :unsubscribe)
-
+  def call(reason = :quit)
+    if reason == :quit
+      create_action(submission.confirmed? ? :leave : :unsubmit)
+    else
+      create_action(reason)
+    end
     submission.destroy
   end
 

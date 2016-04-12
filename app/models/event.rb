@@ -89,16 +89,16 @@ class Event < ApplicationRecord
   end
 
   def receiver_ids_for(action)
-    case action.type
-    when 'subscribe', 'unsubscribe'
+    case action.type.to_sym
+    when :submit, :unsubmit
       [ host.id ]
-    when 'cancel'
+    when :cancel
       submissions.pluck('profile_id')
-    when 'full'
+    when :remove_full, :remove_start
       pending_submissions.pluck('profile_id')
-    when 'join'
+    when :join
       attendees_with_host_ids
-    when 'update', 'leave', 'comment'
+    when :update, :leave, :comment
       attendees_with_host_ids_except(action.actor)
     else
       throw "Unsupported action: #{action.type}"

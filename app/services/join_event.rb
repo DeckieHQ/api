@@ -9,7 +9,7 @@ class JoinEvent < ActionService
     if event.auto_accept?
       confirm_new_submission!
     else
-      create_action(:subscribe)
+      create_action(:submit)
 
       new_submission.tap(&:pending!)
     end

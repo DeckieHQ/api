@@ -218,7 +218,7 @@ RSpec.describe Event, :type => :model do
 
     subject(:receiver_ids_for) { event.receiver_ids_for(action) }
 
-    %w(subscribe unsubscribe).each do |type|
+    %w(submit unsubmit).each do |type|
       context "with a #{type} action" do
         let(:action) { double(type: type) }
 
@@ -262,7 +262,7 @@ RSpec.describe Event, :type => :model do
       end
     end
 
-    %w(full).each do |type|
+    %w(remove_full remove_start).each do |type|
       context "with a #{type} action" do
         let(:action) { double(type: type) }
 

@@ -24,6 +24,6 @@ class ConfirmSubmission < ActionService
   attr_reader :submission
 
   def remove_pending_submissions
-    EventReady.new(submission.event).call(:full)
+    CancelSubmission.for(submission.event.pending_submissions, reason: :remove_full)
   end
 end

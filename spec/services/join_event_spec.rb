@@ -23,7 +23,6 @@ RSpec.describe JoinEvent do
           )
           confirm_service
         end
-
         is_expected.to eq(confirm_service.call)
       end
     end
@@ -41,7 +40,7 @@ RSpec.describe JoinEvent do
         is_expected.to eq(new_submission)
       end
 
-      it { is_expected.to have_created_action(profile, event, :subscribe) }
+      it { is_expected.to have_created_action(profile, event, :submit) }
     end
   end
 end
