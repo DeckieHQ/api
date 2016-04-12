@@ -7,41 +7,38 @@ build="$2"
 
 app="$build-deckie-api"
 
-if [ "$CUSTOM_DOMAIN" ]; then
-    if [ $build == "production" ]; then
-        api_domain_name="api.$CUSTOM_DOMAIN"
-        front_domain_name="www.$CUSTOM_DOMAIN"
-    else
-        api_domain_name="$build-api.$CUSTOM_DOMAIN"
-        front_domain_name="$build-front.$CUSTOM_DOMAIN"
-    fi
-else
-    api_domain_name="$app.herokuapp.com"
-
-    front_domain_name=${api_domain_name/api/front}
-fi
-
 function init() {
     echo "Creating heroku app $app..."
 
     heroku apps:create $app --region eu
 }
 
-function deploy() {
-    echo "Deploying heroku app $app..."
-
-    heroku maintenance:on --app $app
-
-    # TODO: reload domain / urls only if necessary
-
-    heroku domains:clear --app $app
-
+function configure() {
     if [ "$CUSTOM_DOMAIN" ]; then
+        if [ $build == "production" ]; then
+            api_domain_name="api.$CUSTOM_DOMAIN"
+            front_domain_name="www.$CUSTOM_DOMAIN"
+        else
+            api_domain_name="$build-api.$CUSTOM_DOMAIN"
+            front_domain_name="$build-front.$CUSTOM_DOMAIN"
+        fi
+        heroku domains:clear --app $app
+
         heroku domains:add --app $app $api_domain_name
+    else
+        api_domain_name="$app.herokuapp.com"
+
+        front_domain_name=${api_domain_name/api/front}
     fi
 
     heroku config:set --app $app API_URL="http://$api_domain_name" \
                                  FRONT_URL="http://$front_domain_name"
+}
+
+function deploy() {
+    echo "Deploying heroku app $app..."
+
+    heroku maintenance:on --app $app
 
     heroku docker:release --app $app
 
@@ -60,13 +57,11 @@ function clean() {
     heroku apps:destroy --app $app --confirm $app
 }
 
-function provision_ci() {
-    eval init
-
-    heroku addons:create --app $app "algoliasearch"
+function name() {
+    echo $app
 }
 
-for supported_cmd in init deploy env clean provision_ci
+for supported_cmd in init configure deploy env clean name
 do
     if [ "$cmd" == $supported_cmd ]; then
         if [ ! $build ]; then
@@ -81,6 +76,6 @@ do
     fi
 done
 
-echo "usage: sh heroku.sh [init|deploy|env] build"
+echo "usage: bash scripts/heroku.sh [init|configure|deploy|env|clean|name] build"
 
 exit -1
