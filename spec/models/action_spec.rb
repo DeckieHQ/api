@@ -44,7 +44,7 @@ RSpec.describe Action, :type => :model do
 
     [:event, :comment].each do |factory|
       context "with #{factory} resource" do
-        let(:resource) { FactoryGirl.create(:factory) }
+        let(:resource) { FactoryGirl.create(factory) }
 
         let(:fakeIds) { Array.new(5).map { Faker::Number.number(5) } }
 
