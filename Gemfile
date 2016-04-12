@@ -14,12 +14,6 @@ gem 'pg', '~> 0.18'
 # Use Puma as the app server
 gem 'puma', '~> 2.15'
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS),
 # making cross-origin AJAX possible
 gem 'rack-cors', '~> 0.4'
@@ -56,6 +50,13 @@ gem 'paranoia', git: 'git://github.com/radar/paranoia', branch: 'core'
 # Search
 gem 'algoliasearch', git: 'git://github.com/algolia/algoliasearch-client-ruby'
 gem 'algoliasearch-rails', '~> 1.14'
+
+# Env
+gem 'dotenv-rails', '~> 2.1'
+
+# Jobs
+gem 'sidekiq', '~> 4.1'
+gem 'sinatra', git: 'git://github.com/sinatra/sinatra', require: nil
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

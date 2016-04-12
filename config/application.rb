@@ -34,5 +34,7 @@ module Deckie
       api_token: ENV['POSTMARK_API_TOKEN']
     }
     config.sms_settings = { url: ENV['BLOWERIO_URL'] }
+
+    config.active_job.queue_adapter = :sidekiq
   end
 end

@@ -1,4 +1,4 @@
-.PHONY: all re build migrations test up detach shell clean
+.PHONY: all re build migrations test up worker detach shell clean
 
 compose := docker-compose -f docker-compose.yml
 
@@ -15,14 +15,17 @@ migrations: build
 	$(compose) run web bundle exec rake db:migrate
 	$(compose) run web bundle exec rake db:seed
 
-test: migrations
+test:
 	$(compose) -f docker-compose.test.yml run test
 
 up: migrations
 	$(compose) up web
 
+worker:
+	$(compose) up worker
+
 detach:
-	$(compose) up -d web
+	$(compose) up -d web worker
 
 shell: build
 	$(compose) run --service-port shell

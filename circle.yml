@@ -1,17 +1,29 @@
 machine:
   pre:
     - sudo pip install -U docker-compose==1.5.2
+    - sudo wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+    - heroku plugins:install heroku-docker
   services:
     - docker
 
 dependencies:
   override:
-    - docker-compose --version
+    - bash scripts/ci.sh provision
 
 database:
   override:
-    - echo "Skipping database preparation..."
+    - make migrations
 
 test:
+  pre:
+    - bash scripts/ci.sh configure
   override:
     - make test
+  post:
+    - bash scripts/ci.sh clean
+
+deployment:
+  staging:
+    branch: master
+    commands:
+      - bash scripts/heroku.sh deploy staging

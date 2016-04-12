@@ -11,6 +11,16 @@ web:
   links:
     - herokuPostgresql
     - herokuRedis
+worker:
+  build: .
+  command: 'bash -c ''bundle exec sidekiq -C config/sidekiq.yml'''
+  working_dir: /app/user
+  environment:
+    DATABASE_URL: 'postgres://postgres:@herokuPostgresql:5432/postgres'
+    REDIS_URL: 'redis://herokuRedis:6379'
+  links:
+    - herokuPostgresql
+    - herokuRedis
 shell:
   build: .
   command: bash

@@ -1,5 +1,13 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
-  default_url_options host: 'http://0.0.0.0:8080'
+  Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+    username == 'admin' && password == ENV.fetch('JOBS_PASSWORD', 'admin')
+  end
+
+  mount Sidekiq::Web , at: '/jobs'
+
+  default_url_options host: ENV['API_URL'] || 'http://www.deckie.io'
 
   # Removes all routes first in order to remove routes unnecessary for an API.
   devise_for :users, skip: :all

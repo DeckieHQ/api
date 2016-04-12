@@ -45,6 +45,12 @@ You can now type commands like:
 
 ## Run the test suite
 
+  Run the migrations once first:
+
+    make migrations
+
+  Then:
+
     make test
 
 ## Deploy the application
