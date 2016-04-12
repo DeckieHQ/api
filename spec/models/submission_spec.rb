@@ -9,7 +9,7 @@ RSpec.describe Submission, :type => :model do
   end
 
   describe 'Relationships' do
-    it { is_expected.to belong_to(:event) }
+    it { is_expected.to belong_to(:event).counter_cache }
 
     it { is_expected.to belong_to(:profile) }
 

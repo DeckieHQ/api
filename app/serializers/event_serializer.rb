@@ -16,6 +16,7 @@ class EventSerializer < ActiveModel::Serializer
              :state,
              :country,
              :attendees_count,
+             :submissions_count,
              :opened,
              :full
 

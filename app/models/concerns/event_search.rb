@@ -20,7 +20,8 @@ module EventSearch
                    :city,
                    :state,
                    :country,
-                   :attendees_count
+                   :attendees_count,
+                   :submissions_count
 
         attribute :full do
           full?
