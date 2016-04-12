@@ -5,7 +5,6 @@ RSpec.describe EventsStartedJob, type: :job do
     FactoryGirl.create_list(:event,        5)
     FactoryGirl.create_list(:event_closed, 5)
 
-    allow(Event).to receive(:reindex!)
     allow(CancelSubmission).to receive(:for)
 
     described_class.perform_now
@@ -18,9 +17,5 @@ RSpec.describe EventsStartedJob, type: :job do
         have_received(:for).with(event.pending_submissions, reason: :remove_start)
       )
     end
-  end
-
-  it 'reindexes the events' do
-    expect(Event).to have_received(:reindex!)
   end
 end
