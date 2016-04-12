@@ -7,20 +7,24 @@ RSpec.describe EventsStartedJob, type: :job do
 
   describe '#perform' do
     before do
-      FactoryGirl.create_list(:event,        5)
-      FactoryGirl.create_list(:event_closed, 5)
+      FactoryGirl.create_list(:event, 5)
+      FactoryGirl.create_list(:event_closed, 5, :with_pending_submissions)
 
-      allow(CancelSubmission).to receive(:for)
-
-      described_class.perform_now
+      allow(CancelSubmission).to receive(:for).and_call_original
     end
 
 
     it 'cancels all pending submissions of closed events' do
-      Event.all do |event|
+      Event.all.each do |event|
         expect(CancelSubmission).public_send(event.closed? ? :to : :not_to,
-          have_received(:for).with(event.pending_submissions, reason: :remove_start)
+          receive(:for).with(event.pending_submissions, reason: :remove_start)
         )
+      end
+
+      described_class.perform_now
+
+      Event.opened(false).each do |event|
+        expect(event.pending_submissions).to be_empty
       end
     end
   end
