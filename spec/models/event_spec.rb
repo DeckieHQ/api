@@ -302,4 +302,18 @@ RSpec.describe Event, :type => :model do
       expect(results).to_not be_empty
     end
   end
+
+  describe '.with_submissions' do
+    let(:events_with_submissions) do
+      FactoryGirl.create_list(:event_with_submissions, 5)
+    end
+
+    before do
+      FactoryGirl.create_list(:event, 5)
+    end
+
+    it 'returns the event with submissions' do
+      expect(Event.with_submissions).to eq(events_with_submissions)
+    end
+  end
 end
