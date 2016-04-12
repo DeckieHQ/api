@@ -167,22 +167,6 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  describe '#destroy_pending_submissions' do
-    let(:event) do
-      FactoryGirl.create(:event_with_submissions, :with_pending_submissions)
-    end
-
-    before { event.destroy_pending_submissions }
-
-    it 'removes the pending submissions' do
-      expect(event.pending_submissions).to be_empty
-    end
-
-    it 'leaves the other submissions' do
-      expect(event.submissions).to_not be_empty
-    end
-  end
-
   describe '#switched_to_auto_accept?' do
     subject { event.switched_to_auto_accept? }
 

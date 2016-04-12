@@ -84,10 +84,6 @@ class Event < ApplicationRecord
     pending_submissions.take(capacity - attendees_count)
   end
 
-  def destroy_pending_submissions
-    pending_submissions.destroy_all
-  end
-
   def receiver_ids_for(action)
     case action.type.to_sym
     when :submit, :unsubmit
