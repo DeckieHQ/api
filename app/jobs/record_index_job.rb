@@ -1,9 +1,9 @@
 class RecordIndexJob < ApplicationJob
   queue_as :default
 
-  def perform(id, class_name, remove)
-    record = class_name.constantize.with_deleted.find(id)
+  def perform(model_name, id)
+    record = model_name.constantize.with_deleted.find(id)
 
-    record.tap(& remove ? :remove_from_index! : :index!)
+    record.tap(& record.deleted? ? :remove_from_index! : :index!)
   end
 end
