@@ -104,8 +104,14 @@ class Event < ApplicationRecord
     end
   end
 
-  def member? (profile)
+  def member?(profile)
     profile == host || attendees.include?(profile)
+  end
+
+  def submission_of(user = nil)
+    return unless user
+
+    submissions.find_by(profile: user.profile)
   end
 
   private

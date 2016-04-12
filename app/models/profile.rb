@@ -1,6 +1,8 @@
 class Profile < ApplicationRecord
   acts_as_paranoid
 
+  include Filterable
+
   belongs_to :user
 
   validates :nickname,          length: { maximum: 64   }

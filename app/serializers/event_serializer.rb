@@ -22,6 +22,21 @@ class EventSerializer < ActiveModel::Serializer
 
   belongs_to :host
 
+  has_many :attendees do
+    link :related, UrlHelpers.event_attendees(object)
+    include_data false
+  end
+
+  has_one :submission_of, key: :user_submission do
+    link :related, UrlHelpers.event_submission(object)
+    include_data false
+  end
+
+  has_many :submissions do
+    link :related, UrlHelpers.event_submissions(object)
+    include_data false
+  end
+
   has_many :comments do
     link :related, UrlHelpers.event_comments(object)
     include_data false

@@ -34,6 +34,14 @@ RSpec.describe Comment, :type => :model do
 
   it_behaves_like 'acts as paranoid'
 
+  describe '.title' do
+    let(:comment) { FactoryGirl.create(:comment) }
+
+    it 'has a title' do
+      expect(comment.title).to eq(comment.message.first(40))
+    end
+  end
+
   describe '.publics' do
     let(:event) { FactoryGirl.create(:event, :with_comments) }
 
