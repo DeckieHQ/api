@@ -53,6 +53,8 @@ module Fake
       case resource_type
       when 'Event'
         %w(subscribe unsubscribe join update cancel leave)
+      when 'Comment'
+        %w(comment)
       end.sample
     end
   end
