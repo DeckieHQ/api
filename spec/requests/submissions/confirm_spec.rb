@@ -57,10 +57,6 @@ RSpec.describe 'Confirm event submission', :type => :request do
         it do
           is_expected.to have_created_action(submission.profile, submission.event, 'join')
         end
-
-        it do
-          is_expected.to_not have_created_action(submission.event.host, submission.event, 'full')
-        end
       end
 
       context 'when event is full after confirmation' do
@@ -80,10 +76,6 @@ RSpec.describe 'Confirm event submission', :type => :request do
 
         it do
           is_expected.to have_created_action(submission.profile, submission.event, 'join')
-        end
-
-        it do
-          is_expected.to have_created_action(submission.event.host, submission.event, 'full')
         end
       end
     end
