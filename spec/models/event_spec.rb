@@ -303,8 +303,8 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  describe '.with_submissions' do
-    let(:events_with_submissions) do
+  describe '.with_pending_submissions' do
+    let!(:events) do
       FactoryGirl.create_list(:event_with_submissions, 5)
     end
 
@@ -313,7 +313,9 @@ RSpec.describe Event, :type => :model do
     end
 
     it 'returns the event with submissions' do
-      expect(Event.with_submissions).to have_records(events_with_submissions)
+      expect(Event.with_pending_submissions).to have_records(
+        Event.joins(:submissions).where({ submissions: { status: :pending } })
+      )
     end
   end
 end

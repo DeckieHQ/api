@@ -56,7 +56,8 @@ class Event < ApplicationRecord
 
   before_save :geocode, if: :address_changed?
 
-  scope :with_submissions, -> { where('submissions_count > 0') }
+  scope :with_pending_submissions,
+    -> { joins(:submissions).merge(Submission.pending).distinct }
 
   def self.opened(opened = true)
     sign = opened.to_s.to_b ? '>' : '<='
