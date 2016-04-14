@@ -9,16 +9,17 @@ en:
       message: 'To verify your phone number, please enter this code: %{code}.'
     email:
       subject: 'Email Verification'
+
+# Keys below don't need a translation.
   services:
     errors:
       phone_number_unassigned: 'Phone number is unassigned.'
-
   activerecord:
     errors:
       messages:
         user_unverified: 'User must be verified.'
-        subscribtion_already_exist: 'Profile already submited.'
-        subscribtion_already_confirmed: 'Submission already confirmed.'
+        submission_already_exist: 'Profile already submited.'
+        submission_already_confirmed: 'Submission already confirmed.'
         event_full: 'Event is full.'
         event_closed: 'Event is closed.'
         email_already_verified: 'Email is already verified.'
