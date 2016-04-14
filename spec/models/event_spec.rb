@@ -314,7 +314,7 @@ RSpec.describe Event, :type => :model do
 
     it 'returns the event with submissions' do
       expect(Event.with_pending_submissions).to have_records(
-        Event.joins(:submissions).where({ submissions: { status: :pending } })
+        Event.joins(:submissions).where({ submissions: { status: :pending } }).distinct
       )
     end
   end
