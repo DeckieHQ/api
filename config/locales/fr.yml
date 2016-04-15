@@ -1,0 +1,16 @@
+fr:
+  mailer:
+    greetings: 'Bonjour %{username} !'
+    reset_password_instructions:
+      subject: 'Réinitialisation du mot de passe'
+      details: 'Vous avez récemment fait une demande de réinitialisation de votre mot de passe. Pour terminer le processus, veuillez cliquer sur le lien ci‑dessous.'
+      link: 'Changer Mot de Passe'
+      notice: "Si vous n’êtes pas l’auteur de cette demande, il est probable qu’un autre utilisateur ait saisi votre adresse e-mail par erreur, vous pouvez ignorer cet email et votre mot de passe restera inchangé tant que vous n'accèderez pas au lien suivant."
+    email_verification_instructions:
+      subject: "Vérification de l'adresse email"
+      details: 'Vous avez récemment fait une demande de vérification de votre addresse email. Pour terminer le processus, veuillez cliquer sur le lien ci‑dessous.'
+      link: 'Vérifier Addresse Email'
+      notice: "Si vous n’êtes pas l’auteur de cette demande, il est probable qu’un autre utilisateur ait saisi votre adresse e-mail par erreur, vous pouvez ignorer cet email et votre adresse email ne sera pas vérifiée tant que vous n'accèderez pas au lien suivant."
+  smser:
+    phone_number_verification_instructions:
+      message: 'Deckie : Pour vérifier votre numéro de téléphone, veuillez entrer le code : %{code}.'
