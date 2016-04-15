@@ -167,22 +167,6 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  describe '#destroy_pending_submissions' do
-    let(:event) do
-      FactoryGirl.create(:event_with_submissions, :with_pending_submissions)
-    end
-
-    before { event.destroy_pending_submissions }
-
-    it 'removes the pending submissions' do
-      expect(event.pending_submissions).to be_empty
-    end
-
-    it 'leaves the other submissions' do
-      expect(event.submissions).to_not be_empty
-    end
-  end
-
   describe '#switched_to_auto_accept?' do
     subject { event.switched_to_auto_accept? }
 
@@ -218,7 +202,7 @@ RSpec.describe Event, :type => :model do
 
     subject(:receiver_ids_for) { event.receiver_ids_for(action) }
 
-    %w(subscribe unsubscribe).each do |type|
+    %w(submit unsubmit).each do |type|
       context "with a #{type} action" do
         let(:action) { double(type: type) }
 
@@ -262,7 +246,7 @@ RSpec.describe Event, :type => :model do
       end
     end
 
-    %w(full).each do |type|
+    %w(remove_full remove_start).each do |type|
       context "with a #{type} action" do
         let(:action) { double(type: type) }
 
@@ -316,6 +300,22 @@ RSpec.describe Event, :type => :model do
         opened ? begin_at > Time.now : begin_at <= Time.now
       end
       expect(results).to_not be_empty
+    end
+  end
+
+  describe '.with_pending_submissions' do
+    let!(:events) do
+      FactoryGirl.create_list(:event_with_submissions, 5)
+    end
+
+    before do
+      FactoryGirl.create_list(:event, 5)
+    end
+
+    it 'returns the event with submissions' do
+      expect(Event.with_pending_submissions).to have_records(
+        Event.joins(:submissions).where({ submissions: { status: :pending } }).distinct
+      )
     end
   end
 end

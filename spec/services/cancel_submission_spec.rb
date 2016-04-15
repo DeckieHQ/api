@@ -8,19 +8,35 @@ RSpec.describe CancelSubmission do
 
     before do
       allow(described_class).to receive(:new).and_return(*services)
-
-      described_class.for(submissions)
     end
 
     it "gets an instance of #{described_class} for each given submission" do
+      described_class.for(submissions)
+
       submissions.each do |submission|
         expect(described_class).to have_received(:new).with(submission)
       end
     end
 
-    it "call on each services of #{described_class}" do
-      services.each do |service|
-        expect(service).to have_received(:call).with(no_args)
+    context 'when reason is not specified' do
+      before { described_class.for(submissions) }
+
+      it "call on each services of #{described_class} with default reason" do
+        services.each do |service|
+          expect(service).to have_received(:call).with(:quit)
+        end
+      end
+    end
+
+    context 'when reason is  specified' do
+      let(:reason) { [:remove_full, :remove_start].sample }
+
+      before { described_class.for(submissions, reason: reason) }
+
+      it "call on each services of #{described_class} with default reason" do
+        services.each do |service|
+          expect(service).to have_received(:call).with(reason)
+        end
       end
     end
   end
@@ -28,28 +44,43 @@ RSpec.describe CancelSubmission do
   describe '#call' do
     subject(:service) { described_class.new(submission) }
 
-    context 'when submission is confirmed' do
-      let(:submission) { FactoryGirl.create(:submission, :confirmed) }
+    context 'when reason is specified' do
+      let(:submission) { FactoryGirl.create(:submission) }
 
-      before { service.call }
+      let(:reason) { [:remove_full, :remove_start].sample }
+
+      before { service.call(reason) }
 
       it 'destroys the submission' do
         expect(submission).to be_deleted
       end
 
-      it { is_expected.to have_created_action(submission.profile, submission.event, :leave) }
+      it { is_expected.to have_created_action(submission.profile, submission.event, reason) }
     end
 
-    context 'when submission is not confirmed' do
-      let(:submission) { FactoryGirl.create(:submission, :pending) }
-
+    context 'when reason is not specified' do
       before { service.call }
 
-      it 'destroys the submission' do
-        expect(submission).to be_deleted
+      context 'when submission is confirmed' do
+        let(:submission) { FactoryGirl.create(:submission, :confirmed) }
+
+
+        it 'destroys the submission' do
+          expect(submission).to be_deleted
+        end
+
+        it { is_expected.to have_created_action(submission.profile, submission.event, :leave) }
       end
 
-      it { is_expected.to have_created_action(submission.profile, submission.event, :unsubscribe) }
+      context 'when submission is not confirmed' do
+        let(:submission) { FactoryGirl.create(:submission, :pending) }
+
+        it 'destroys the submission' do
+          expect(submission).to be_deleted
+        end
+
+        it { is_expected.to have_created_action(submission.profile, submission.event, :unsubmit) }
+      end
     end
   end
 end

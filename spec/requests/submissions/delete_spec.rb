@@ -42,7 +42,7 @@ RSpec.describe 'Destroy event submission', :type => :request do
       context 'when submissions is pending' do
         let(:submission) { FactoryGirl.create(:submission, :pending) }
 
-        it { is_expected.to have_created_action(user.profile, submission.event, 'unsubscribe') }
+        it { is_expected.to have_created_action(user.profile, submission.event, 'unsubmit') }
       end
 
       context 'when submissions is confirmed' do

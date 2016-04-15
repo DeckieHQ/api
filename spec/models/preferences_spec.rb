@@ -15,7 +15,7 @@ RSpec.describe Preferences, :type => :model do
     before { preferences.valid? }
 
     context 'when notifications has duplicates' do
-      let(:notifications) { %w(event-update event-update event-subscribe) }
+      let(:notifications) { %w(event-update event-update event-submit) }
 
       it 'removes the duplicates' do
         expect(preferences.notifications).to eq(notifications.uniq)

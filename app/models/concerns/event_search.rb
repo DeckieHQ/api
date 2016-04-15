@@ -51,7 +51,7 @@ module EventSearch
       end
 
       def self.index_worker(record, remove)
-        RecordIndexJob.perform_later(record.id, record.class.name, remove)
+        RecordIndexJob.perform_later(record.class.name, record.id)
       end
     end
   end

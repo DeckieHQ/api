@@ -17,7 +17,7 @@ en:
     errors:
       messages:
         user_unverified: 'User must be verified.'
-        subscribtion_already_exist: 'Profile already subscribed.'
+        subscribtion_already_exist: 'Profile already submited.'
         subscribtion_already_confirmed: 'Submission already confirmed.'
         event_full: 'Event is full.'
         event_closed: 'Event is closed.'
@@ -46,4 +46,5 @@ en:
               unsupported: 'Unsupported include. Must be in %{accept}'
         preferences:
           attributes:
-            notifications: 'Unsupported unsupported. Must be in %{accept}'
+            notifications:
+              unsupported: 'Unsupported notifications. Must be in %{accept}'

@@ -2,7 +2,7 @@ class Preferences
   include ActiveModel::Validations
   include ActiveModel::Serialization
 
-  SUPPORTED_NOTIFICATIONS ||= %w(event-update event-subscribe)
+  SUPPORTED_NOTIFICATIONS ||= %w(event-update event-submit)
 
   attr_accessor :notifications
 
