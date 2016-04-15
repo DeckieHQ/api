@@ -8,6 +8,10 @@ class ResetPasswordInstructions
     user.email
   end
 
+  def subject
+    I18n.t('mailer.reset_password_instructions.subject')
+  end
+
   def reset_password_url
     UrlHelpers.front_for(:edit_password, params: { token: token })
   end

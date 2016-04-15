@@ -11,6 +11,53 @@ en:
       details: 'You have requested an email address verification, and you can do this through the link below.'
       link: 'Verify Email Address'
       notice: "If you didn't request this, please ignore this email. Your email address won't be verified until you access the link above."
+    notification_informations:
+      subject:
+        event-submit:
+          third_person: '%{display_name} submitted to an event you organize'
+        event-unsubmit:
+          third_person: '%{display_name} unsubmitted from an event you organize'
+        event-leave:
+          third_person: '%{display_name} left an event you organize/attend'
+        event-comment:
+          third_person: '%{display_name} posted a new comment on an event you organize/attend'
+        event-update:
+          third_person: '%{display_name} has updated an event you attend'
+        event-cancel:
+          third_person: '%{display_name} cancelled an event you submited to'
+        event-remove_full:
+          address_directly: 'An event you submitted to is full'
+        event-remove_start:
+          address_directly: 'An event you submitted to started'
+        event-join:
+          third_person: '%{display_name} joined an event you organize/attend'
+          address_directly: 'Your submission to an event has been confirmed'
+        comment-comment:
+          third_person: '%{display_name} answered to a comment you are following'
+      description:
+        event-submit:
+          third_person: '%{display_name} submitted to the event [%{title}].'
+        event-unsubmit:
+          third_person: '%{display_name} unsubmitted from the event [%{title}].'
+        event-leave:
+          third_person: '%{display_name} left the event [%{title}].'
+        event-comment:
+          third_person: '%{display_name} posted a new comment on the event [%{title}].'
+        event-update:
+          third_person: '%{display_name} has updated the event [%{title}].'
+        event-cancel:
+          third_person: '%{display_name} cancelled the event [%{title}].'
+        event-remove_full:
+          address_directly: "[%{title}] is full and the event host didn't confirm your submission. Therefore your submissions has been automatically removed."
+        event-remove_start:
+          address_directly: "[%{title}] started and the event host didn't confirm your submission before the beginning. Therefore your submissions has been automatically removed."
+        event-join:
+          third_person: '%{display_name} joined the event [%{title}].'
+          address_directly: 'Your submission to the event [%{title}] has been confirmed.'
+        comment-comment:
+          third_person: '%{display_name} answered to the comment [%{title}].'
+
+
   smser:
     phone_number_verification_instructions:
       message: 'Deckie: To verify your phone number, please enter this code: %{code}.'

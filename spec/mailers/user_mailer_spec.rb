@@ -10,12 +10,12 @@ RSpec.describe UserMailer do
 
     let(:mail) { described_class.reset_password_instructions(user, reset_password_token) }
 
-    let(:content) { ResetPasswordInstructions.new(user, reset_password_token) }
+    let(:content) do
+      change_locale and return ResetPasswordInstructions.new(user, reset_password_token)
+    end
 
     it 'sets the subject' do
-      expect(mail.subject).to eq(
-        I18n.t('mailer.reset_password_instructions.subject', locale: user.culture)
-      )
+      expect(mail.subject).to eq(content.subject)
     end
 
     it 'adds the default email signature to the senders' do
@@ -56,12 +56,12 @@ RSpec.describe UserMailer do
       user.generate_email_verification_token!
     end
 
-    let(:content) { EmailVerificationInstructions.new(user) }
+    let(:content) do
+      change_locale and return EmailVerificationInstructions.new(user)
+    end
 
     it 'sets the subject' do
-      expect(mail.subject).to eq(
-        I18n.t('mailer.email_verification_instructions.subject', locale: user.culture)
-      )
+      expect(mail.subject).to eq(content.subject)
     end
 
     it 'adds the default email signature to the senders' do
@@ -93,5 +93,9 @@ RSpec.describe UserMailer do
     it 'assigns email_verification_url' do
       expect(mail.body.encoded).to include(content.email_verification_url)
     end
+  end
+
+  def change_locale
+    I18n.locale = user.culture
   end
 end

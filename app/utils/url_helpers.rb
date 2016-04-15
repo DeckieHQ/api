@@ -11,7 +11,9 @@ module UrlHelpers
   end
 
   def self.front_for(action, params: {})
-    URI::join(front, "#{action}?#{params.to_query}").to_s
+    query = params.empty? ? action : "#{action}?#{params.to_query}"
+
+    URI::join(front, query).to_s
   end
 
   def self.front

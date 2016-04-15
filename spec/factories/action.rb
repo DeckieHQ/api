@@ -9,5 +9,13 @@ FactoryGirl.define do
     after(:build) do |action|
       action.type = Fake::Action.type_for(action.resource_type)
     end
+
+    factory :action_direct do
+      association :resource, factory: :event
+
+      after(:build) do |action|
+        action.type = Fake::Action.type_for(action.resource_type, direct: true)
+      end
+    end
   end
 end

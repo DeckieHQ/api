@@ -13,6 +13,16 @@ RSpec.describe ResetPasswordInstructions do
     it { is_expected.to eq(user.email) }
   end
 
+  describe '#subject' do
+    subject { content.subject }
+
+    it do
+      is_expected.to eq(
+        I18n.t('mailer.reset_password_instructions.subject')
+      )
+    end
+  end
+
   describe '#reset_password_url' do
     subject(:reset_password_url) { content.reset_password_url }
 

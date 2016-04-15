@@ -1,9 +1,11 @@
 class ApplicationMailer < ActionMailer::Base
   private
 
-  def send_mail(user, type)
+  attr_reader :content
+
+  def send_mail(user)
     change_locale_for(user) do
-      mail(to: user.email, subject: I18n.t("mailer.#{type}.subject"))
+      mail(to: user.email, subject: content.subject)
     end
   end
 

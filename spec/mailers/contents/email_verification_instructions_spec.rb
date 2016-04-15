@@ -11,6 +11,16 @@ RSpec.describe EmailVerificationInstructions do
     it { is_expected.to eq(user.email) }
   end
 
+  describe '#subject' do
+    subject { content.subject }
+
+    it do
+      is_expected.to eq(
+        I18n.t('mailer.email_verification_instructions.subject')
+      )
+    end
+  end
+
   describe '#email_verification_url' do
 
     subject(:email_verification_url) { content.email_verification_url }
