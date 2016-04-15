@@ -13,7 +13,9 @@ RSpec.describe UserMailer do
     let(:content) { ResetPasswordInstructions.new(user, reset_password_token) }
 
     it 'sets the subject' do
-      expect(mail.subject).to eq(I18n.t('mailer.reset_password_instructions.subject'))
+      expect(mail.subject).to eq(
+        I18n.t('mailer.reset_password_instructions.subject', locale: user.culture)
+      )
     end
 
     it 'adds the user to the receivers' do
@@ -22,14 +24,16 @@ RSpec.describe UserMailer do
 
     it 'greets the user' do
       expect(mail.body.encoded).to include(
-        I18n.t('mailer.greetings', username: content.username)
+        I18n.t('mailer.greetings', username: content.username, locale: user.culture)
       )
     end
 
     %w(details link notice).each do |key|
       it "assigns label #{key}" do
         expect(mail.body.encoded).to include(
-          CGI.escapeHTML(I18n.t("mailer.reset_password_instructions.#{key}"))
+          CGI.escapeHTML(
+            I18n.t("mailer.reset_password_instructions.#{key}", locale: user.culture)
+          )
         )
       end
     end
@@ -49,7 +53,9 @@ RSpec.describe UserMailer do
     let(:content) { EmailVerificationInstructions.new(user) }
 
     it 'sets the subject' do
-      expect(mail.subject).to eq(I18n.t('mailer.email_verification_instructions.subject'))
+      expect(mail.subject).to eq(
+        I18n.t('mailer.email_verification_instructions.subject', locale: user.culture)
+      )
     end
 
     it 'adds the user to the receivers' do
@@ -58,14 +64,16 @@ RSpec.describe UserMailer do
 
     it 'greets the user' do
       expect(mail.body.encoded).to include(
-        I18n.t('mailer.greetings', username: content.username)
+        I18n.t('mailer.greetings', username: content.username, locale: user.culture)
       )
     end
 
     %w(details link notice).each do |key|
       it "assigns label #{key}" do
         expect(mail.body.encoded).to include(
-          CGI.escapeHTML(I18n.t("mailer.email_verification_instructions.#{key}"))
+          CGI.escapeHTML(
+            I18n.t("mailer.email_verification_instructions.#{key}", locale: user.culture)
+          )
         )
       end
     end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe UserSMSer do
-  let(:user) { FactoryGirl.create(:user_with_phone_number_verification) }
+  let(:user) { FactoryGirl.create(:user_with_phone_number_verification, culture: 'fr') }
 
   let(:sms) { UserSMSer.phone_number_verification_instructions(user) }
 
@@ -11,11 +11,11 @@ RSpec.describe UserSMSer do
     end
 
     it 'renders the verification instructions message' do
-      expected_message = I18n.t(
-        'smser.phone_number_verification_instructions.message',
-        code: user.phone_number_verification_token
+      expect(sms[:message]).to eq(
+        I18n.t('smser.phone_number_verification_instructions.message',
+          code: user.phone_number_verification_token, locale: user.culture
+        )
       )
-      expect(sms[:message]).to eq expected_message
     end
 
     it 'can be delivered' do

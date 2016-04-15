@@ -9,10 +9,16 @@ class ApplicationMailer < ActionMailer::Base
   private
 
   def send_mail(user, type)
-    if type == :reset_password_instructions
-      devise_mail(user, type)
-    else
+    change_locale_for(user) do
       mail(to: user.email, subject: I18n.t("mailer.#{type}.subject"))
     end
+  end
+
+  def change_locale_for(user)
+    I18n.locale = user.culture
+
+    yield
+
+    I18n.locale = :en
   end
 end
