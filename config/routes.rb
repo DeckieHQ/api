@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   mount Sidekiq::Web , at: '/jobs'
 
-  default_url_options host: ENV['API_URL'] || 'http://www.deckie.io'
+  default_url_options host: ENV['API_URL'] || 'http://api.example.com'
 
   # Removes all routes first in order to remove routes unnecessary for an API.
   devise_for :users, skip: :all

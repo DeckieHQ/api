@@ -9,7 +9,7 @@ class ResetPasswordInstructions
   end
 
   def reset_password_url
-    UrlHelpers.front_url_for(:edit_password, params: { token: token })
+    UrlHelpers.front_for(:edit_password, params: { token: token })
   end
 
   private
@@ -27,7 +27,7 @@ class EmailVerificationInstructions
   end
 
   def email_verification_url
-    UrlHelpers.front_url_for(
+    UrlHelpers.front_for(
       :verify_email, params: { token: user.email_verification_token }
     )
   end

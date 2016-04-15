@@ -10,10 +10,12 @@ module UrlHelpers
     public_send(method_name, args)
   end
 
-  def self.front_url_for(action, params: {})
-    @front_url ||= ENV.fetch('FRONT_URL', 'http://www.deckie.io')
+  def self.front_for(action, params: {})
+    URI::join(front, "#{action}?#{params.to_query}").to_s
+  end
 
-     URI::join(front_url, "#{action}?#{params.to_query}").to_s
+  def self.front
+    @front ||= ENV.fetch('FRONT_URL', 'http://www.example.com')
   end
 
   private
