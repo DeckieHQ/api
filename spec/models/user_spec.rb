@@ -155,4 +155,29 @@ RSpec.describe User, :type => :model do
       expect { user.reset_notifications_count! }.to change { user.notifications_count }.to(0)
     end
   end
+
+  describe '#subscribed_to?' do
+    let(:notification) { FactoryGirl.create(:notification) }
+
+    let(:user) { FactoryGirl.create(:user) }
+
+    subject { user.subscribed_to?(notification) }
+
+    context 'when user subscribed to the notification' do
+      before do
+        user.update(preferences: { notifications: [notification.type] })
+      end
+
+      it { is_expected.to be_truthy }
+    end
+
+    context "when user doesn't subscribed to the notification" do
+
+      before do
+        user.update(preferences: { notifications: [] })
+      end
+
+      it { is_expected.to be_falsy }
+    end
+  end
 end

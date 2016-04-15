@@ -66,4 +66,39 @@ RSpec.describe Notification, :type => :model do
       expect(notification).to be_viewed
     end
   end
+
+  describe '#send_email' do
+    let(:notification) { FactoryGirl.create(:notification) }
+
+    let(:informations_mail) { double(:deliver_later) }
+
+    before do
+      allow(NotificationMailer).to receive(:informations)
+        .with(notification).and_return(informations_mail)
+    end
+
+    context 'when user subscribed to this notification' do
+      before do
+        allow(notification.user).to receive(:subscribed_to?).with(notification).and_return(true)
+      end
+
+      it 'plans to deliver later a notification informations email' do
+        expect(informations_mail).to receive(:deliver_later).with(no_args)
+
+        notification.send_email
+      end
+    end
+
+    context "when user didn't subscribed to this notification" do
+      before do
+        allow(notification.user).to receive(:subscribed_to?).with(notification).and_return(false)
+      end
+
+      it "doesn't send any email" do
+        notification.send_email
+
+        expect(NotificationMailer).to_not have_received(:informations)
+      end
+    end
+  end
 end

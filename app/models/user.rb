@@ -54,6 +54,10 @@ class User < ApplicationRecord
     update(notifications_count: 0)
   end
 
+  def subscribed_to?(notification)
+    preferences['notifications'].include?(notification.type)
+  end
+
   private
 
   def build_profile
