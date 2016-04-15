@@ -10,19 +10,32 @@ RSpec.describe UserMailer do
 
     let(:mail) { UserMailer.reset_password_instructions(user, reset_password_token) }
 
-    include_examples 'renders the email headers with', {
-      subject:  I18n.t('devise.mailer.reset_password_instructions.subject'),
-      to:       :user,
-      from:     :notifications,
-      reply_to: :notifications
-    }
+    let(:content) { ResetPasswordInstructions.new(user, reset_password_token) }
 
-    include_examples 'assigns', :user, :email
+    it 'sets the subject' do
+      expect(mail.subject).to eq(I18n.t('mailer.reset_password_instructions.subject'))
+    end
 
-    it 'assigns @reset_password_url' do
+    it 'adds the user to the receivers' do
+      expect(mail.to).to eq([user.email])
+    end
+
+    it 'greets the user' do
       expect(mail.body.encoded).to include(
-        user_password_url << "/edit?reset_password_token=#{reset_password_token}"
+        I18n.t('mailer.greetings', username: content.username)
       )
+    end
+
+    %w(details link notice).each do |key|
+      it "assigns label #{key}" do
+        expect(mail.body.encoded).to include(
+          CGI.escapeHTML(I18n.t("mailer.reset_password_instructions.#{key}"))
+        )
+      end
+    end
+
+    it 'assigns reset_password_url' do
+      expect(mail.body.encoded).to include(content.reset_password_url)
     end
   end
 
@@ -33,19 +46,32 @@ RSpec.describe UserMailer do
       user.generate_email_verification_token!
     end
 
-    include_examples 'renders the email headers with', {
-      subject:  I18n.t('verifications.email.subject'),
-      to:       :user,
-      from:     :notifications,
-      reply_to: :notifications
-    }
+    let(:content) { EmailVerificationInstructions.new(user) }
 
-    include_examples 'assigns', :user, :email
+    it 'sets the subject' do
+      expect(mail.subject).to eq(I18n.t('mailer.email_verification_instructions.subject'))
+    end
 
-    it 'assigns @email_verification_url' do
+    it 'adds the user to the receivers' do
+      expect(mail.to).to eq([user.email])
+    end
+
+    it 'greets the user' do
       expect(mail.body.encoded).to include(
-        user_verification_url << "/email?token=#{user.email_verification_token}"
+        I18n.t('mailer.greetings', username: content.username)
       )
+    end
+
+    %w(details link notice).each do |key|
+      it "assigns label #{key}" do
+        expect(mail.body.encoded).to include(
+          CGI.escapeHTML(I18n.t("mailer.email_verification_instructions.#{key}"))
+        )
+      end
+    end
+
+    it 'assigns email_verification_url' do
+      expect(mail.body.encoded).to include(content.email_verification_url)
     end
   end
 end

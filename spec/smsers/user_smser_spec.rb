@@ -10,9 +10,9 @@ RSpec.describe UserSMSer do
       expect(sms[:to]).to eq(user.phone_number)
     end
 
-    it 'renders the verification message' do
+    it 'renders the verification instructions message' do
       expected_message = I18n.t(
-        'verifications.phone_number.message',
+        'smser.phone_number_verification_instructions.message',
         code: user.phone_number_verification_token
       )
       expect(sms[:message]).to eq expected_message

@@ -1,8 +1,7 @@
-Hello <%= @user.email %>!
+<%= t('mailer.greetings', username: @content.username) %>
 
-Yo have requested an email address verification, and you can do this through the link below.
+<%= t('mailer.email_verification_instructions.details') %>
 
-[Verify Email Address](<%= @email_verification_url %>)
+[<%= t('mailer.email_verification_instructions.link') %>](<%= @content.email_verification_url %>)
 
-If you didn't request this, please ignore this email.
-Your email address won't be verified until you access the link above.
+<%= t('mailer.email_verification_instructions.notice') %>

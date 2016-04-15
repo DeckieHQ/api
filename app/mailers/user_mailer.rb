@@ -1,26 +1,52 @@
-class UserMailer < ApplicationMailer
-  include Devise::Mailers::Helpers
-
-  def reset_password_instructions(user, token, opts={})
-    @reset_password_url = front_link_for(
-      action: :password, path: '/edit',
-      params: { reset_password_token: token }
-    )
-    devise_mail(user, :reset_password_instructions)
+class ResetPasswordInstructions
+  def initialize(user, token)
+    @user  = user
+    @token = token
   end
 
-  def email_verification_instructions(user)
-    @user = user
-    @email_verification_url = front_link_for(
-      action: :verification, path: '/email',
-      params: { token: user.email_verification_token }
-    )
-    mail to: user.email, subject: I18n.t('verifications.email.subject')
+  def username
+    user.email
+  end
+
+  def reset_password_url
+    UrlHelpers.front_url_for(:edit_password, params: { token: token })
   end
 
   private
 
-  def front_link_for(action:, path: '', params:)
-    send("user_#{action}_url") << "#{path}?#{params.to_query}"
+  attr_reader :user, :token
+end
+
+class EmailVerificationInstructions
+  def initialize(user)
+    @user = user
+  end
+
+  def username
+    user.email
+  end
+
+  def email_verification_url
+    UrlHelpers.front_url_for(
+      :verify_email, params: { token: user.email_verification_token }
+    )
+  end
+
+  private
+
+  attr_reader :user
+end
+
+class UserMailer < ApplicationMailer
+  def reset_password_instructions(user, token, opts={})
+    @content = ResetPasswordInstructions.new(user, token)
+
+    send_mail(user, :reset_password_instructions)
+  end
+
+  def email_verification_instructions(user)
+    @content = EmailVerificationInstructions.new(user)
+
+    send_mail(user, :email_verification_instructions)
   end
 end
