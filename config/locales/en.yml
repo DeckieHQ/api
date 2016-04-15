@@ -28,7 +28,7 @@ en:
         event-remove_full:
           address_directly: 'An event you submitted to is full'
         event-remove_start:
-          address_directly: 'An event you submitted to started'
+          address_directly: 'An event you submitted to has started'
         event-join:
           third_person: '%{display_name} joined an event you organize/attend'
           address_directly: 'Your submission to an event has been confirmed'
@@ -48,9 +48,9 @@ en:
         event-cancel:
           third_person: '%{display_name} cancelled the event [%{title}].'
         event-remove_full:
-          address_directly: "[%{title}] is full and the event host didn't confirm your submission. Therefore your submissions has been automatically removed."
+          address_directly: "[%{title}] is full and the event host didn't confirm your submission. Therefore your submission has been automatically removed."
         event-remove_start:
-          address_directly: "[%{title}] started and the event host didn't confirm your submission before the beginning. Therefore your submissions has been automatically removed."
+          address_directly: "[%{title}] started and the event host didn't confirm your submission before the beginning. Therefore your submission has been automatically removed."
         event-join:
           third_person: '%{display_name} joined the event [%{title}].'
           address_directly: 'Your submission to the event [%{title}] has been confirmed.'
