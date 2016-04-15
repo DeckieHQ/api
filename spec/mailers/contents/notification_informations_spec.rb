@@ -63,7 +63,6 @@ RSpec.describe NotificationInformations do
     end
   end
 
-
   describe '#notification_url' do
     subject(:notification_url) { content.notification_url }
 
