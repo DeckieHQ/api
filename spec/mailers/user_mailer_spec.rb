@@ -8,7 +8,7 @@ RSpec.describe UserMailer do
     # the database.
     let(:reset_password_token) { user.send(:set_reset_password_token) }
 
-    let(:mail) { UserMailer.reset_password_instructions(user, reset_password_token) }
+    let(:mail) { described_class.reset_password_instructions(user, reset_password_token) }
 
     let(:content) { ResetPasswordInstructions.new(user, reset_password_token) }
 
@@ -16,6 +16,12 @@ RSpec.describe UserMailer do
       expect(mail.subject).to eq(
         I18n.t('mailer.reset_password_instructions.subject', locale: user.culture)
       )
+    end
+
+    it 'adds the default email signature to the senders' do
+      expect(mail.from).to eq([
+        ENV.fetch('EMAIL_SIGNATURE', 'no-reply@example.com')
+      ])
     end
 
     it 'adds the user to the receivers' do
@@ -44,7 +50,7 @@ RSpec.describe UserMailer do
   end
 
   describe '#email_verification_instructions' do
-    let(:mail) { UserMailer.email_verification_instructions(user) }
+    let(:mail) { described_class.email_verification_instructions(user) }
 
     before do
       user.generate_email_verification_token!
@@ -56,6 +62,12 @@ RSpec.describe UserMailer do
       expect(mail.subject).to eq(
         I18n.t('mailer.email_verification_instructions.subject', locale: user.culture)
       )
+    end
+
+    it 'adds the default email signature to the senders' do
+      expect(mail.from).to eq([
+        ENV.fetch('EMAIL_SIGNATURE', 'no-reply@example.com')
+      ])
     end
 
     it 'adds the user to the receivers' do

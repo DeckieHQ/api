@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe UserSMSer do
   let(:user) { FactoryGirl.create(:user_with_phone_number_verification, culture: 'fr') }
 
-  let(:sms) { UserSMSer.phone_number_verification_instructions(user) }
+  let(:sms) { described_class.phone_number_verification_instructions(user) }
 
   describe '#phone_number_verification_instructions' do
     it 'renders the sender phone number' do
