@@ -1,10 +1,6 @@
-class EmailVerificationInstructions
-  def initialize(user)
-    @user = user
-  end
-
+class EmailVerificationInstructions < SimpleDelegator
   def username
-    user.email
+    email
   end
 
   def subject
@@ -13,11 +9,7 @@ class EmailVerificationInstructions
 
   def email_verification_url
     UrlHelpers.front_for(
-      :verify_email, params: { token: user.email_verification_token }
+      :verify_email, params: { token: email_verification_token }
     )
   end
-
-  private
-
-  attr_reader :user
 end

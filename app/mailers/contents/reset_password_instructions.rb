@@ -1,11 +1,12 @@
-class ResetPasswordInstructions
+class ResetPasswordInstructions < SimpleDelegator
   def initialize(user, token)
-    @user  = user
+    super(user)
+
     @token = token
   end
 
   def username
-    user.email
+    email
   end
 
   def subject
@@ -18,5 +19,5 @@ class ResetPasswordInstructions
 
   private
 
-  attr_reader :user, :token
+  attr_reader :token
 end

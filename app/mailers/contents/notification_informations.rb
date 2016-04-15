@@ -1,8 +1,4 @@
-class NotificationInformations
-  def initialize(notification)
-    @notification = notification
-  end
-
+class NotificationInformations < SimpleDelegator
   def username
     user.email
   end
@@ -19,18 +15,10 @@ class NotificationInformations
   end
 
   def notification_url
-    UrlHelpers.front_for("notifications/#{notification.id}")
+    UrlHelpers.front_for("notifications/#{id}")
   end
 
   private
-
-  attr_reader :notification
-
-  delegate :user,   to: :notification
-
-  delegate :action, to: :notification
-
-  delegate :type,   to: :notification
 
   def root
     'mailer.notification_informations'
