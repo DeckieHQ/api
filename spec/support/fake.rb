@@ -22,6 +22,14 @@ module Fake
     end
   end
 
+  module User
+    extend self
+
+    def culture
+      %w(en fr).sample
+    end
+  end
+
   module Event
     extend self
 

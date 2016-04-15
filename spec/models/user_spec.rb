@@ -41,7 +41,7 @@ RSpec.describe User, :type => :model do
     it { is_expected.to validate_date_after(:birthday,  { limit: 100.year.ago }) }
     it { is_expected.to validate_date_before(:birthday, { limit: 18.year.ago + 1.day }) }
 
-    it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en)) }
+    it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en fr)) }
   end
 
   describe 'Relationships' do
