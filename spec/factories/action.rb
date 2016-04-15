@@ -17,5 +17,9 @@ FactoryGirl.define do
         action.type = Fake::Action.type_for(action.resource_type, direct: true)
       end
     end
+
+    trait :of_event_with_submissions do
+      association :resource, factory: :event_with_submissions
+    end
   end
 end

@@ -103,3 +103,13 @@ RSpec::Matchers.define :have_records do |records|
     expect(resultIds).to eq(recordIds)
   end
 end
+
+RSpec::Matchers.define :have_enqueued_notification_mail_for do |notification|
+  match do
+    global_id = { '_aj_globalid' => notification.to_global_id.to_s }
+
+    enqueued_jobs.include?({ job: ActionMailer::DeliveryJob, queue: 'mailers',
+      args: ['NotificationMailer', 'informations', 'deliver_now', global_id]
+    })
+  end
+end
