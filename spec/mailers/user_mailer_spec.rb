@@ -8,45 +8,20 @@ RSpec.describe UserMailer do
     # the database.
     let(:reset_password_token) { user.send(:set_reset_password_token) }
 
-    let(:mail) { described_class.reset_password_instructions(user, reset_password_token) }
+    let(:mail) do
+      described_class.reset_password_instructions(user, reset_password_token)
+    end
 
     let(:content) do
-      change_locale and return ResetPasswordInstructions.new(user, reset_password_token)
+      I18n.locale = user.culture
+
+      ResetPasswordInstructions.new(user, reset_password_token)
     end
 
-    it 'sets the subject' do
-      expect(mail.subject).to eq(content.subject)
-    end
-
-    it 'adds the default email signature to the senders' do
-      expect(mail.from).to eq([
-        ENV.fetch('EMAIL_SIGNATURE', 'no-reply@example.com')
-      ])
-    end
-
-    it 'adds the user to the receivers' do
-      expect(mail.to).to eq([user.email])
-    end
-
-    it 'greets the user' do
-      expect(mail.body.encoded).to include(
-        I18n.t('mailer.greetings', username: content.username, locale: user.culture)
-      )
-    end
-
-    %w(details link notice).each do |key|
-      it "assigns label #{key}" do
-        expect(mail.body.encoded).to include(
-          CGI.escapeHTML(
-            I18n.t("mailer.reset_password_instructions.#{key}", locale: user.culture)
-          )
-        )
-      end
-    end
-
-    it 'assigns reset_password_url' do
-      expect(mail.body.encoded).to include(content.reset_password_url)
-    end
+    it_behaves_like 'a mail with', :reset_password_instructions,
+      greets_user: true,
+      labels:      [:details, :link, :notice],
+      attributes:  [:reset_password_url]
   end
 
   describe '#email_verification_instructions' do
@@ -57,45 +32,14 @@ RSpec.describe UserMailer do
     end
 
     let(:content) do
-      change_locale and return EmailVerificationInstructions.new(user)
+      I18n.locale = user.culture
+
+      EmailVerificationInstructions.new(user)
     end
 
-    it 'sets the subject' do
-      expect(mail.subject).to eq(content.subject)
-    end
-
-    it 'adds the default email signature to the senders' do
-      expect(mail.from).to eq([
-        ENV.fetch('EMAIL_SIGNATURE', 'no-reply@example.com')
-      ])
-    end
-
-    it 'adds the user to the receivers' do
-      expect(mail.to).to eq([user.email])
-    end
-
-    it 'greets the user' do
-      expect(mail.body.encoded).to include(
-        I18n.t('mailer.greetings', username: content.username, locale: user.culture)
-      )
-    end
-
-    %w(details link notice).each do |key|
-      it "assigns label #{key}" do
-        expect(mail.body.encoded).to include(
-          CGI.escapeHTML(
-            I18n.t("mailer.email_verification_instructions.#{key}", locale: user.culture)
-          )
-        )
-      end
-    end
-
-    it 'assigns email_verification_url' do
-      expect(mail.body.encoded).to include(content.email_verification_url)
-    end
-  end
-
-  def change_locale
-    I18n.locale = user.culture
+    it_behaves_like 'a mail with', :email_verification_instructions,
+      greets_user: true,
+      labels:      [:details, :link, :notice],
+      attributes:  [:email_verification_url]
   end
 end

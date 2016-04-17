@@ -4,12 +4,13 @@ class NotificationInformations < SimpleDelegator
   end
 
   def subject
-    I18n.t("#{root}.subject.#{type}.#{address_to}",
-      display_name: action.actor.display_name)
+    I18n.t(translation_for(:subject),
+      display_name: action.actor.display_name
+    )
   end
 
   def description
-    I18n.t("#{root}.description.#{type}.#{address_to}",
+    I18n.t(translation_for(:description),
       display_name: action.actor.display_name, title: action.title
     )
   end
@@ -20,8 +21,8 @@ class NotificationInformations < SimpleDelegator
 
   private
 
-  def root
-    'mailer.notification_informations'
+  def translation_for(key)
+    "mailer.notification_informations.#{key}.#{type}.#{address_to}"
   end
 
   def address_to
