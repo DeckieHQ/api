@@ -33,16 +33,30 @@ RSpec.describe Submission, :type => :model do
   end
 
   context 'after update' do
-    subject(:submission) { FactoryGirl.create(:submission) }
+    subject!(:submission) { FactoryGirl.create(:submission, status: :pending) }
 
     before do
       allow(submission.event).to receive(:update)
-
-      submission.confirmed!
     end
 
-    it 'updates event#attendees_count' do
-      expect_to_update_counter_cache
+    context 'when status changed' do
+      before do
+        submission.confirmed!
+      end
+
+      it 'updates event#attendees_count' do
+        expect_to_update_counter_cache
+      end
+    end
+
+    context "when status doesn't change" do
+      before do
+        submission.update(status: submission.status)
+      end
+
+      it "doesn't update event#attendees_count" do
+        expect(submission.event).to_not have_received(:update)
+      end
     end
   end
 

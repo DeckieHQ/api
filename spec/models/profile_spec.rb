@@ -26,13 +26,27 @@ RSpec.describe Profile, :type => :model do
 
     before do
       allow(ReindexRecordsJob).to receive(:perform_later)
-
-      profile.update(nickname: 'blabla')
     end
 
-    it 'plans to reindex its opened_hosted_events' do
-      expect(ReindexRecordsJob).to have_received(:perform_later)
-        .with('Event', profile.opened_hosted_events.pluck('id'))
+    context 'with changes' do
+      before do
+        profile.update(nickname: 'blabla')
+      end
+
+      it 'plans to reindex its opened_hosted_events' do
+        expect(ReindexRecordsJob).to have_received(:perform_later)
+          .with('Event', profile.opened_hosted_events.pluck('id'))
+      end
+    end
+
+    context 'without changes' do
+      before do
+        profile.update(nickname: profile.nickname)
+      end
+
+      it "doesn't plan to reindex its opened_hosted_events" do
+        expect(ReindexRecordsJob).to_not have_received(:perform_later)
+      end
     end
   end
 

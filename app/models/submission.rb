@@ -9,7 +9,7 @@ class Submission < ApplicationRecord
 
   enum status: [:pending, :confirmed]
 
-  after_save    :update_counter_cache
+  after_save    :update_counter_cache, if: :status_changed?
 
   after_destroy :update_counter_cache
 
@@ -25,7 +25,10 @@ class Submission < ApplicationRecord
 
   private
 
-  def update_counter_cache
+  # This will maybe lead to validations fail when the event is about to start.
+  # If this happens, a workaround should be to remove validations on event#start_at
+  # if event#attendees_count changed.
+  def update_event_counter_cache
     event.update(attendees_count: event.attendees.count)
   end
 end

@@ -13,7 +13,7 @@ class Profile < ApplicationRecord
 
   has_many :opened_hosted_events, -> { opened }, class_name: :Event
 
-  after_update :reindex_opened_hosted_events
+  after_update :reindex_opened_hosted_events, if: :changed?
 
   private
 
