@@ -34,7 +34,7 @@ class User < ApplicationRecord
     after:              Proc.new { 100.year.ago },
     before_or_equal_to: Proc.new {  18.year.ago }
   }
-  validates :culture, presence: true, inclusion: { in: %w(en) }
+  validates :culture, presence: true, inclusion: { in: %w(en fr) }
 
   validates_plausible_phone :phone_number
 
@@ -52,6 +52,10 @@ class User < ApplicationRecord
 
   def reset_notifications_count!
     update(notifications_count: 0)
+  end
+
+  def subscribed_to?(notification)
+    preferences['notifications'].include?(notification.type)
   end
 
   private

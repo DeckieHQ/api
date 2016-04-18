@@ -1,24 +1,82 @@
 en:
+  mailer:
+    greetings: 'Hello %{username}!'
+    reset_password_instructions:
+      subject: 'Reset password instructions'
+      details: 'Someone has requested a link to change your password, and you can do this through the link below.'
+      link: 'Change Password'
+      notice: "If you didn't request this, please ignore this email. Your password won't change until you access the link above and create a new one."
+    email_verification_instructions:
+      subject: 'Email verification instructions'
+      details: 'You have requested an email address verification, and you can do this through the link below.'
+      link: 'Verify Email Address'
+      notice: "If you didn't request this, please ignore this email. Your email address won't be verified until you access the link above."
+    notification_informations:
+      subject:
+        event-submit:
+          third_person: '%{display_name} submitted to an event you organize'
+        event-unsubmit:
+          third_person: '%{display_name} unsubmitted from an event you organize'
+        event-leave:
+          third_person: '%{display_name} left an event you organize/attend'
+        event-comment:
+          third_person: '%{display_name} posted a new comment on an event you organize/attend'
+        event-update:
+          third_person: '%{display_name} has updated an event you attend'
+        event-cancel:
+          third_person: '%{display_name} cancelled an event you submited to'
+        event-remove_full:
+          address_directly: 'An event you submitted to is full'
+        event-remove_start:
+          address_directly: 'An event you submitted to has started'
+        event-join:
+          third_person: '%{display_name} joined an event you organize/attend'
+          address_directly: 'Your submission to an event has been confirmed'
+        comment-comment:
+          third_person: '%{display_name} answered to a comment you are following'
+      description:
+        event-submit:
+          third_person: '%{display_name} submitted to the event [%{title}].'
+        event-unsubmit:
+          third_person: '%{display_name} unsubmitted from the event [%{title}].'
+        event-leave:
+          third_person: '%{display_name} left the event [%{title}].'
+        event-comment:
+          third_person: '%{display_name} posted a new comment on the event [%{title}].'
+        event-update:
+          third_person: '%{display_name} has updated the event [%{title}].'
+        event-cancel:
+          third_person: '%{display_name} cancelled the event [%{title}].'
+        event-remove_full:
+          address_directly: "[%{title}] is full and the event host didn't confirm your submission. Therefore your submission has been automatically removed."
+        event-remove_start:
+          address_directly: "[%{title}] started and the event host didn't confirm your submission before the beginning. Therefore your submission has been automatically removed."
+        event-join:
+          third_person: '%{display_name} joined the event [%{title}].'
+          address_directly: 'Your submission to the event [%{title}] has been confirmed.'
+        comment-comment:
+          third_person: '%{display_name} answered to the comment [%{title}].'
+      details: 'You received a new notification:'
+      link: 'View on Deckie'
+  smser:
+    phone_number_verification_instructions:
+      message: 'Deckie: To verify your phone number, please enter this code: %{code}.'
+
+# Keys below don't need a translation.
   failure:
     unauthorized: 'Bad credentials.'
     not_found: 'Not found.'
     bad_request: 'Bad request.'
     forbidden: 'Forbidden.'
-  verifications:
-    phone_number:
-      message: 'To verify your phone number, please enter this code: %{code}.'
-    email:
-      subject: 'Email Verification'
   services:
     errors:
       phone_number_unassigned: 'Phone number is unassigned.'
-
   activerecord:
     errors:
       messages:
         user_unverified: 'User must be verified.'
-        subscribtion_already_exist: 'Profile already submited.'
-        subscribtion_already_confirmed: 'Submission already confirmed.'
+        submission_already_exist: 'Profile already submited.'
+        submission_already_confirmed: 'Submission already confirmed.'
         event_full: 'Event is full.'
         event_closed: 'Event is closed.'
         email_already_verified: 'Email is already verified.'

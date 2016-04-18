@@ -30,9 +30,11 @@ module Deckie
     end
 
     config.action_mailer.delivery_method = :postmark
-    config.action_mailer.postmark_settings = {
-      api_token: ENV['POSTMARK_API_TOKEN']
-    }
+
+    config.action_mailer.postmark_settings = { api_token: ENV['POSTMARK_API_TOKEN'] }
+
+    config.action_mailer.default_options = { from: ENV.fetch('EMAIL_SIGNATURE', 'no-reply@example.com') }
+
     config.sms_settings = { url: ENV['BLOWERIO_URL'] }
 
     config.active_job.queue_adapter = :sidekiq

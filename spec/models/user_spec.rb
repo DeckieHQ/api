@@ -41,7 +41,7 @@ RSpec.describe User, :type => :model do
     it { is_expected.to validate_date_after(:birthday,  { limit: 100.year.ago }) }
     it { is_expected.to validate_date_before(:birthday, { limit: 18.year.ago + 1.day }) }
 
-    it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en)) }
+    it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en fr)) }
   end
 
   describe 'Relationships' do
@@ -153,6 +153,31 @@ RSpec.describe User, :type => :model do
 
     it 'sets the notifications_count to 0' do
       expect { user.reset_notifications_count! }.to change { user.notifications_count }.to(0)
+    end
+  end
+
+  describe '#subscribed_to?' do
+    let(:notification) { FactoryGirl.create(:notification) }
+
+    let(:user) { FactoryGirl.create(:user) }
+
+    subject { user.subscribed_to?(notification) }
+
+    context 'when user subscribed to the notification' do
+      before do
+        user.update(preferences: { notifications: [notification.type] })
+      end
+
+      it { is_expected.to be_truthy }
+    end
+
+    context "when user doesn't subscribed to the notification" do
+
+      before do
+        user.update(preferences: { notifications: [] })
+      end
+
+      it { is_expected.to be_falsy }
     end
   end
 end

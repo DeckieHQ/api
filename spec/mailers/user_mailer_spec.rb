@@ -8,44 +8,38 @@ RSpec.describe UserMailer do
     # the database.
     let(:reset_password_token) { user.send(:set_reset_password_token) }
 
-    let(:mail) { UserMailer.reset_password_instructions(user, reset_password_token) }
-
-    include_examples 'renders the email headers with', {
-      subject:  I18n.t('devise.mailer.reset_password_instructions.subject'),
-      to:       :user,
-      from:     :notifications,
-      reply_to: :notifications
-    }
-
-    include_examples 'assigns', :user, :email
-
-    it 'assigns @reset_password_url' do
-      expect(mail.body.encoded).to include(
-        user_password_url << "/edit?reset_password_token=#{reset_password_token}"
-      )
+    let(:mail) do
+      described_class.reset_password_instructions(user, reset_password_token)
     end
+
+    let(:content) do
+      I18n.locale = user.culture
+
+      ResetPasswordInstructions.new(user, reset_password_token)
+    end
+
+    it_behaves_like 'a mail with', :reset_password_instructions,
+      greets_user: true,
+      labels:      [:details, :link, :notice],
+      attributes:  [:reset_password_url]
   end
 
   describe '#email_verification_instructions' do
-    let(:mail) { UserMailer.email_verification_instructions(user) }
+    let(:mail) { described_class.email_verification_instructions(user) }
 
     before do
       user.generate_email_verification_token!
     end
 
-    include_examples 'renders the email headers with', {
-      subject:  I18n.t('verifications.email.subject'),
-      to:       :user,
-      from:     :notifications,
-      reply_to: :notifications
-    }
+    let(:content) do
+      I18n.locale = user.culture
 
-    include_examples 'assigns', :user, :email
-
-    it 'assigns @email_verification_url' do
-      expect(mail.body.encoded).to include(
-        user_verification_url << "/email?token=#{user.email_verification_token}"
-      )
+      EmailVerificationInstructions.new(user)
     end
+
+    it_behaves_like 'a mail with', :email_verification_instructions,
+      greets_user: true,
+      labels:      [:details, :link, :notice],
+      attributes:  [:email_verification_url]
   end
 end

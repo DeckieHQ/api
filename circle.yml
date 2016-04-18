@@ -2,7 +2,7 @@ machine:
   pre:
     - sudo pip install -U docker-compose==1.5.2
     - sudo wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-    - heroku plugins:install heroku-docker
+  #  - heroku plugins:install heroku-docker
   services:
     - docker
 

@@ -15,8 +15,8 @@ class Notification < ApplicationRecord
   end
 
   def send_email
-    if user.preferences[:notifications].include?(type)
-      UserMailer.send_notification(self).deliver_later
+    if user.subscribed_to?(self)
+      NotificationMailer.informations(self).deliver_later
     end
   end
 

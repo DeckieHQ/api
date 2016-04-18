@@ -1,6 +1,19 @@
 class ApplicationMailer < ActionMailer::Base
-  DEFAULT_EMAIL_SIGNATURE = 'notifications@deckie.io'
+  private
 
-  default from:     DEFAULT_EMAIL_SIGNATURE
-  default reply_to: DEFAULT_EMAIL_SIGNATURE
+  attr_reader :content
+
+  def send_mail(user)
+    change_locale_for(user) do
+      mail(to: user.email, subject: content.subject)
+    end
+  end
+
+  def change_locale_for(user)
+    I18n.locale = user.culture
+
+    yield
+
+    I18n.locale = I18n.default_locale 
+  end
 end

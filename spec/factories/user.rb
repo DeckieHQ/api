@@ -4,7 +4,7 @@ FactoryGirl.define do
     last_name  { Faker::Name.last_name  }
     birthday   { Faker::Date.between(100.years.ago + 1.day, 18.years.ago) }
 
-    culture 'en'
+    culture { Fake::User.culture }
 
     email    { Faker::Internet.email }
     password { Faker::Internet.password }

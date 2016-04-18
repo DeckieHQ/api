@@ -6,6 +6,10 @@ def bind(profile, factory_name)
   profile.user_id = user.id
 
   profile.save
+
+  user.reload.send(:update_profile)
+
+  profile.reload
 end
 
 FactoryGirl.define do
@@ -18,12 +22,12 @@ FactoryGirl.define do
       nickname { Faker::Lorem.characters(65) }
     end
 
-    before(:create) do |profile|
+    after(:create) do |profile|
       bind(profile, :user)
     end
 
     factory :profile_verified do
-      before(:create) do |profile|
+      after(:create) do |profile|
         bind(profile, :user_verified)
       end
     end

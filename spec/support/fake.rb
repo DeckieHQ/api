@@ -22,6 +22,14 @@ module Fake
     end
   end
 
+  module User
+    extend self
+
+    def culture
+      %w(en fr).sample
+    end
+  end
+
   module Event
     extend self
 
@@ -49,10 +57,14 @@ module Fake
   module Action
     extend self
 
-    def type_for(resource_type)
+    def type_for(resource_type, direct: false)
       case resource_type
       when 'Event'
-        %w(submit unsubmit join update cancel leave)
+        if direct
+          %w(join)
+        else
+          %w(submit unsubmit join update cancel leave)
+        end
       when 'Comment'
         %w(comment)
       end.sample

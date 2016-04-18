@@ -43,3 +43,9 @@ RSpec::Matchers.define :equal_sms do |expected|
     actual.options == expected.options
   end
 end
+
+RSpec::Matchers.define :equal_front_url_with do |path|
+  match do |actual|
+    expect(actual).to eq(URI::join(UrlHelpers.front, path).to_s)
+  end
+end

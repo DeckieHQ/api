@@ -6,7 +6,7 @@ class ActionNotifier
   def notify
     Notification.transaction do
       users.each do |user|
-        Notification.create(action: action, user: user)
+        Notification.create(action: action, user: user).send_email
       end
     end
   end

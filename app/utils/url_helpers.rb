@@ -10,7 +10,19 @@ module UrlHelpers
     public_send(method_name, args)
   end
 
+  def self.front_for(action, params: {})
+    query = params.empty? ? action : "#{action}?#{params.to_query}"
+
+    URI::join(front, query).to_s
+  end
+
+  def self.front
+    @front ||= ENV.fetch('FRONT_URL', 'http://www.example.com')
+  end
+
   private
+
+  attr_reader :front_url
 
   def helpers
     Rails.application.routes.url_helpers
