@@ -35,6 +35,10 @@ module EventSearch
           end_at.to_i
         end
 
+        attribute :host do
+          ProfileSerializer.new(host).attributes
+        end
+
         attributesToIndex [
           'unordered(title)',
           'unordered(state)',

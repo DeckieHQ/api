@@ -18,6 +18,10 @@ RSpec.describe Profile, :type => :model do
 
     it { is_expected.to have_many(:hosted_events) }
   end
-  
+
   it_behaves_like 'acts as paranoid'
+
+  it do
+    byebug
+  end
 end
