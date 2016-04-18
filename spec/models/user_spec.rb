@@ -131,8 +131,8 @@ RSpec.describe User, :type => :model do
 
     subject { user.opened_hosted_events }
 
-    it 'returns the user opened hosted events' do
-      is_expected.to eq(user.hosted_events.opened)
+    it 'returns the user profile opened hosted events' do
+      is_expected.to eq(user.profile.opened_hosted_events)
     end
   end
 

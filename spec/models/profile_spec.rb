@@ -20,4 +20,29 @@ RSpec.describe Profile, :type => :model do
   end
 
   it_behaves_like 'acts as paranoid'
+
+  context 'after update' do
+    let!(:profile) { FactoryGirl.create(:profile_with_hosted_events) }
+
+    before do
+      allow(ReindexRecordsJob).to receive(:perform_later)
+
+      profile.update(nickname: 'blabla')
+    end
+
+    it 'plans to reindex its opened_hosted_events' do
+      expect(ReindexRecordsJob).to have_received(:perform_later)
+        .with('Event', profile.opened_hosted_events.pluck('id'))
+    end
+  end
+
+  describe '#opened_hosted_events' do
+    let(:profile) { FactoryGirl.create(:profile_with_hosted_events) }
+
+    subject { profile.opened_hosted_events }
+
+    it 'returns the profile opened hosted events' do
+      is_expected.to eq(profile.hosted_events.opened)
+    end
+  end
 end

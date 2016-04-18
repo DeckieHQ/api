@@ -10,4 +10,14 @@ class Profile < ApplicationRecord
   has_many :submissions
 
   has_many :hosted_events, class_name: :Event
+
+  has_many :opened_hosted_events, -> { opened }, class_name: :Event
+
+  after_update :reindex_opened_hosted_events
+
+  private
+
+  def reindex_opened_hosted_events
+    ReindexRecordsJob.perform_later('Event', opened_hosted_events.pluck('id'))
+  end
 end
