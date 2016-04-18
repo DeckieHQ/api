@@ -38,11 +38,11 @@ RSpec.shared_examples 'an indexable resource' do |options = {}|
   end
 
   def use_fake_index_job
-    allow(RecordIndexJob).to receive(:perform_later)
+    allow(IndexRecordJob).to receive(:perform_later)
   end
 
   def expect_index_worker(with_remove:)
-    expect(RecordIndexJob).to have_received(:perform_later)
+    expect(IndexRecordJob).to have_received(:perform_later)
       .with(model.class.name, model.id)
   end
 end
