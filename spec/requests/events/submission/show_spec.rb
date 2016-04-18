@@ -28,7 +28,7 @@ RSpec.describe 'Submission show', :type => :request do
     it { is_expected.to return_status_code 200 }
 
     it 'returns the submission attributes' do
-      expect(response.body).to eq("null")
+      expect(response.body).to eq({ data: nil }.to_json)
     end
   end
 

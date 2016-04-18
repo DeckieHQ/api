@@ -42,11 +42,6 @@ class EventSerializer < ActiveModel::Serializer
     include_data false
   end
 
-  has_many :comments, key: :private_comments do
-    link :related, UrlHelpers.event_comments(object) + '?private=true'
-    include_data false
-  end
-
   def opened
     !object.closed?
   end
