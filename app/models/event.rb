@@ -43,7 +43,15 @@ class Event < ApplicationRecord
   }
   validates :auto_accept, inclusion: { in: [true, false] }
 
-  validates :begin_at, presence: true, date: { after: Proc.new { Time.now } }
+  validates :begin_at, presence: true
+
+
+  validates :begin_at, date: { after: Proc.new { Time.now } }, on: :create
+
+  # Allows events closed to be valid.
+  validates :begin_at, date: { after: Proc.new { Time.now } }, on: :update,
+    if: :begin_at_changed?
+
   validates :end_at, date: { after: :begin_at }, allow_nil: true
 
   validates :postcode, presence: true, length: { maximum: 10 }

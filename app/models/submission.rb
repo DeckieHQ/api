@@ -25,10 +25,7 @@ class Submission < ApplicationRecord
 
   private
 
-  # This will maybe lead to validations fail when the event is about to start.
-  # If this happens, a workaround should be to remove validations on event#start_at
-  # if event#attendees_count changed.
-  def update_event_counter_cache
+  def update_counter_cache
     event.update(attendees_count: event.attendees.count)
   end
 end
