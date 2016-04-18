@@ -42,7 +42,7 @@ RSpec.describe Event, :type => :model do
         .through(:confirmed_submissions).source(:profile)
     end
 
-    it "attendees count doesn't include deleted submissions" do
+    it "attendees doesn't include deleted submissions" do
       event = FactoryGirl.create(:event_with_attendees)
 
       attendees_count = event.attendees.count
