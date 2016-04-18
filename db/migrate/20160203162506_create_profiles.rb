@@ -6,7 +6,9 @@ class CreateProfiles < ActiveRecord::Migration[5.0]
       t.text   :short_description
       t.text   :description
 
-      t.references :profiles, :user, index: { unique: true }, foreign_key: true
+      t.belongs_to :user, index: { unique: true }, foreign_key: true
+
+      t.integer :hosted_events_count, null: false, default: 0
 
       t.timestamps null: false
 

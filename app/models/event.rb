@@ -5,7 +5,8 @@ class Event < ApplicationRecord
 
   include Filterable
 
-  belongs_to :host, -> { with_deleted }, class_name: 'Profile', foreign_key: 'profile_id'
+  belongs_to :host, -> { with_deleted },
+    class_name: 'Profile', foreign_key: 'profile_id', counter_cache: :hosted_events_count
 
   has_many :submissions, dependent: :destroy
 

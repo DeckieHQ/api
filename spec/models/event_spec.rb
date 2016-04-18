@@ -16,7 +16,10 @@ RSpec.describe Event, :type => :model do
   end
 
   describe 'Relationships' do
-    it { is_expected.to belong_to(:host).with_foreign_key('profile_id') }
+    it do
+      is_expected.to belong_to(:host)
+        .with_foreign_key('profile_id').counter_cache(:hosted_events_count)
+    end
 
     it { is_expected.to include_deleted(:host) }
 

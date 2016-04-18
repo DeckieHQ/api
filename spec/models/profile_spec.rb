@@ -3,6 +3,11 @@ require 'rails_helper'
 RSpec.describe Profile, :type => :model do
   describe 'Database' do
     it { is_expected.to have_db_index(:user_id).unique(true) }
+
+    it do
+      is_expected.to have_db_column(:hosted_events_count)
+        .of_type(:integer).with_options(null: false, default: 0)
+    end
   end
 
   describe 'Validations' do
