@@ -57,6 +57,8 @@ module EventSearch
       def self.index_worker(record, remove)
         RecordIndexJob.perform_later(record.class.name, record.id)
       end
+
+      after_touch -> { self.class.index_worker(self, false) }
     end
   end
 end

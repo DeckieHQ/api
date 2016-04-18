@@ -39,6 +39,16 @@ RSpec.describe Event, :type => :model do
         .through(:confirmed_submissions).source(:profile)
     end
 
+    it "attendees count doesn't include deleted submissions" do
+      event = FactoryGirl.create(:event_with_attendees)
+
+      attendees_count = event.attendees.count
+
+      event.confirmed_submissions.sample.destroy
+
+      expect(event.attendees.count).to eq(attendees_count - 1)
+    end
+
     it { is_expected.to have_many(:actions).dependent(:destroy) }
   end
 

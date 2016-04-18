@@ -20,8 +20,4 @@ RSpec.describe Profile, :type => :model do
   end
 
   it_behaves_like 'acts as paranoid'
-
-  it do
-    byebug
-  end
 end

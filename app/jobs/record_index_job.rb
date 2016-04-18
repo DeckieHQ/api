@@ -1,5 +1,5 @@
 class RecordIndexJob < ApplicationJob
-  queue_as :default
+  queue_as :scheduler
 
   def perform(model_name, id)
     record = model_name.constantize.with_deleted.find(id)

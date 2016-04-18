@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe RecordIndexJob, type: :job do
-  it 'uses the default queue' do
-    expect(described_class.queue_name).to eq('default')
+  it 'uses the scheduler queue' do
+    expect(described_class.queue_name).to eq('scheduler')
   end
 
   describe '#perform' do
