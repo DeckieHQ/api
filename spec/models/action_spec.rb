@@ -16,7 +16,7 @@ RSpec.describe Action, :type => :model do
     end
 
     it do
-      is_expected.to have_db_column(:receiver_ids)
+      is_expected.to have_db_column(:receivers_ids)
         .of_type(:text).with_options(array: true, null: false, default: [])
     end
 
@@ -49,7 +49,7 @@ RSpec.describe Action, :type => :model do
         let(:fakeIds) { Array.new(5).map { Faker::Number.number(5) } }
 
         before do
-          allow(resource).to receive(:receiver_ids_for).and_return(fakeIds)
+          allow(resource).to receive(:receivers_ids_for).and_return(fakeIds)
         end
 
         it "sets title to #{factory} title" do
@@ -57,11 +57,11 @@ RSpec.describe Action, :type => :model do
         end
 
         it 'asks the resource for the receiver ids' do
-          expect(resource).to have_received(:receiver_ids_for).with(action)
+          expect(resource).to have_received(:receivers_ids_for).with(action)
         end
 
         it 'saves the receiver ids' do
-          expect(action.receiver_ids).to eq(fakeIds)
+          expect(action.receivers_ids).to eq(fakeIds)
         end
       end
     end
