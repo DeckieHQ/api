@@ -13,7 +13,9 @@ RSpec.describe ProfileSerializer, :type => :serializer do
       expect(serialized.attributes).to have_serialized_attributes(
         profile.slice(
           :nickname, :display_name, :short_description, :description,
-          :hosted_events_count, :created_at
+          :hosted_events_count, :created_at, :deleted_at
+        ).merge(
+          deleted: profile.deleted?
         )
       )
     end
