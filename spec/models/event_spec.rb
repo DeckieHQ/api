@@ -16,7 +16,10 @@ RSpec.describe Event, :type => :model do
   end
 
   describe 'Relationships' do
-    it { is_expected.to belong_to(:host).with_foreign_key('profile_id') }
+    it do
+      is_expected.to belong_to(:host)
+        .with_foreign_key('profile_id').counter_cache(:hosted_events_count)
+    end
 
     it { is_expected.to include_deleted(:host) }
 
@@ -37,6 +40,16 @@ RSpec.describe Event, :type => :model do
     it do
       is_expected.to have_many(:attendees)
         .through(:confirmed_submissions).source(:profile)
+    end
+
+    it "attendees doesn't include deleted submissions" do
+      event = FactoryGirl.create(:event_with_attendees)
+
+      attendees_count = event.attendees.count
+
+      event.confirmed_submissions.sample.destroy
+
+      expect(event.attendees.count).to eq(attendees_count - 1)
     end
 
     it { is_expected.to have_many(:actions).dependent(:destroy) }
@@ -85,6 +98,12 @@ RSpec.describe Event, :type => :model do
 
     it do
       is_expected.to validate_date_after(:end_at, { limit: :begin_at , on: :second })
+    end
+
+    context 'when event is closed' do
+      subject(:event) { FactoryGirl.create(:event_closed) }
+
+      it { is_expected.to be_valid }
     end
 
     it { is_expected.to_not allow_value(nil).for(:auto_accept) }

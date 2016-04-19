@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe RecordIndexJob, type: :job do
-  it 'uses the default queue' do
-    expect(described_class.queue_name).to eq('default')
+RSpec.describe IndexRecordJob, type: :job do
+  it 'uses the indexation queue' do
+    expect(described_class.queue_name).to eq('indexation')
   end
 
   describe '#perform' do

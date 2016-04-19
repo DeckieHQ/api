@@ -30,6 +30,18 @@ FactoryGirl.define do
       after(:create) do |profile|
         bind(profile, :user_verified)
       end
+
+      factory :profile_with_hosted_events do
+        transient do
+          events_count        5
+          events_closed_count 2
+        end
+
+        after(:create) do |profile, e|
+          create_list(:event, e.events_count - e.events_closed_count, host: profile)
+          create_list(:event_closed, e.events_closed_count, host: profile)
+        end
+      end
     end
   end
 end

@@ -8,7 +8,10 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
 
   delegate :hosted_events, to: :profile
-  delegate :submissions,   to: :profile
+
+  delegate :opened_hosted_events, to: :profile
+
+  delegate :submissions, to: :profile
 
   has_secure_token :authentication_token
 
@@ -40,10 +43,6 @@ class User < ApplicationRecord
 
   def verified?
     email_verified? && phone_number_verified?
-  end
-
-  def opened_hosted_events
-    hosted_events.opened
   end
 
   def opened_submissions

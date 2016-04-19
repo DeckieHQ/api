@@ -9,7 +9,7 @@ class Submission < ApplicationRecord
 
   enum status: [:pending, :confirmed]
 
-  after_save    :update_counter_cache
+  after_save    :update_counter_cache, if: :status_changed?
 
   after_destroy :update_counter_cache
 

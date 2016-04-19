@@ -16,61 +16,68 @@ RSpec.describe Submission, :type => :model do
     it { is_expected.to include_deleted(:profile) }
   end
 
+  it_behaves_like 'acts as paranoid'
+
   context 'after create' do
-    subject(:submission) { FactoryGirl.build(:submission, status: status) }
+    subject(:submission) { FactoryGirl.build(:submission) }
 
-    context 'with a confirmed status' do
-      let(:status) { :confirmed }
+    before do
+      allow(submission.event).to receive(:update)
 
-      it 'increases the event attendees_count' do
-        expect_to_increase_counter_cache { submission.save }
-      end
+      submission.save
     end
 
-    context 'with another status' do
-      let(:status) { :pending }
-
-      it "doesn't change the event attendees_count" do
-        expect_to_not_change_counter_cache { submission.save }
-      end
+    it 'updates event#attendees_count' do
+      expect_to_update_counter_cache
     end
   end
 
   context 'after update' do
-    subject(:submission) { FactoryGirl.create(:submission, status: status) }
+    subject!(:submission) { FactoryGirl.create(:submission, status: :pending) }
 
-    context 'when pending' do
-      let(:status) { :pending }
+    before do
+      allow(submission.event).to receive(:update)
+    end
 
-      context 'with a confirmed status' do
-        it 'increases the event attendees_count' do
-          expect_to_increase_counter_cache { submission.confirmed! }
-        end
+    context 'when status changed' do
+      before do
+        submission.confirmed!
+      end
+
+      it 'updates event#attendees_count' do
+        expect_to_update_counter_cache
+      end
+    end
+
+    context "when status doesn't change" do
+      before do
+        submission.update(status: submission.status)
+      end
+
+      it "doesn't update event#attendees_count" do
+        expect(submission.event).to_not have_received(:update)
       end
     end
   end
 
   context 'after destroy' do
-    subject(:submission) { FactoryGirl.create(:submission, status: status) }
+    subject(:submission) { FactoryGirl.create(:submission) }
 
-    context 'when confirmed' do
-      let(:status) { :confirmed }
+    before do
+      allow(submission.event).to receive(:update)
 
-      it 'descreases the event attendees_count' do
-        expect_to_decrease_counter_cache { submission.destroy }
-      end
+      submission.destroy
     end
 
-    context 'when not confirmed' do
-      let(:status) { :pending }
-
-      it "doesn't change the event attendees_count" do
-        expect_to_not_change_counter_cache { submission.destroy }
-      end
+    it 'updates event#attendees_count' do
+      expect_to_update_counter_cache
     end
   end
 
-  it_behaves_like 'acts as paranoid'
+  def expect_to_update_counter_cache
+    expect(submission.event).to have_received(:update)
+      .with(attendees_count: submission.event.attendees.count)
+  end
 
   describe '.status' do
     before do
@@ -117,21 +124,5 @@ RSpec.describe Submission, :type => :model do
         Event.opened.order(order).pluck(:id)
       )
     end
-  end
-
-  def expect_to_increase_counter_cache(&action)
-    expect_to_change_counter_cache_by(1, &action)
-  end
-
-  def expect_to_decrease_counter_cache(&action)
-    expect_to_change_counter_cache_by(-1, &action)
-  end
-
-  def expect_to_change_counter_cache_by(value, &action)
-    expect(action).to change { submission.event.attendees_count }.by(value)
-  end
-
-  def expect_to_not_change_counter_cache(&action)
-    expect(action).to_not change { submission.event.attendees_count }
   end
 end

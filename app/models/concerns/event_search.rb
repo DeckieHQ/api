@@ -35,6 +35,10 @@ module EventSearch
           end_at.to_i
         end
 
+        attribute :host do
+          ProfileSerializer.new(host).attributes
+        end
+
         attributesToIndex [
           'unordered(title)',
           'unordered(state)',
@@ -51,8 +55,10 @@ module EventSearch
       end
 
       def self.index_worker(record, remove)
-        RecordIndexJob.perform_later(record.class.name, record.id)
+        IndexRecordJob.perform_later(record.class.name, record.id)
       end
+
+      after_touch -> { self.class.index_worker(self, false) }
     end
   end
 end

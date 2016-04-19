@@ -7,19 +7,21 @@ production:
   :concurrency: 20
 :queues:
   - default
+  - [indexation, 2]
   - [notifications, 2]
   - [scheduler, 3]
   - [mailers, 4]
 :schedule:
-  reindex_events:
+  events_reindex:
     every: 1h
-    class: ReindexEventsJob
+    class: ReindexRecordsJob
     queue: scheduler
+    args: 'Event'
     description: 'This job will reindex events with algolia'
   events_started:
-      every: 5m
-      class: EventsStartedJob
-      queue: scheduler
-      description: 'This job will remove pending submissions of started events'
+    every: 5m
+    class: EventsStartedJob
+    queue: scheduler
+    description: 'This job will remove pending submissions of started events'
 :scheduler:
-  :listened_queues_only: 
+  :listened_queues_only:

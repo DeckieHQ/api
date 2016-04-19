@@ -10,9 +10,7 @@ RSpec.shared_examples 'an indexable resource' do |options = {}|
       model.save
     end
 
-    it 'calls record index job with resource and without remove option' do
-      expect_index_worker(with_remove: false)
-    end
+    it { expect_index_worker(with_remove: true) }
   end
 
   context 'after destroy commit' do
@@ -24,17 +22,27 @@ RSpec.shared_examples 'an indexable resource' do |options = {}|
       model.destroy
     end
 
-    it 'calls record index job with  resource and with remove option' do
-      expect_index_worker(with_remove: true)
+    it { expect_index_worker(with_remove: true) }
+  end
+
+  context 'after touch' do
+    before do
+      model.save
+
+      use_fake_index_job
+
+      model.touch
     end
+
+    it { expect_index_worker(with_remove: true) }
   end
 
   def use_fake_index_job
-    allow(RecordIndexJob).to receive(:perform_later)
+    allow(IndexRecordJob).to receive(:perform_later)
   end
 
   def expect_index_worker(with_remove:)
-    expect(RecordIndexJob).to have_received(:perform_later)
+    expect(IndexRecordJob).to have_received(:perform_later)
       .with(model.class.name, model.id)
   end
 end

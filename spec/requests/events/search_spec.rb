@@ -20,11 +20,19 @@ RSpec.describe 'Event search', :type => :search do
 
   let(:event) { Event.opened.sample }
 
-  it 'has serialized attributes' do
+  it 'includes its serialized attributes' do
     result = Event.raw_search('')['hits'].sample
 
     expect(result).to include_serialized_attributes(
       Event.find(result['objectID']), except: [:opened]
+    )
+  end
+
+  it 'includes its host serialized attributes' do
+    result = Event.raw_search('')['hits'].sample
+
+    expect(result['host']).to include_serialized_attributes(
+      Event.find(result['objectID']).host
     )
   end
 
