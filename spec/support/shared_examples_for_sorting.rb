@@ -25,7 +25,7 @@ RSpec.shared_examples 'an action with sorting' do |owner_name, collection_name, 
     it { is_expected.to return_status_code 200 }
 
     it "returns a sorted #{owner_name} #{collection_name} list" do
-      expect(response.body).to equal_serialized(sorted_collection)
+      expect(response.body).to equal_sort(sorted_collection)
     end
   end
 end

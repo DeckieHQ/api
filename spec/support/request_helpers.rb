@@ -4,6 +4,10 @@ module Request
       @json_response ||= JSON.parse(response.body, symbolize_names: true)
     end
 
+    def json_data
+      @json_data ||= json_response[:data]
+    end
+
     def json_headers
       headers = {}
 

@@ -6,7 +6,8 @@ RSpec.shared_examples 'an action with pagination' do |owner_name, collection_nam
   end
 
   let(:page) do
-    size   = collection.count / Faker::Number.between(2, 3)
+    size = collection.count / Faker::Number.between(2, 3)
+
     number = Faker::Number.between(1, size + 1)
 
     FactoryGirl.build(:page, number: number, size: size)
