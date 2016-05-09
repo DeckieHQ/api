@@ -16,13 +16,11 @@ module UrlHelpers
     URI::join(front, query).to_s
   end
 
-  def self.front
-    @front ||= ENV.fetch('FRONT_URL', 'http://www.example.com')
-  end
-
   private
 
-  attr_reader :front_url
+  def self.front
+    Rails.application.config.front_url
+  end
 
   def helpers
     Rails.application.routes.url_helpers
