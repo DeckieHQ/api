@@ -96,7 +96,7 @@ class Event < ApplicationRecord
     pending_submissions.take(capacity - attendees_count)
   end
 
-  def receiver_ids_for(action)
+  def receivers_ids_for(action)
     case action.type.to_sym
     when :submit, :unsubmit
       [ host.id ]

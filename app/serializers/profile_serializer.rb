@@ -4,5 +4,11 @@ class ProfileSerializer < ActiveModel::Serializer
              :short_description,
              :description,
              :hosted_events_count,
-             :created_at
+             :created_at,
+             :deleted_at,
+             :deleted
+
+  def deleted
+    object.deleted?
+  end
 end

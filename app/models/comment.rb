@@ -17,7 +17,7 @@ class Comment < ApplicationRecord
     message[0...40]
   end
 
-  def receiver_ids_for(action)
+  def receivers_ids_for(action)
     ids = comments.pluck(:profile_id).push(author.id)
 
     ids.delete(action.actor.id)

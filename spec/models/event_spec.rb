@@ -214,12 +214,12 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  describe '#receiver_ids_for' do
+  describe '#receivers_ids_for' do
     let(:event) do
       FactoryGirl.create(:event_with_attendees, :with_pending_submissions)
     end
 
-    subject(:receiver_ids_for) { event.receiver_ids_for(action) }
+    subject(:receivers_ids_for) { event.receivers_ids_for(action) }
 
     %w(submit unsubmit).each do |type|
       context "with a #{type} action" do
@@ -277,7 +277,7 @@ RSpec.describe Event, :type => :model do
 
     context 'with unsupported type' do
       it 'raises an error' do
-        expect { receiver_ids_for }.to raise_error
+        expect { receivers_ids_for }.to raise_error
       end
     end
   end

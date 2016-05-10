@@ -2,8 +2,6 @@ class Preferences
   include ActiveModel::Validations
   include ActiveModel::Serialization
 
-  SUPPORTED_NOTIFICATIONS ||= %w(event-update event-submit)
-
   attr_accessor :notifications
 
   validate :notifications_must_be_supported
@@ -19,9 +17,9 @@ class Preferences
   private
 
   def notifications_must_be_supported
-    notifications.tap(&:uniq!).each do |notification|
-      unless SUPPORTED_NOTIFICATIONS.include?(notification)
-        errors.add(:notifications, :unsupported, accept: SUPPORTED_NOTIFICATIONS)
+    notifications.tap(&:uniq!).each do |notification_type|
+      unless Notification.types.include?(notification_type)
+        errors.add(:notifications, :unsupported, accept: Notification.types)
       end
     end
   end

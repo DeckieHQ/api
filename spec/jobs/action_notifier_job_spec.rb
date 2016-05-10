@@ -15,7 +15,7 @@ RSpec.describe ActionNotifierJob, :type => :job do
     end
 
     let(:receivers) do
-      Profile.where(id: action.receiver_ids).includes(:user)
+      Profile.where(id: action.receivers_ids).includes(:user)
     end
 
     context 'when receivers exists' do

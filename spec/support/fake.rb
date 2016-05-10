@@ -3,7 +3,7 @@ module Fake
     extend self
 
     def notifications
-      values = %w(event-update event-submit)
+      values = ::Notification.types
 
       # Injecting duplicates voluntarily in order to have more randomness.
       (values.length / 2).times.inject([]) do |result|
@@ -58,15 +58,14 @@ module Fake
     extend self
 
     def type_for(resource_type, direct: false)
-      case resource_type
-      when 'Event'
-        if direct
-          %w(join)
-        else
-          %w(submit unsubmit join update cancel leave)
-        end
-      when 'Comment'
-        %w(comment)
+      return 'join' if direct && resource_type == 'Event'
+
+      prefix = "#{resource_type.downcase}-"
+
+      ::Notification.types.select do |notification_type|
+        notification_type.start_with?(prefix)
+      end.map do |notification_type|
+        notification_type.gsub(prefix, '')
       end.sample
     end
   end

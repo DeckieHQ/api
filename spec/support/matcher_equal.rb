@@ -15,9 +15,22 @@ class SerializationContext
   end
 end
 
-RSpec::Matchers.define :equal_serialized do |object|
+def collection_order(collection)
+  first, last = json_data.pluck(:id).map(&:to_i)
+
+  first < last ? 'ASC' : 'DESC'
+end
+
+RSpec::Matchers.define :equal_serialized do |records|
   match do |actual|
-    resource = ActiveModel::SerializableResource.new(object)
+    resource = if records.kind_of?(ActiveRecord::AssociationRelation) && json_data.count > 1
+
+      order = collection_order(actual)
+
+      ActiveModel::SerializableResource.new(records.order("id #{order}"))
+    else
+      ActiveModel::SerializableResource.new(records)
+    end
 
     expected = resource.to_json({
       serialization_context: SerializationContext.new(request)
@@ -25,6 +38,14 @@ RSpec::Matchers.define :equal_serialized do |object|
     result = JSON.parse(actual).except('meta').to_json
 
     result == expected
+  end
+end
+
+RSpec::Matchers.define :equal_sort do |records|
+  match do |actual|
+    # Pluck can't be used on active record collections with some joins without
+    # getting an error, therefore we have to map the id directly.
+    json_data.pluck(:id) == records.map(&:id).map(&:to_s)
   end
 end
 
@@ -46,6 +67,8 @@ end
 
 RSpec::Matchers.define :equal_front_url_with do |path|
   match do |actual|
-    expect(actual).to eq(URI::join(UrlHelpers.front, path).to_s)
+    expect(actual).to eq(
+      URI::join(Rails.application.config.front_url, path).to_s
+    )
   end
 end

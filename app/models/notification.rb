@@ -10,6 +10,19 @@ class Notification < ApplicationRecord
 
   after_create :increment_counter_cache
 
+  def self.types
+    %w(
+      event-submit
+      event-unsubmit
+      event-leave
+      event-comment
+      event-update
+      event-cancel
+      event-join
+      comment-comment
+    )
+  end
+
   def viewed!
     update(viewed: true)
   end

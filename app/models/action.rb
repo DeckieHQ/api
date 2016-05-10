@@ -11,7 +11,7 @@ class Action < ApplicationRecord
 
   before_create :set_title
 
-  before_create :set_receiver_ids
+  before_create :set_receivers_ids
 
   after_commit :create_notifications
 
@@ -21,8 +21,8 @@ class Action < ApplicationRecord
     self.title = resource.title
   end
 
-  def set_receiver_ids
-    self.receiver_ids = resource.receiver_ids_for(self)
+  def set_receivers_ids
+    self.receivers_ids = resource.receivers_ids_for(self)
   end
 
   def create_notifications
