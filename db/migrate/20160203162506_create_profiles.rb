@@ -3,8 +3,10 @@ class CreateProfiles < ActiveRecord::Migration[5.0]
     create_table(:profiles) do |t|
       t.string :nickname
       t.string :display_name
-      t.text   :short_description
-      t.text   :description
+      t.string :avatar
+
+      t.text :short_description
+      t.text :description
 
       t.belongs_to :user, index: { unique: true }, foreign_key: true
 

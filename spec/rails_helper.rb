@@ -7,9 +7,10 @@ require 'shoulda-matchers'
 require 'factory_girl_rails'
 require 'algolia/webmock'
 require 'pundit/rspec'
+require 'carrierwave/test/matchers'
 
 def disable_net_connect!
-  WebMock.disable_net_connect!(allow: %w(codeclimate.com maps.googleapis.com))
+  WebMock.disable_net_connect!(allow: %w(api.cloudinary.com codeclimate.com maps.googleapis.com))
 end
 
 disable_net_connect!

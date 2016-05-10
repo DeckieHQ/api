@@ -43,5 +43,13 @@ FactoryGirl.define do
         end
       end
     end
+
+    trait :with_avatar do
+      avatar { File.open(Rails.root.join('spec/support/images/avatar.jpeg')) }
+    end
+
+    trait :with_invalid_avatar do
+      avatar { File.open(Rails.root.join('Gemfile')) }
+    end
   end
 end
