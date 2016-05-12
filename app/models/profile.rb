@@ -21,7 +21,7 @@ class Profile < ApplicationRecord
 
   after_update :reindex_opened_hosted_events, if: :changed?
 
-  before_destroy :remove_avatar
+  after_destroy :remove_avatar
 
   private
 

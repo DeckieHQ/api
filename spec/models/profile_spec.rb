@@ -69,7 +69,7 @@ RSpec.describe Profile, :type => :model do
     end
   end
 
-  context 'before destroy' do
+  context 'after destroy' do
     before do
       allow(profile.avatar).to receive(:remove!).and_call_original
 
