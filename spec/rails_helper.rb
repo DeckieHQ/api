@@ -34,7 +34,9 @@ end
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
-  config.include Request::JsonHelpers, :type => :request
+  config.include RequestHelpers::Json, :type => :request
+
+  config.include FileHelpers::Image
 
   config.include ActiveJob::TestHelper
 

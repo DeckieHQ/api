@@ -1,7 +1,5 @@
 require 'rails_helper'
 
-require 'base64'
-
 RSpec.describe 'Profile update', :type => :request do
   let(:params) { Serialize.params(profile_update_params, type: :profiles) }
 
@@ -47,12 +45,7 @@ RSpec.describe 'Profile update', :type => :request do
       end
 
       describe 'Profile avatar update', :type => :uploader do
-        let(:profile_update_params) do
-          encoded_file = Base64.encode64(
-            File.open(Rails.root.join('spec/support/images/avatar.jpeg')).read
-          )
-          { avatar: "data:image/jpeg;base64,#{encoded_file}" }
-        end
+        let(:profile_update_params) { { avatar: image_param('avatar.jpeg') } }
 
         # Remove the profile in order to trigger the image destruction.
         after { profile.destroy }
@@ -64,9 +57,7 @@ RSpec.describe 'Profile update', :type => :request do
         end
 
         context 'when avatar is invalid' do
-          let(:avatar) do
-            "data:application/pdf;base64,/9j/4AAQSkZJRgABAQEASABKdhH//2Q=="
-          end
+          let(:avatar) { Fake::File.pdf }
 
           let(:profile_update_params) { { avatar: avatar } }
 

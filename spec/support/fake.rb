@@ -77,4 +77,12 @@ module Fake
       [true, false].sample
     end
   end
+
+  module File
+    extend self
+    
+    def pdf
+      "data:application/pdf;base64,/9j/4AAQSkZJRgABAQEASABKdhH//2Q=="
+    end
+  end
 end
