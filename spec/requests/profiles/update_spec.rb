@@ -52,6 +52,10 @@ RSpec.describe 'Profile update', :type => :request do
 
         it { is_expected.to return_status_code 200 }
 
+        it 'returns the profile attributes' do
+          expect(response.body).to equal_serialized(profile)
+        end
+
         it 'uploads the avatar and stores the profile avatar url' do
           expect(profile.reload.avatar.url).to be_an_url
         end
