@@ -46,7 +46,7 @@ RSpec.describe 'Profile update', :type => :request do
         it { is_expected.to return_validation_errors :profile_update }
       end
 
-      describe 'Profile avatar update', :type => :upload do
+      describe 'Profile avatar update', :type => :uploader do
         let(:profile_update_params) do
           encoded_file = Base64.encode64(
             File.open(Rails.root.join('spec/support/images/avatar.jpeg')).read
