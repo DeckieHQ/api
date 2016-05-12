@@ -4,6 +4,8 @@ RSpec.describe Profile, :type => :model do
   describe 'Database' do
     it { is_expected.to have_db_index(:user_id).unique(true) }
 
+    it { is_expected.to have_db_column(:avatar).of_type(:string) }
+
     it do
       is_expected.to have_db_column(:hosted_events_count)
         .of_type(:integer).with_options(null: false, default: 0)
@@ -14,6 +16,18 @@ RSpec.describe Profile, :type => :model do
     it { is_expected.to validate_length_of(:nickname).is_at_most(64) }
     it { is_expected.to validate_length_of(:short_description).is_at_most(140) }
     it { is_expected.to validate_length_of(:description).is_at_most(8192) }
+
+    context 'with valid avatar' do
+      subject(:profile) { FactoryGirl.build(:profile, :with_avatar) }
+
+      it { is_expected.to be_valid }
+    end
+
+    context 'with invalid avatar' do
+      subject(:profile) { FactoryGirl.build(:profile, :with_invalid_avatar) }
+
+      it { is_expected.to_not be_valid }
+    end
   end
 
   describe 'Relationships' do
@@ -51,6 +65,30 @@ RSpec.describe Profile, :type => :model do
 
       it "doesn't plan to reindex its opened_hosted_events" do
         expect(ReindexRecordsJob).to_not have_received(:perform_later)
+      end
+    end
+  end
+
+  context 'after destroy' do
+    before do
+      allow(profile.avatar).to receive(:remove!).and_call_original
+
+      profile.destroy
+    end
+
+    context 'when profile has an avatar', type: :uploader do
+      let(:profile) { FactoryGirl.create(:profile, :with_avatar) }
+
+      it 'destroys the avatar' do
+        expect(profile.avatar).to have_received(:remove!).with(no_args)
+      end
+    end
+
+    context 'when profile has no avatar' do
+      let(:profile) { FactoryGirl.create(:profile) }
+
+      it "doesn't attempt to destroy the avatar" do
+        expect(profile.avatar).to_not have_received(:remove!)
       end
     end
   end

@@ -22,3 +22,6 @@
 
 # Ignore Dotenv file.
 .env
+
+# Ignore Carrierwave temp files.
+/public/uploads/*

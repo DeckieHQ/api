@@ -7,9 +7,10 @@ require 'shoulda-matchers'
 require 'factory_girl_rails'
 require 'algolia/webmock'
 require 'pundit/rspec'
+require 'carrierwave/test/matchers'
 
 def disable_net_connect!
-  WebMock.disable_net_connect!(allow: %w(codeclimate.com maps.googleapis.com))
+  WebMock.disable_net_connect!(allow: %w(api.cloudinary.com codeclimate.com maps.googleapis.com))
 end
 
 disable_net_connect!
@@ -33,7 +34,9 @@ end
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
-  config.include Request::JsonHelpers, :type => :request
+  config.include RequestHelpers::Json, :type => :request
+
+  config.include FileHelpers::Image
 
   config.include ActiveJob::TestHelper
 
@@ -48,6 +51,8 @@ RSpec.configure do |config|
                       AlgoliaSearch.configuration[:api_key].present?
 
   config.filter_run_excluding type: :search unless search_configured
+
+  config.filter_run_excluding type: :uploader if ENV.fetch('CLOUDINARY_URL', '').empty?
 
   # Search tests requires accessing a real algolia server. Reindexing is quite
   # long, therefore it's mandatory to create records in a before(:all) hook

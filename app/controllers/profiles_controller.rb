@@ -11,7 +11,9 @@ class ProfilesController < ApplicationController
     unless profile.update(profile_params)
       return render_validation_errors(profile)
     end
-    render json: profile
+    # After updating a profile with a new avatar, the record must be reloaded
+    # in order to have the avatar url.
+    render json: profile.reload
   end
 
   protected

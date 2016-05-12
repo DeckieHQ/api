@@ -59,6 +59,11 @@ gem 'sidekiq', '~> 4.1'
 gem 'sidekiq-scheduler', '~> 2.0'
 gem 'sinatra', git: 'git://github.com/sinatra/sinatra', require: nil
 
+# Image upload
+gem 'carrierwave', git: 'git://github.com/carrierwaveuploader/carrierwave'
+gem 'carrierwave-base64', '~> 2.2'
+gem 'cloudinary', '~> 1.1'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'

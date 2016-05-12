@@ -15,6 +15,7 @@ RSpec.describe ProfileSerializer, :type => :serializer do
           :nickname, :display_name, :short_description, :description,
           :hosted_events_count, :created_at, :deleted_at
         ).merge(
+          avatar_url: profile.avatar.url,
           deleted: profile.deleted?
         )
       )

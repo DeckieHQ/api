@@ -8,6 +8,7 @@ class ProfilePolicy < ApplicationPolicy
   def permited_attributes
     [
       :nickname,
+      :avatar,
       :short_description,
       :description
     ]

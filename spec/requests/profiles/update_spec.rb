@@ -43,6 +43,34 @@ RSpec.describe 'Profile update', :type => :request do
         it { is_expected.to return_status_code 422 }
         it { is_expected.to return_validation_errors :profile_update }
       end
+
+      describe 'Profile avatar update', :type => :uploader do
+        let(:profile_update_params) { { avatar: image_param('avatar.jpeg') } }
+
+        # Remove the profile in order to trigger the image destruction.
+        after { profile.destroy }
+
+        it { is_expected.to return_status_code 200 }
+
+        it 'returns the profile attributes' do
+          expect(response.body).to equal_serialized(profile)
+        end
+
+        it 'uploads the avatar and stores the profile avatar url' do
+          expect(profile.reload.avatar.url).to be_an_url
+        end
+
+        context 'when avatar is invalid' do
+          let(:avatar) { Fake::File.pdf }
+
+          let(:profile_update_params) { { avatar: avatar } }
+
+          let(:profile_update) { FactoryGirl.build(:profile, avatar: avatar) }
+
+          it { is_expected.to return_status_code 422 }
+          it { is_expected.to return_validation_errors :profile_update }
+        end
+      end
     end
 
     context 'with another user' do
