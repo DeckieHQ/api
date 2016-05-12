@@ -54,6 +54,9 @@ RSpec.describe 'Profile update', :type => :request do
           { avatar: "data:image/jpeg;base64,#{encoded_file}" }
         end
 
+        # Remove the profile in order to trigger the image destruction.
+        after { profile.destroy }
+
         it { is_expected.to return_status_code 200 }
 
         it 'uploads the avatar and stores the profile avatar url' do

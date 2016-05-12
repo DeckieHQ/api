@@ -21,9 +21,15 @@ class Profile < ApplicationRecord
 
   after_update :reindex_opened_hosted_events, if: :changed?
 
+  before_destroy :remove_avatar
+
   private
 
   def reindex_opened_hosted_events
     ReindexRecordsJob.perform_later('Event', opened_hosted_events.pluck('id'))
+  end
+
+  def remove_avatar
+    avatar.remove! if avatar.url
   end
 end

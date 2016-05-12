@@ -69,6 +69,30 @@ RSpec.describe Profile, :type => :model do
     end
   end
 
+  context 'before destroy' do
+    before do
+      allow(profile.avatar).to receive(:remove!).and_call_original
+
+      profile.destroy
+    end
+
+    context 'when profile has an avatar', type: :uploader do
+      let(:profile) { FactoryGirl.create(:profile, :with_avatar) }
+
+      it 'destroys the avatar' do
+        expect(profile.avatar).to have_received(:remove!).with(no_args)
+      end
+    end
+
+    context 'when profile has no avatar' do
+      let(:profile) { FactoryGirl.create(:profile) }
+
+      it "doesn't attempt to destroy the avatar" do
+        expect(profile.avatar).to_not have_received(:remove!)
+      end
+    end
+  end
+
   describe '#opened_hosted_events' do
     let(:profile) { FactoryGirl.create(:profile_with_hosted_events) }
 
