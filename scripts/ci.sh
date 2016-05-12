@@ -10,7 +10,10 @@ function provision() {
 
     app=$(bash ./scripts/heroku.sh name $build)
 
-    heroku addons:create --app $app "algoliasearch"
+    for addon in algoliasearch cloudinary
+    do
+        heroku addons:create $addon --app $app
+    done
 }
 
 function configure() {
