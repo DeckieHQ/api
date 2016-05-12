@@ -1,7 +1,7 @@
 class Profile < ApplicationRecord
   acts_as_paranoid
 
-  mount_uploader :avatar, AvatarUploader
+  mount_base64_uploader :avatar, AvatarUploader
 
   belongs_to :user
 

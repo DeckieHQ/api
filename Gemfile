@@ -61,6 +61,7 @@ gem 'sinatra', git: 'git://github.com/sinatra/sinatra', require: nil
 
 # Image upload
 gem 'carrierwave', git: 'git://github.com/carrierwaveuploader/carrierwave'
+gem 'carrierwave-base64', '~> 2.2'
 gem 'cloudinary', '~> 1.1'
 
 group :development, :test do

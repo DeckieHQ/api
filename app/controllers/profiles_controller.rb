@@ -11,7 +11,7 @@ class ProfilesController < ApplicationController
     unless profile.update(profile_params)
       return render_validation_errors(profile)
     end
-    render json: profile
+    render json: profile.reload
   end
 
   protected
