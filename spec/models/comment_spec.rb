@@ -34,6 +34,26 @@ RSpec.describe Comment, :type => :model do
 
   it_behaves_like 'acts as paranoid'
 
+  context 'after create' do
+    context 'with Comment resource' do
+      subject(:comment) { FactoryGirl.build(:comment, :of_comment) }
+
+      it { expect(comment.save).to be_truthy }
+    end
+
+    context 'with another resource' do
+      let(:comment) { FactoryGirl.build(:comment) }
+
+      it 'updates the resource counter cache' do
+        prefix = comment.private? ? :private : :public
+
+        expect { comment.save }.to change {
+          comment.resource.public_send("#{prefix}_comments_count")
+        }.by(1)
+      end
+    end
+  end
+
   describe '.publics' do
     let(:event) { FactoryGirl.create(:event, :with_comments) }
 

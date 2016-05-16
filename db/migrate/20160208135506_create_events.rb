@@ -26,8 +26,10 @@ class CreateEvents < ActiveRecord::Migration[5.0]
       t.string :state
       t.string :country,  null: false
 
-      t.integer :submissions_count, null: false, default: 0
-      t.integer :attendees_count,   null: false, default: 0
+      t.integer :submissions_count,      null: false, default: 0
+      t.integer :attendees_count,        null: false, default: 0
+      t.integer :public_comments_count,  null: false, default: 0
+      t.integer :private_comments_count, null: false, default: 0
 
       t.timestamps null: false
 

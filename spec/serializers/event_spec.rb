@@ -12,7 +12,8 @@ RSpec.describe EventSerializer, :type => :serializer do
       expected_attributes = event.slice(
         :title, :category, :ambiance, :level, :capacity, :auto_accept,
         :short_description, :description, :begin_at, :end_at, :latitude, :longitude,
-        :street, :postcode, :city, :state, :country, :attendees_count, :submissions_count
+        :street, :postcode, :city, :state, :country, :attendees_count, :submissions_count,
+        :public_comments_count, :private_comments_count
       ).merge({
         opened: !event.closed?,
         full:    event.full?

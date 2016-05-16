@@ -8,14 +8,13 @@ RSpec.describe Event, :type => :model do
 
     it { is_expected.to have_db_column(:description).of_type(:text) }
 
-    it do
-      is_expected.to have_db_column(:attendees_count)
-        .of_type(:integer).with_options(null: false, default: 0)
-    end
-
-    it do
-      is_expected.to have_db_column(:submissions_count)
-        .of_type(:integer).with_options(null: false, default: 0)
+    [
+      :submissions_count, :attendees_count, :public_comments_count, :private_comments_count
+    ].each do |attribute|
+      it do
+        is_expected.to have_db_column(attribute)
+          .of_type(:integer).with_options(null: false, default: 0)
+      end
     end
   end
 

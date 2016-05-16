@@ -18,6 +18,8 @@ class EventSerializer < ActiveModel::Serializer
              :country,
              :attendees_count,
              :submissions_count,
+             :public_comments_count,
+             :private_comments_count,
              :opened,
              :full
 
