@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe ProfileSerializer, :type => :serializer do
 
   context 'Individual Resource Representation' do
-    let(:profile) { FactoryGirl.create(:profile) }
+    let(:profile) { FactoryGirl.create([:profile, :profile_verified].sample) }
 
     let(:serialized) do
       Serialized.new(ProfileSerializer.new(profile))
