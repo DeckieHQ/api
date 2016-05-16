@@ -17,8 +17,8 @@ class User < ApplicationRecord
 
   after_create :build_profile
 
-  after_update :update_profile, if: -> { first_name_changed? || last_name_changed? }
-
+  after_update :update_profile, if: :propagate_changes?
+  
   acts_as_verifiable :email,
     delivery: UserMailer, token: -> { Token.friendly }
 
@@ -59,15 +59,22 @@ class User < ApplicationRecord
 
   private
 
+  def display_name
+    "#{first_name} #{last_name.capitalize.chr}"
+  end
+
   def build_profile
     create_profile(display_name: display_name)
   end
 
   def update_profile
-    profile.update(display_name: display_name)
+    profile.update(display_name: display_name,
+      email_verified: email_verified?, phone_number_verified: phone_number_verified?
+    )
   end
 
-  def display_name
-    "#{first_name} #{last_name.capitalize.chr}"
+  def propagate_changes?
+    first_name_changed?        || last_name_changed?  ||
+    email_verified_at_changed? || phone_number_verified_at_changed?
   end
 end

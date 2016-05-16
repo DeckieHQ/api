@@ -10,6 +10,10 @@ class CreateProfiles < ActiveRecord::Migration[5.0]
 
       t.belongs_to :user, index: { unique: true }, foreign_key: true
 
+      t.boolean :email_verified, null: false, default: false
+
+      t.boolean :phone_number_verified, null: false, default: false
+
       t.integer :hosted_events_count, null: false, default: 0
 
       t.timestamps null: false

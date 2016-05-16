@@ -73,9 +73,11 @@ RSpec.describe User, :type => :model do
   context 'after update' do
     subject(:user) { FactoryGirl.create(:user) }
 
-    let(:user_update) { FactoryGirl.build(:user) }
+    let(:user_update) { FactoryGirl.build(:user_verified) }
 
-    [:first_name, :last_name].each do |attribute|
+    [
+      :first_name, :last_name, :email_verified_at, :phone_number_verified_at
+    ].each do |attribute|
       context "with #{attribute}" do
         before do
           user.update(attribute => user_update.send(attribute))
