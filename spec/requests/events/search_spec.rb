@@ -38,7 +38,9 @@ RSpec.describe 'Event search', :type => :search do
     )
   end
 
-  [:title, :state, :city, :country, :description].each do |attribute|
+  [
+    :title, :state, :city, :country, :short_description, :description
+  ].each do |attribute|
     it "has an index on #{attribute}" do
       value = event.public_send(attribute).split(' ').sample
 

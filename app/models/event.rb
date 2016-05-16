@@ -27,6 +27,8 @@ class Event < ApplicationRecord
 
   validates :title, :street, presence: true, length: { maximum: 128 }
 
+  validates :short_description, length: { maximum: 256 }
+
   validates :description, length: { maximum: 8192 }
 
   validates :category, presence: true, inclusion: {

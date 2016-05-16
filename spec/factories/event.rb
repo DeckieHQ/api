@@ -10,6 +10,8 @@ FactoryGirl.define do
 
     capacity { Faker::Number.between(1, 999) }
 
+    short_description { Faker::Lorem.sentences(2) }
+
     description { Faker::Lorem.paragraph }
 
     begin_at { Faker::Time.between(Time.now, Time.now + 10.day, :all) }

@@ -10,6 +10,8 @@ class CreateEvents < ActiveRecord::Migration[5.0]
 
       t.boolean :auto_accept, null: false, default: false
 
+      t.text :short_description
+
       t.text :description
 
       t.datetime :begin_at, null: false

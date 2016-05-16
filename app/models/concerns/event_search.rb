@@ -10,6 +10,7 @@ module EventSearch
                    :level,
                    :capacity,
                    :auto_accept,
+                   :short_description,
                    :description,
                    :begin_at,
                    :end_at,
@@ -44,6 +45,7 @@ module EventSearch
           'unordered(state)',
           'unordered(city)',
           'unordered(country)',
+          'unordered(short_description)',
           'unordered(description)'
         ]
 

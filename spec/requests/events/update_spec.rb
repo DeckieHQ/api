@@ -10,7 +10,7 @@ RSpec.describe 'Event update', :type => :request do
   let(:permited_params) do
     event_update.slice(
       :title, :category, :ambiance, :level, :capacity, :auto_accept,
-      :description, :street, :postcode, :city, :state, :country
+      :short_description, :description, :street, :postcode, :city, :state, :country
     )
   end
 

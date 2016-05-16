@@ -5,6 +5,7 @@ class EventSerializer < ActiveModel::Serializer
              :level,
              :capacity,
              :auto_accept,
+             :short_description,
              :description,
              :begin_at,
              :end_at,
