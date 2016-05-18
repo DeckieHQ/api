@@ -4,7 +4,7 @@
 staging:
   :concurrency: 10
 production:
-  :concurrency: 20
+  :concurrency: 10
 :queues:
   - default
   - [notifications, 2]
@@ -22,4 +22,4 @@ production:
       queue: scheduler
       description: 'This job will remove pending submissions of started events'
 :scheduler:
-  :listened_queues_only: 
+  :listened_queues_only:
