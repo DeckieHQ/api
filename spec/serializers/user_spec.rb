@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe UserSerializer, :type => :serializer do
 
   context 'Individual Resource Representation' do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryGirl.create([:user, :user_verified].sample) }
 
     let(:serialized) do
       Serialized.new(UserSerializer.new(user))
@@ -25,7 +25,7 @@ RSpec.describe UserSerializer, :type => :serializer do
     end
 
     it 'adds the hosted events link' do
-      expect(serialized).to have_relationship_link_for :hosted_events
+      expect(serialized).to have_relationship_link_for(:hosted_events)
     end
   end
 end

@@ -5,6 +5,7 @@ class EventSerializer < ActiveModel::Serializer
              :level,
              :capacity,
              :auto_accept,
+             :short_description,
              :description,
              :begin_at,
              :end_at,
@@ -17,6 +18,8 @@ class EventSerializer < ActiveModel::Serializer
              :country,
              :attendees_count,
              :submissions_count,
+             :public_comments_count,
+             :private_comments_count,
              :opened,
              :full
 

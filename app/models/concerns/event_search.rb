@@ -10,6 +10,7 @@ module EventSearch
                    :level,
                    :capacity,
                    :auto_accept,
+                   :short_description,
                    :description,
                    :begin_at,
                    :end_at,
@@ -21,7 +22,9 @@ module EventSearch
                    :state,
                    :country,
                    :attendees_count,
-                   :submissions_count
+                   :submissions_count,
+                   :public_comments_count,
+                   :private_comments_count
 
         attribute :full do
           full?
@@ -44,6 +47,7 @@ module EventSearch
           'unordered(state)',
           'unordered(city)',
           'unordered(country)',
+          'unordered(short_description)',
           'unordered(description)'
         ]
 

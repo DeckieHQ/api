@@ -10,6 +10,16 @@ RSpec.describe Profile, :type => :model do
       is_expected.to have_db_column(:hosted_events_count)
         .of_type(:integer).with_options(null: false, default: 0)
     end
+
+    it do
+      is_expected.to have_db_column(:email_verified)
+        .of_type(:boolean).with_options(null: false, default: false)
+    end
+
+    it do
+      is_expected.to have_db_column(:phone_number_verified)
+        .of_type(:boolean).with_options(null: false, default: false)
+    end
   end
 
   describe 'Validations' do

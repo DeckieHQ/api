@@ -11,6 +11,8 @@ class Comment < ApplicationRecord
 
   has_many :comments, as: :resource, dependent: :destroy
 
+  after_create :update_counter_cache, unless: :of_comment?
+
   scope :publics, -> { where(private: false) }
 
   def title
@@ -31,5 +33,17 @@ class Comment < ApplicationRecord
 
   def of_comment?
     resource_type == 'Comment'
+  end
+
+  private
+
+  def update_counter_cache
+    resource.update({
+      "#{counter_cache_prefix}_comments_count": resource.comments.privates(private?).count
+    })
+  end
+
+  def counter_cache_prefix
+    private? ? :private : :public
   end
 end

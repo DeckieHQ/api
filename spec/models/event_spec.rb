@@ -4,14 +4,17 @@ RSpec.describe Event, :type => :model do
   describe 'Database' do
     it { is_expected.to have_db_index(:profile_id) }
 
-    it do
-      is_expected.to have_db_column(:attendees_count)
-        .of_type(:integer).with_options(null: false, default: 0)
-    end
+    it { is_expected.to have_db_column(:short_description).of_type(:text) }
 
-    it do
-      is_expected.to have_db_column(:submissions_count)
-        .of_type(:integer).with_options(null: false, default: 0)
+    it { is_expected.to have_db_column(:description).of_type(:text) }
+
+    [
+      :submissions_count, :attendees_count, :public_comments_count, :private_comments_count
+    ].each do |attribute|
+      it do
+        is_expected.to have_db_column(attribute)
+          .of_type(:integer).with_options(null: false, default: 0)
+      end
     end
   end
 
@@ -109,13 +112,14 @@ RSpec.describe Event, :type => :model do
     it { is_expected.to_not allow_value(nil).for(:auto_accept) }
 
     {
-      title:       128,
-      description: 8192,
-      street:      128,
-      postcode:    10,
-      city:        64,
-      state:       64,
-      country:     64
+      title:             128,
+      short_description: 256,
+      description:       8192,
+      street:            128,
+      postcode:          10,
+      city:              64,
+      state:             64,
+      country:           64
     }.each do |attribute, length|
       it { is_expected.to validate_length_of(attribute).is_at_most(length) }
     end

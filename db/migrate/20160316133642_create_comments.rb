@@ -5,7 +5,7 @@ class CreateComments < ActiveRecord::Migration
 
       t.references :resource, polymorphic: true, index: true
 
-      t.string :message, null: false
+      t.string  :message, null: false
       t.boolean :private, null: false, default: false
 
       t.timestamps null: false

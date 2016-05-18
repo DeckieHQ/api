@@ -32,6 +32,7 @@ class EventPolicy < ApplicationPolicy
       :level,
       :capacity,
       :auto_accept,
+      :short_description,
       :description,
       :begin_at,
       :end_at,

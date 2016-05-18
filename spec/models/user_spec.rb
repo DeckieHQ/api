@@ -73,9 +73,11 @@ RSpec.describe User, :type => :model do
   context 'after update' do
     subject(:user) { FactoryGirl.create(:user) }
 
-    let(:user_update) { FactoryGirl.build(:user) }
+    let(:user_update) { FactoryGirl.build([:user, :user_verified].sample) }
 
-    [:first_name, :last_name].each do |attribute|
+    [
+      :first_name, :last_name, :email_verified_at, :phone_number_verified_at
+    ].each do |attribute|
       context "with #{attribute}" do
         before do
           user.update(attribute => user_update.send(attribute))
@@ -90,7 +92,9 @@ RSpec.describe User, :type => :model do
 
   def expect_profile_propagation
     expect(user.profile).to have_attributes({
-      display_name: "#{user.first_name} #{user.last_name.capitalize[0]}"
+      display_name: "#{user.first_name} #{user.last_name.capitalize[0]}",
+      email_verified:        user.email_verified?,
+      phone_number_verified: user.phone_number_verified?
     })
   end
 

@@ -27,7 +27,8 @@ RSpec.describe 'User create hosted event', :type => :request do
       it 'creates a new event with permited parameters' do
         permited_params = event.slice(
           :title, :category, :ambiance, :level, :capacity, :auto_accept,
-          :description, :street, :postcode, :city, :state, :country
+          :short_description, :description, :street, :postcode, :city, :state,
+          :country
         )
         expect(created_event).to have_attributes(permited_params)
 
@@ -52,7 +53,7 @@ RSpec.describe 'User create hosted event', :type => :request do
       let(:params) {}
 
       it { is_expected.to return_authorization_error(:user_unverified) }
-      
+
       it "doesn't create the event" do
         expect(user.hosted_events).to be_empty
       end
