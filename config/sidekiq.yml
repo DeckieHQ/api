@@ -4,7 +4,7 @@
 staging:
   :concurrency: 10
 production:
-  :concurrency: 20
+  :concurrency: 10
 :queues:
   - default
   - [indexation, 2]
