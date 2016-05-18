@@ -1,8 +1,9 @@
 class EventsController < ApplicationController
   before_action :authenticate!, only: [:update, :destroy]
+  before_action :authenticate,  only: [:show]
 
   def show
-    included = Include.new(params[:include], accept: %w(host))
+    included = Include.new(params[:include], accept: %w(host user_submission))
 
     return render_include_errors(included) unless included.valid?
 

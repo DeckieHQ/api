@@ -178,6 +178,43 @@ RSpec.describe Event, :type => :model do
     end
   end
 
+  describe '.member?' do
+    let(:event) { FactoryGirl.create(:event_with_attendees) }
+
+    context 'when user is member of the event' do
+      let(:profile) { FactoryGirl.create(:profile) }
+
+      it { expect(event.member?(profile)).to be_falsy }
+    end
+
+    context 'when user is member of the event' do
+      let(:profile) { event.attendees.last }
+
+      it { expect(event.member?(profile)).to be_truthy }
+    end
+  end
+
+  describe '.submission_of' do
+    let(:event) { FactoryGirl.create(:event_with_submissions) }
+
+    context 'when there is no user' do
+      it { expect(event.submission_of()).to be_nil }
+    end
+
+    context "when user hasn't a submission on the event" do
+      let(:user) { FactoryGirl.create(:user) }
+
+      it { expect(event.submission_of(user)).to be_nil }
+    end
+
+    context 'when user has a submission on the event' do
+      let(:submission) { event.submissions.last }
+      let(:user)       { submission.profile.user }
+
+      it { expect(event.submission_of(user).to_json).to eq(submission.to_json) }
+    end
+  end
+
   describe '#max_confirmable_submissions' do
     let(:event) do
       FactoryGirl.create(:event_with_submissions, :with_pending_submissions)

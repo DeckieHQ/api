@@ -3,6 +3,8 @@ class Profile < ApplicationRecord
 
   mount_base64_uploader :avatar, AvatarUploader
 
+  include Filterable
+
   belongs_to :user
 
   has_many :submissions

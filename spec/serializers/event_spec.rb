@@ -25,14 +25,22 @@ RSpec.describe EventSerializer, :type => :serializer do
       expect(serialized.relationships).to have_key('host')
     end
 
-    it 'adds the comments link' do
-      expect(serialized).to have_relationship_link_for(:comments, source: event)
+    it 'adds the attendees link' do
+      expect(serialized).to have_relationship_link_for(:attendees, source: event)
     end
 
-    it 'adds the private comments link' do
+    it 'adds the submissions link' do
+      expect(serialized).to have_relationship_link_for(:submissions, source: event)
+    end
+
+    it 'adds the user submission link' do
       expect(serialized).to have_relationship_link_for(
-        :comments, source: event, key: 'private_comments', args: '?private=true'
+        :submission, source: event, key: 'user_submission'
       )
+    end
+
+    it 'adds the comments link' do
+      expect(serialized).to have_relationship_link_for(:comments, source: event)
     end
   end
 end
