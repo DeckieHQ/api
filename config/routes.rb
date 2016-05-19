@@ -53,4 +53,6 @@ Rails.application.routes.draw do
   end
 
   resources :profiles, only: [:show, :update]
+
+  resources :contacts, only: :show
 end

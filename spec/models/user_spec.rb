@@ -184,4 +184,26 @@ RSpec.describe User, :type => :model do
       it { is_expected.to be_falsy }
     end
   end
+
+  describe '#host_of?' do
+    let(:host) { FactoryGirl.create(:user_with_hosted_events) }
+
+    let(:user) { FactoryGirl.create(:user) }
+
+    subject(:host_of?) { host.host_of?(user) }
+
+    it { is_expected.to be_falsy }
+
+    context 'when user is an attendee of at least of event of the host' do
+      before do
+        event = host.hosted_events.sample
+
+        event.update(auto_accept: true)
+
+        JoinEvent.new(user.profile, event).call
+      end
+
+      it { is_expected.to be_truthy }
+    end
+  end
 end

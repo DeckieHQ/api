@@ -18,7 +18,7 @@ class User < ApplicationRecord
   after_create :build_profile
 
   after_update :update_profile, if: :propagate_changes?
-  
+
   acts_as_verifiable :email,
     delivery: UserMailer, token: -> { Token.friendly }
 
@@ -55,6 +55,10 @@ class User < ApplicationRecord
 
   def subscribed_to?(notification)
     preferences['notifications'].include?(notification.type)
+  end
+
+  def host_of?(user)
+    user.submissions.confirmed.where(event_id: hosted_events.pluck(:id)).count > 0
   end
 
   private

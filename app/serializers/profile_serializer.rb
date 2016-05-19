@@ -18,4 +18,10 @@ class ProfileSerializer < ActiveModel::Serializer
   def deleted
     object.deleted?
   end
+
+  has_one :user, key: :contact do
+    link :related, UrlHelpers.contact(object.user_id)
+
+    include_data false
+  end
 end

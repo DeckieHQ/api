@@ -17,15 +17,21 @@ end
 RSpec::Matchers.define :have_relationship_link_for do |attribute, options = {}|
   match do |actual|
     key = options[:key]
+
     relationship = key || attribute.to_s
+
     link = actual.relationships[relationship]['links']['related']
 
     type = actual.type.singularize
+
     target = options[:target]
+
     method = target ? :"#{attribute}_url" : :"#{type}_#{attribute}_url"
 
     url_helpers = Rails.application.routes.url_helpers
+
     source = target || options[:source]
+
     args = options[:args] || ""
 
     link == url_helpers.public_send(method, source) + args
