@@ -18,7 +18,7 @@ class User < ApplicationRecord
   after_create :build_profile
 
   after_update :update_profile, if: :propagate_changes?
-  
+
   acts_as_verifiable :email,
     delivery: UserMailer, token: -> { Token.friendly }
 

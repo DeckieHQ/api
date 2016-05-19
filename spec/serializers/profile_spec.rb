@@ -21,5 +21,9 @@ RSpec.describe ProfileSerializer, :type => :serializer do
         )
       )
     end
+
+    it 'adds the contact link' do
+      expect(serialized).to have_relationship_link_for(:contact, target: profile.user_id)
+    end
   end
 end
