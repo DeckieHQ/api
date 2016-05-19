@@ -2,6 +2,8 @@ class ContactsController < ApplicationController
   before_action :authenticate!
 
   def show
+    authorize contact
+    
     render json: contact
   end
 

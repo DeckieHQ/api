@@ -5,6 +5,10 @@ RSpec.describe Contact, :type => :model do
 
   subject(:contact) { described_class.new(user) }
 
+  it 'intializes its user' do
+    expect(contact.user).to eq(user)
+  end
+
   it 'shares the user id' do
     expect(contact.id).to eq(user.id)
   end

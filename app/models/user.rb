@@ -57,6 +57,10 @@ class User < ApplicationRecord
     preferences['notifications'].include?(notification.type)
   end
 
+  def host_of?(user)
+    user.submissions.confirmed.where(event_id: hosted_events.pluck(:id)).count > 0
+  end
+
   private
 
   def display_name
