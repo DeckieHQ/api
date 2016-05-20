@@ -68,6 +68,10 @@ RSpec.describe User, :type => :model do
     it 'is not verified' do
       expect(user).not_to be_verified
     end
+
+    it 'has subscribed to all notifications' do
+      expect(user.preferences['notifications']).to eq(Notification.types)
+    end
   end
 
   context 'after update' do
