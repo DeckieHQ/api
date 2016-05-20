@@ -4,7 +4,11 @@ class User::RegistrationsController < Devise::RegistrationsController
   before_action :authenticate!, only: :show
 
   def show
-    render json: current_user
+    included = Include.new(params[:include], accept: %w(profile))
+
+    return render_include_errors(included) unless included.valid?
+
+    render json: current_user, include: included.params
   end
 
   def create
