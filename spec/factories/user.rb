@@ -9,10 +9,6 @@ FactoryGirl.define do
     email    { Faker::Internet.email }
     password { Faker::Internet.password }
 
-    after(:create) do |user|
-      user.update(preferences: build(:preferences).to_json)
-    end
-
     factory :user_invalid do
       email nil
     end

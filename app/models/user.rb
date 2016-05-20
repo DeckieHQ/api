@@ -15,6 +15,8 @@ class User < ApplicationRecord
 
   has_secure_token :authentication_token
 
+  before_create :subscribe_to_notifications
+
   after_create :build_profile
 
   after_update :update_profile, if: :propagate_changes?
@@ -65,6 +67,10 @@ class User < ApplicationRecord
 
   def display_name
     "#{first_name} #{last_name.capitalize.chr}"
+  end
+
+  def subscribe_to_notifications
+    preferences['notifications'] = Notification.types
   end
 
   def build_profile
