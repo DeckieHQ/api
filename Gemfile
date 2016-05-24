@@ -5,8 +5,9 @@ ruby '2.2.3'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.0.0.beta2'
 
-# JSON Serializers
+# Serializers
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers'
+gem 'activemodel-serializers-xml', '~> 1.0'
 
 # Use postgresql as ActiveRecord database
 gem 'pg', '~> 0.18'
@@ -63,6 +64,9 @@ gem 'sinatra', git: 'git://github.com/sinatra/sinatra', require: nil
 gem 'carrierwave', git: 'git://github.com/carrierwaveuploader/carrierwave'
 gem 'carrierwave-base64', '~> 2.2'
 gem 'cloudinary', '~> 1.1'
+
+# Achievments
+gem 'merit', '~> 2.3'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

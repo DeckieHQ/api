@@ -7,6 +7,8 @@ class ApplicationController < ActionController::API
 
   rescue_from ActiveRecord::RecordNotFound, with: -> { render_error_for(:not_found) }
 
+  rescue_from Ambry::NotFoundError, with: -> { render_error_for(:not_found) }
+
   rescue_from 'Pundit::NotAuthorizedError' do
     if current_user.errors.empty?
       render_error_for(:forbidden)
@@ -65,8 +67,8 @@ class ApplicationController < ActionController::API
   end
 
   def render_search_errors(search)
-    errors = [:page, :sort, :filters, :include].inject([]) do |errors, type|
-      errors.concat(
+    errors = [:page, :sort, :filters, :include].inject([]) do |errs, type|
+      errs.concat(
         ErrorsSerializer.new(search.errors[type], on: type).serialize[:errors]
       )
     end

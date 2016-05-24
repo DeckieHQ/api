@@ -27,9 +27,13 @@ RSpec::Matchers.define :equal_serialized do |records|
 
       order = collection_order(actual)
 
-      ActiveModel::SerializableResource.new(records.order("id #{order}"))
+      ActiveModelSerializers::SerializableResource.new(records.order("id #{order}"))
     else
-      ActiveModel::SerializableResource.new(records)
+      ActiveModelSerializers::SerializableResource.new(records)
+    end
+
+    if records.kind_of?(Merit::Badge)
+      resource = ActiveModelSerializers::SerializableResource.new(records, serializer: AchievementSerializer)
     end
 
     expected = resource.to_json({
