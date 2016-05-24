@@ -25,5 +25,9 @@ RSpec.describe ProfileSerializer, :type => :serializer do
     it 'adds the contact link' do
       expect(serialized).to have_relationship_link_for(:contact, target: profile.user_id)
     end
+
+    it 'adds the achievements link' do
+      expect(serialized).to have_relationship_link_for(:achievements, source: profile)
+    end
   end
 end
