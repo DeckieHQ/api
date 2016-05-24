@@ -36,6 +36,10 @@ RSpec::Matchers.define :equal_serialized do |records|
       ActiveModelSerializers::SerializableResource.new(
         records, serializer: AchievementSerializer, serialization_context: context
       )
+    elsif records.kind_of?(Array) && records[0].kind_of?(Merit::Badge)
+      ActiveModelSerializers::SerializableResource.new(
+        records, each_serializer: AchievementSerializer, serialization_context: context
+      )
     else
       ActiveModelSerializers::SerializableResource.new(
         records, serialization_context: context

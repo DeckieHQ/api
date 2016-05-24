@@ -52,7 +52,9 @@ Rails.application.routes.draw do
     post 'view', on: :member
   end
 
-  resources :profiles, only: [:show, :update]
+  resources :profiles, only: [:show, :update] do
+    resources :achievements, only: [:index], controller: 'profile/achievements'
+  end
 
   resources :contacts, only: :show
 

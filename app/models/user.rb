@@ -1,6 +1,8 @@
 require 'concerns/acts_as_verifiable'
 
 class User < ApplicationRecord
+  has_merit
+
   acts_as_paranoid
 
   has_one :profile, dependent: :destroy
