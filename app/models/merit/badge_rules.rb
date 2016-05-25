@@ -52,7 +52,7 @@ module Merit
     end
 
     def created_early?(record)
-      record.created_at < Date.strptime('10-07-2016', '%d-%m-%Y')
+      record.created_at < Rails.application.config.launch_date
     end
   end
 end

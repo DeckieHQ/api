@@ -42,5 +42,7 @@ module Deckie
     config.active_job.queue_adapter = :sidekiq
 
     config.front_url = ENV['FRONT_URL'] || 'http://www.example.com'
+
+    config.launch_date = Date.strptime('10-07-2016', '%d-%m-%Y')
   end
 end
