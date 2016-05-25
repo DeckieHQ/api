@@ -84,6 +84,12 @@ RSpec::Matchers.define :have_created_action do |profile, resource, type|
   end
 end
 
+RSpec::Matchers.define :have_achievement do |achievement_name|
+  match do |record|
+    record.badges.map(&:name).include?(achievement_name)
+  end
+end
+
 RSpec::Matchers.define :have_many_actions do |actors, resource, type|
   match do
     actions = Action.with_deleted.where(resource: resource, type: type).to_a || []

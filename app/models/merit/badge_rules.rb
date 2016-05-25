@@ -38,12 +38,21 @@ module Merit
       #   comment.votes.count == 5
       # end
 
-      # Changes his name by one wider than 4 chars (arbitrary ruby code case)
-      # grant_on 'registrations#update', badge: 'autobiographer',
-      #   temporary: true, model_name: 'User' do |user|
-      #
-      #   user.name.length > 4
-      # end
+      grant_on 'user/registrations#create', badge: 'early-registration', to: :itself, model_name: 'User' do |user|
+        created_early?(user)
+      end
+
+      grant_on 'user/hosted_events#create', badge: 'early-event', model_name: 'User' do |event|
+        created_early?(event)
+      end
+
+      grant_on 'user/verifications#update', badge: 'verified-profile', model_name: 'User' do |verification|
+        verification.model.kind_of?(User) && verification.model.verified?
+      end
+    end
+
+    def created_early?(record)
+      record.created_at < Date.strptime('10-07-2016', '%d-%m-%Y')
     end
   end
 end

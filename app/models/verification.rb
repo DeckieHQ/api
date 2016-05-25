@@ -3,6 +3,8 @@ class Verification
 
   attr_accessor :type, :token
 
+  attr_reader :model
+
   validates :type,  inclusion: { in: %w(email phone_number) }
 
   validates :token, presence: true, on: :complete
@@ -17,8 +19,6 @@ class Verification
   end
 
   private
-
-  attr_reader :model
 
   def token_must_be_valid
     model_token = model.send("#{type}_verification_token").to_s

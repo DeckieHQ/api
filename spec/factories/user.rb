@@ -65,6 +65,14 @@ FactoryGirl.define do
             create_list(:event_closed, e.events_closed_count, host: user.profile)
           end
         end
+
+        factory :user_verified_after_email_verification do
+          after(:create) { |user| user.generate_email_verification_token! }
+        end
+
+        factory :user_verified_after_phone_number_verification do
+          after(:create) { |user| user.generate_phone_number_verification_token! }
+        end
       end
     end
 

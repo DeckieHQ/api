@@ -39,6 +39,10 @@ RSpec.describe 'User create hosted event', :type => :request do
       it 'returns the event attributes' do
         expect(response.body).to equal_serialized(created_event)
       end
+
+      it 'grants the user with an achievement' do
+        expect(user).to have_achievement('early-event')
+      end
     end
 
     context 'when attributes are invalid' do

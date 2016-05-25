@@ -40,9 +40,7 @@ RSpec.describe 'User verification', :type => :request do
           { type: type, token: user_token }
         end
 
-        before do
-          user.reload
-        end
+        before { user.reload }
 
         context "when user #{type} is not verified" do
           let(:user) { FactoryGirl.create(:"user_with_#{type}_verification") }
@@ -51,6 +49,18 @@ RSpec.describe 'User verification', :type => :request do
 
           it "completes user #{type} verification" do
             expect(user).to send("be_#{type}_verified")
+          end
+
+          it "doesn' grant the user with an achievement" do
+            expect(user).to_not have_achievement('verified-profile')
+          end
+
+          context 'when user is fully verified after this verification' do
+            let(:user) { FactoryGirl.create(:"user_verified_after_#{type}_verification") }
+
+            it 'grants the user with an achievement' do
+              expect(user).to have_achievement('verified-profile')
+            end
           end
         end
 
