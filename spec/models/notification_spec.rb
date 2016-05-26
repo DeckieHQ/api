@@ -67,7 +67,7 @@ RSpec.describe Notification, :type => :model do
     end
   end
 
-  describe '#send_email' do
+  describe '#send_informations' do
     let(:notification) { FactoryGirl.create(:notification) }
 
     let(:informations_mail) { double(:deliver_later) }
@@ -85,7 +85,7 @@ RSpec.describe Notification, :type => :model do
       it 'plans to deliver later a notification informations email' do
         expect(informations_mail).to receive(:deliver_later).with(no_args)
 
-        notification.send_email
+        notification.send_informations
       end
     end
 
@@ -95,7 +95,7 @@ RSpec.describe Notification, :type => :model do
       end
 
       it "doesn't send any email" do
-        notification.send_email
+        notification.send_informations
 
         expect(NotificationMailer).to_not have_received(:informations)
       end

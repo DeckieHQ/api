@@ -9,7 +9,7 @@ RSpec.shared_examples 'a mail with' do |type, options = {}|
 
   it 'adds the default email signature to the senders' do
     expect(mail.from).to eq([
-      ENV.fetch('EMAIL_SIGNATURE', 'no-reply@example.com')
+      Rails.application.config.action_mailer.default_options[:from]
     ])
   end
 

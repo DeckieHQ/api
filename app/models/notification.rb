@@ -27,7 +27,7 @@ class Notification < ApplicationRecord
     update(viewed: true)
   end
 
-  def send_email
+  def send_informations
     if user.subscribed_to?(self)
       NotificationMailer.informations(self).deliver_later
     end
