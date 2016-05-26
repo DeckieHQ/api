@@ -12,15 +12,17 @@ class User::HostedEventsController < ApplicationController
   def create
     authorize Event
 
-    event = Event.new(event_params)
-
-    unless current_user.hosted_events << event
-      return render_validation_errors(event)
+    unless current_user.hosted_events << hosted_event
+      return render_validation_errors(hosted_event)
     end
-    render json: event, status: :created
+    render json: hosted_event, status: :created
   end
 
   protected
+
+  def hosted_event
+    @hosted_event ||= Event.new(event_params)
+  end
 
   def event_params
     permited_attributes(Event)

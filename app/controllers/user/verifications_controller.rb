@@ -5,6 +5,7 @@ class User::VerificationsController < ApplicationController
     unless verification.valid?
       return render_validation_errors(verification)
     end
+
     authorize verification
 
     result = SendVerification.new(current_user, verification).call

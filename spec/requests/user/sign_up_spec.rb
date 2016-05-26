@@ -31,6 +31,10 @@ RSpec.describe 'User sign up', :type => :request do
     it 'returns the user attributes' do
       expect(response.body).to equal_serialized(created_user)
     end
+
+    it 'grants the user with an achievement' do
+      expect(created_user).to have_achievement('early-registration')
+    end
   end
 
   context 'when attributes are invalid' do

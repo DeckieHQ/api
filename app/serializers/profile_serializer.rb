@@ -24,4 +24,13 @@ class ProfileSerializer < ActiveModel::Serializer
 
     include_data false
   end
+
+  # There is no relation to hit on profiles called achievements, therefore we
+  # have to use an existing relationship to generate the link as AMS is trying
+  # to call the matching method.
+  has_many :submissions, key: :achievements do
+    link :related, UrlHelpers.profile_achievements(object)
+
+    include_data false
+  end
 end

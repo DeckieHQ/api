@@ -23,18 +23,31 @@ end
 
 RSpec::Matchers.define :equal_serialized do |records|
   match do |actual|
-    resource = if records.kind_of?(ActiveRecord::AssociationRelation) && json_data.count > 1
+    if records.kind_of?(ActiveRecord::AssociationRelation) && json_data.count > 1
 
       order = collection_order(actual)
 
-      ActiveModel::SerializableResource.new(records.order("id #{order}"))
-    else
-      ActiveModel::SerializableResource.new(records)
+      records = records.order("id #{order}")
     end
 
-    expected = resource.to_json({
-      serialization_context: SerializationContext.new(request)
-    })
+    context = SerializationContext.new(request)
+
+    resource = if records.kind_of?(Merit::Badge)
+      ActiveModelSerializers::SerializableResource.new(
+        records, serializer: AchievementSerializer, serialization_context: context
+      )
+    elsif records.kind_of?(Array) && records[0].kind_of?(Merit::Badge)
+      ActiveModelSerializers::SerializableResource.new(
+        records, each_serializer: AchievementSerializer, serialization_context: context
+      )
+    else
+      ActiveModelSerializers::SerializableResource.new(
+        records, serialization_context: context
+      )
+    end
+
+    expected = resource.to_json
+
     result = JSON.parse(actual).except('meta').to_json
 
     result == expected

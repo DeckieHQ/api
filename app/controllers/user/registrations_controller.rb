@@ -15,6 +15,10 @@ class User::RegistrationsController < Devise::RegistrationsController
     super do |user|
       return render_validation_errors(user) unless user.persisted?
 
+      # We need to assigns the registration instance variable to allow merit
+      # to retrieve the registration.
+      @registration = user
+
       render json: user, status: :created and return
     end
   end
