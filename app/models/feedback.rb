@@ -9,7 +9,12 @@ class Feedback
 
   validates :description, length: { maximum: 8192 }
 
-  def send_email
-    FeedbackMailer.informations(self).deliver_later
+  def initialize(attributes = {})
+    @title       = attributes[:title]
+    @description = attributes[:description]
+  end
+
+  def send_informations
+    FeedbackMailer.informations(self).deliver_now
   end
 end

@@ -49,6 +49,8 @@ module Merit
       grant_on 'user/verifications#update', badge: 'verified-profile', model_name: 'User' do |verification|
         verification.model.kind_of?(User) && verification.model.verified?
       end
+
+      grant_on 'feedbacks#create', badge: 'first-feedback'
     end
 
     def created_early?(record)

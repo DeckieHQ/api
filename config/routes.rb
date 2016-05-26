@@ -59,4 +59,6 @@ Rails.application.routes.draw do
   resources :contacts, only: :show
 
   resources :achievements, only: :show
+
+  resources :feedbacks, only: :create
 end

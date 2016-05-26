@@ -11,18 +11,18 @@ RSpec.describe Feedback, :type => :model do
     end
   end
 
-  describe '#send_email' do
+  describe '#send_informations' do
     let(:feedback) { FactoryGirl.build(:feedback) }
 
-    let(:informations_mail) { double(:deliver_later) }
+    let(:informations_mail) { double(:deliver_now) }
 
-    it 'plans to deliver later a feeedback informations email' do
+    it 'sends a feeedback informations email' do
       allow(FeedbackMailer).to receive(:informations).with(feedback)
         .and_return(informations_mail)
 
-      expect(informations_mail).to receive(:deliver_later).with(no_args)
+      expect(informations_mail).to receive(:deliver_now).with(no_args)
 
-      feedback.send_email
+      feedback.send_informations
     end
   end
 end
