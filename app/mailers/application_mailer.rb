@@ -14,6 +14,6 @@ class ApplicationMailer < ActionMailer::Base
 
     yield
 
-    I18n.locale = I18n.default_locale 
+    I18n.locale = I18n.default_locale
   end
 end
