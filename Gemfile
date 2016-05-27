@@ -31,6 +31,7 @@ gem 'rest-client', '2.0.0.rc2'
 # Validations
 gem 'phony_rails', '~> 0.12'
 gem 'date_validator', '~> 0.9'
+gem 'email_validator', '~> 1.6'
 
 # Geolocation
 gem 'geocoder', '~> 1.3'
@@ -65,7 +66,7 @@ gem 'carrierwave', git: 'git://github.com/carrierwaveuploader/carrierwave'
 gem 'carrierwave-base64', '~> 2.2'
 gem 'cloudinary', '~> 1.1'
 
-# Achievments
+# Achievements
 gem 'merit', '~> 2.3'
 
 group :development, :test do
