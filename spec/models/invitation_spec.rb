@@ -27,6 +27,10 @@ RSpec.describe Invitation, :type => :model do
     end
   end
 
+  describe 'Relationships' do
+    it { is_expected.to belong_to(:event) }
+  end
+
   describe 'Validations' do
     [:email, :message].each do |attribute|
       it { is_expected.to validate_presence_of(attribute) }

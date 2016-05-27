@@ -5,6 +5,7 @@ class CommentSerializer < ActiveModel::Serializer
 
   has_many :comments do
     link :related, UrlHelpers.comment_comments(object)
+
     include_data false
   end
 end
