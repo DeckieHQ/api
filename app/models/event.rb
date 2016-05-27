@@ -25,6 +25,8 @@ class Event < ApplicationRecord
 
   has_many :public_comments, -> { publics }, as: :resource, class_name: 'Comment'
 
+  has_many :invitations, dependent: :destroy
+
   validates :title, :street, presence: true, length: { maximum: 128 }
 
   validates :short_description, length: { maximum: 256 }

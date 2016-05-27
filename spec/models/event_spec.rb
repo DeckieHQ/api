@@ -56,6 +56,9 @@ RSpec.describe Event, :type => :model do
     end
 
     it { is_expected.to have_many(:actions).dependent(:destroy) }
+
+    it { is_expected.to have_many(:invitations).dependent(:destroy) }
+
   end
 
   describe 'Validations' do
