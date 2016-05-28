@@ -44,7 +44,7 @@ RSpec.describe 'Profile update', :type => :request do
         it { is_expected.to return_validation_errors :profile_update }
       end
 
-      describe 'Profile avatar update', :type => :uploader do
+      context 'Profile avatar update', upload: true do
         let(:profile_update_params) { { avatar: image_param('avatar.jpeg') } }
 
         # Remove the profile in order to trigger the image destruction.

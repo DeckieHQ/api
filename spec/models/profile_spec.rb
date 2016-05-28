@@ -79,14 +79,14 @@ RSpec.describe Profile, :type => :model do
     end
   end
 
-  context 'after destroy' do
+  context 'after destroy', upload: true do
     before do
       allow(profile.avatar).to receive(:remove!).and_call_original
 
       profile.destroy
     end
 
-    context 'when profile has an avatar', type: :uploader do
+    context 'when profile has an avatar' do
       let(:profile) { FactoryGirl.create(:profile, :with_avatar) }
 
       it 'destroys the avatar' do
