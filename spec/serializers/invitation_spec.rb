@@ -15,7 +15,7 @@ RSpec.describe InvitationSerializer, :type => :serializer do
       )
     end
 
-    %w(profile event).each do |relation_name|
+    %w(sender event).each do |relation_name|
       it "serializes the #{relation_name} relation" do
         expect(serialized.relationships).to have_key(relation_name)
       end

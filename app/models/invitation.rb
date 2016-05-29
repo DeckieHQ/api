@@ -1,8 +1,9 @@
 class Invitation < ApplicationRecord
-  belongs_to :profile
+  belongs_to :sender, class_name: 'Profile', foreign_key: 'profile_id'
+
   belongs_to :event
 
-  delegate :user, to: :profile
+  delegate :user, to: :sender
 
   validates :email, presence: true, email: true, uniqueness: { scope: :event_id, case_sensitive: false }
 

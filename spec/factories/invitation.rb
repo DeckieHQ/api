@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :invitation do
-    association :profile, factory: :profile_verified
-    association :event,   factory: :event
+    association :sender, factory: :profile_verified
+    association :event,  factory: :event
 
     email { Faker::Internet.email }
 

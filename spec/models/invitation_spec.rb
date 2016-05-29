@@ -29,8 +29,9 @@ RSpec.describe Invitation, :type => :model do
   end
 
   describe 'Relationships' do
-    it { is_expected.to belong_to(:profile) }
-    it { is_expected.to belong_to(:event)   }
+    it { is_expected.to belong_to(:sender).with_foreign_key('profile_id') }
+
+    it { is_expected.to belong_to(:event) }
   end
 
   describe 'Validations' do
@@ -64,8 +65,8 @@ RSpec.describe Invitation, :type => :model do
 
     subject(:user) { invitation.user }
 
-    it 'delegates its profile user' do
-      is_expected.to eq(invitation.profile.user)
+    it 'delegates its sender user' do
+      is_expected.to eq(invitation.sender.user)
     end
   end
 

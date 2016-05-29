@@ -8,7 +8,7 @@ class InvitationInformations < SimpleDelegator
   end
 
   def details
-    I18n.t('mailer.invitation_informations.details', sender: profile.display_name)
+    I18n.t('mailer.invitation_informations.details', sender: sender.display_name)
   end
 
   def invitation_url

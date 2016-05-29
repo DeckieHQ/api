@@ -22,7 +22,7 @@ RSpec.describe 'Create event invitation', :type => :request do
       let(:authenticate) { event.host.user }
 
       let(:created_invitation) do
-        event.invitations.find_by(profile: authenticate.profile)
+        event.invitations.find_by(sender: authenticate.profile)
       end
 
       it { is_expected.to return_status_code 201 }
