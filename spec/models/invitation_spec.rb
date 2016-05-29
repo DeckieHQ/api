@@ -58,4 +58,29 @@ RSpec.describe Invitation, :type => :model do
       it { is_expected.to_not be_valid }
     end
   end
+
+  describe '#user' do
+    let(:invitation) { FactoryGirl.create(:invitation) }
+
+    subject(:user) { invitation.user }
+
+    it 'delegates its profile user' do
+      is_expected.to eq(invitation.profile.user)
+    end
+  end
+
+  describe '#send_informations' do
+    let(:invitation) { FactoryGirl.build(:invitation) }
+
+    let(:informations_mail) { double(:deliver_now) }
+
+    it 'sends an invitation informations email' do
+      allow(InvitationMailer).to receive(:informations).with(invitation)
+        .and_return(informations_mail)
+
+      expect(informations_mail).to receive(:deliver_now).with(no_args)
+
+      invitation.send_informations
+    end
+  end
 end

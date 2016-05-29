@@ -61,14 +61,6 @@ RSpec.describe User, :type => :model do
       expect_profile_propagation
     end
 
-    it 'delegates its profile hosted_events' do
-      expect(user.hosted_events).to eq(user.profile.hosted_events)
-    end
-
-    it 'delegates its profile invitations' do
-      expect(user.invitations).to eq(user.profile.invitations)
-    end
-
     it 'is not verified' do
       expect(user).not_to be_verified
     end
@@ -135,6 +127,18 @@ RSpec.describe User, :type => :model do
       let(:user) { FactoryGirl.create(:user_verified) }
 
       it { is_expected.to be_truthy }
+    end
+  end
+
+  [:invitations, :hosted_events].each do |method_name|
+    describe "##{method_name}" do
+      let(:user) { FactoryGirl.create(:user_with_hosted_events) }
+
+      subject { user.public_send(method_name) }
+
+      it "delegates its profile #{method_name}" do
+        is_expected.to eq(user.profile.public_send(method_name))
+      end
     end
   end
 

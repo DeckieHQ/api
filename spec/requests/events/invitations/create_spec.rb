@@ -13,6 +13,8 @@ RSpec.describe 'Create event invitation', :type => :request do
     post event_invitations_path(event), params: params, headers: json_headers
   end
 
+  after { MailDeliveries.clear }
+
   it_behaves_like 'an action requiring authentication'
 
   context 'when user is authenticated' do
@@ -25,7 +27,6 @@ RSpec.describe 'Create event invitation', :type => :request do
 
       it { is_expected.to return_status_code 201 }
 
-
       it 'creates a new event invitation with permited parameters' do
         permited_params = invitation.slice(:email, :message)
 
@@ -36,16 +37,22 @@ RSpec.describe 'Create event invitation', :type => :request do
         expect(response.body).to equal_serialized(created_invitation)
       end
 
+      it { is_expected.to have_sent_mail }
+
       context 'when event is closed' do
         let(:event) { FactoryGirl.create(:event_closed) }
 
         it { is_expected.to return_authorization_error(:event_closed) }
+
+        it { is_expected.to_not have_sent_mail }
       end
 
       context 'when invitation is invalid' do
         let(:invitation) { FactoryGirl.build(:invitation, :with_invalid_email) }
 
         it { is_expected.to return_validation_errors :invitation }
+
+        it { is_expected.to_not have_sent_mail }
       end
     end
 
@@ -53,6 +60,8 @@ RSpec.describe 'Create event invitation', :type => :request do
       let(:authenticate) { FactoryGirl.create(:user) }
 
       it { is_expected.to return_forbidden }
+
+      it { is_expected.to_not have_sent_mail }
     end
 
     context "when event doesn't exist" do
@@ -61,6 +70,8 @@ RSpec.describe 'Create event invitation', :type => :request do
       let(:event) { { event_id: 0 } }
 
       it { is_expected.to return_not_found }
+
+      it { is_expected.to_not have_sent_mail }
     end
   end
 end

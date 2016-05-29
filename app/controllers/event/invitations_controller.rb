@@ -9,7 +9,7 @@ class Event::InvitationsController < ApplicationController
     unless current_user.invitations << invitation
       return render_validation_errors(invitation)
     end
-    render json: invitation, status: 201
+    render json: invitation.tap(&:send_informations), status: 201
   end
 
   protected

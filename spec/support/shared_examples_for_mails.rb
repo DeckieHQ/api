@@ -1,5 +1,6 @@
 RSpec.shared_examples 'a mail with' do |type, options = {}|
-  greets_user = options[:greets_user]
+  greets_user = options[:greets_user],
+  to          = options[:to]         || :user
   labels      = options[:labels]     || []
   attributes  = options[:attributes] || []
 
@@ -13,14 +14,14 @@ RSpec.shared_examples 'a mail with' do |type, options = {}|
     ])
   end
 
-  it 'adds the user email to the receivers' do
-    expect(mail.to).to eq([user.email])
+  it "adds the #{to} email to the receivers" do
+    expect(mail.to).to eq([public_send(to).email])
   end
 
   if greets_user
     it 'greets the user' do
       expect(mail.body.encoded).to include(
-        I18n.t('mailer.greetings', username: content.username, locale: user.culture)
+        I18n.t('mailer.greetings', username: content.username, locale: culture)
       )
     end
   end
@@ -29,7 +30,7 @@ RSpec.shared_examples 'a mail with' do |type, options = {}|
     it "assigns label #{key}" do
       expect(mail.body.encoded).to include(
         CGI.escapeHTML(
-          I18n.t("mailer.#{type}.#{key}", locale: user.culture)
+          I18n.t("mailer.#{type}.#{key}", locale: culture)
         )
       )
     end
