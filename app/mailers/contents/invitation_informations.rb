@@ -1,0 +1,2 @@
+class InvitationInformations < SimpleDelegator
+end

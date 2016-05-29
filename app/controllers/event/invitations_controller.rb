@@ -2,19 +2,21 @@ class Event::InvitationsController < ApplicationController
   before_action :authenticate!, only: [:create]
 
   def create
-    invitation = Invitation.new(permited_attributes(Invitation))
-
     invitation.event = event
 
     authorize invitation
 
-    unless invitation.save
+    unless current_user.invitations << invitation
       return render_validation_errors(invitation)
     end
     render json: invitation, status: 201
   end
 
   protected
+
+  def invitation
+    @invitation ||= Invitation.new(permited_attributes(Invitation))
+  end
 
   def event
     @event ||= Event.find(params[:event_id])

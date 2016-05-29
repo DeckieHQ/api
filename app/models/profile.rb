@@ -7,6 +7,8 @@ class Profile < ApplicationRecord
 
   belongs_to :user
 
+  has_many :invitations
+
   has_many :submissions
 
   has_many :hosted_events, class_name: :Event

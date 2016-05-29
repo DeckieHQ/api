@@ -43,6 +43,8 @@ RSpec.describe Profile, :type => :model do
   describe 'Relationships' do
     it { is_expected.to belong_to(:user) }
 
+    it { is_expected.to have_many(:invitations) }
+
     it { is_expected.to have_many(:submissions) }
 
     it { is_expected.to have_many(:hosted_events) }

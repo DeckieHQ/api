@@ -61,8 +61,12 @@ RSpec.describe User, :type => :model do
       expect_profile_propagation
     end
 
-    it 'has a shortcut to its profile hosted_events' do
+    it 'delegates its profile hosted_events' do
       expect(user.hosted_events).to eq(user.profile.hosted_events)
+    end
+
+    it 'delegates its profile invitations' do
+      expect(user.invitations).to eq(user.profile.invitations)
     end
 
     it 'is not verified' do

@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Invitation, :type => :model do
   describe 'Database' do
+    it { is_expected.to have_db_index(:profile_id) }
     it { is_expected.to have_db_index(:event_id) }
 
     it { is_expected.to have_db_index([:event_id, :email]).unique(true) }
@@ -28,12 +29,13 @@ RSpec.describe Invitation, :type => :model do
   end
 
   describe 'Relationships' do
-    it { is_expected.to belong_to(:event) }
+    it { is_expected.to belong_to(:profile) }
+    it { is_expected.to belong_to(:event)   }
   end
 
   describe 'Validations' do
     subject(:invitation) { FactoryGirl.build(:invitation) }
-    
+
     [:email, :message].each do |attribute|
       it { is_expected.to validate_presence_of(attribute) }
     end

@@ -19,7 +19,9 @@ RSpec.describe 'Create event invitation', :type => :request do
     context 'as the event host' do
       let(:authenticate) { event.host.user }
 
-      let(:created_invitation) { event.invitations.last }
+      let(:created_invitation) do
+        event.invitations.find_by(profile: authenticate.profile)
+      end
 
       it { is_expected.to return_status_code 201 }
 
