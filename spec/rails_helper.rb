@@ -52,7 +52,9 @@ RSpec.configure do |config|
 
   config.filter_run_excluding type: :search unless search_configured
 
-  config.filter_run_excluding type: :uploader if ENV.fetch('CLOUDINARY_URL', '').empty?
+  if ENV.fetch('CLOUDINARY_URL', '').empty?
+    config.filter_run_excluding type: :uploader, upload: :true
+  end
 
   # Search tests requires accessing a real algolia server. Reindexing is quite
   # long, therefore it's mandatory to create records in a before(:all) hook

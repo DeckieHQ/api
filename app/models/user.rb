@@ -13,6 +13,8 @@ class User < ApplicationRecord
 
   delegate :opened_hosted_events, to: :profile
 
+  delegate :invitations, to: :profile
+
   delegate :submissions, to: :profile
 
   has_secure_token :authentication_token

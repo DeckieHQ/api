@@ -1,0 +1,7 @@
+<%= t('mailer.greetings', username: @content.username) %>
+
+<%= @content.details %>
+
+[<%= t('mailer.invitation_informations.link') %>](<%= @content.invitation_url %>)
+
+<%= @content.message %>

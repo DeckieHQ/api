@@ -43,6 +43,8 @@ Rails.application.routes.draw do
       resources :comments, only: [:index, :create], controller: 'event/comments', shallow: true do
         resources :comments, only: [:index, :create], controller: 'comment/comments'
       end
+
+      resources :invitations, only: :create, controller: 'event/invitations'
     end
   end
 

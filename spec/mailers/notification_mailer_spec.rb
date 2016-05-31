@@ -3,13 +3,15 @@ require 'rails_helper'
 RSpec.describe NotificationMailer do
   let(:notification) { FactoryGirl.create(:notification)  }
 
+  let(:user) { notification.user }
+
+  let(:culture) { user.culture }
+
   describe '#informations' do
     let(:mail) { described_class.informations(notification) }
 
-    let(:user) { notification.user }
-
     let(:content) do
-      I18n.locale = user.culture
+      I18n.locale = culture
 
       NotificationInformations.new(notification)
     end
