@@ -25,6 +25,10 @@ class Profile < ApplicationRecord
 
   after_destroy :remove_avatar
 
+  delegate :badges, to: :user
+
+  alias_method :achievements, :badges
+
   private
 
   def reindex_opened_hosted_events

@@ -103,6 +103,16 @@ RSpec.describe Profile, :type => :model do
     end
   end
 
+  describe '#achievements' do
+    let(:profile) { FactoryGirl.create(:profile, :with_achievements) }
+
+    subject { profile.achievements }
+
+    it 'returns the profile user badges' do
+      expect(profile.achievements).to eq(profile.user.badges)
+    end
+  end
+
   describe '#opened_hosted_events' do
     let(:profile) { FactoryGirl.create(:profile_with_hosted_events) }
 
