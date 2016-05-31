@@ -1,11 +1,11 @@
 class Profile::AchievementsController < ApplicationController
   def index
-    render json: user.badges, each_serializer: AchievementSerializer
+    render json: profile.achievements, each_serializer: AchievementSerializer
   end
 
   protected
 
-  def user
-    @user ||= Profile.find(params[:profile_id]).user
+  def profile
+    @profile ||= Profile.find(params[:profile_id])
   end
 end

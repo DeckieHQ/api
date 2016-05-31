@@ -51,5 +51,13 @@ FactoryGirl.define do
     trait :with_invalid_avatar do
       avatar { File.open(Rails.root.join('Gemfile')) }
     end
+
+    trait :with_achievements do
+      after(:create) do |profile|
+        3.times do
+          profile.user.add_badge(Faker::Number.between(1, 3))
+        end
+      end
+    end
   end
 end

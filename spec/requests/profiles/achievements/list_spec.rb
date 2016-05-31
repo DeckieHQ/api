@@ -7,16 +7,10 @@ RSpec.describe 'List profile achievements', :type => :request do
     get profile_achievements_path(profile), params: params, headers: json_headers
   end
 
-  let(:profile) do
-    FactoryGirl.create(:user).tap do |u|
-      u.add_badge(1)
-      u.add_badge(2)
-      u.add_badge(3)
-    end.profile
-  end
+  let(:profile) { FactoryGirl.create(:profile, :with_achievements) }
 
-  it 'returns the profile badges' do
-    expect(response.body).to equal_serialized(profile.user.badges)
+  it 'returns the profile achievements' do
+    expect(response.body).to equal_serialized(profile.achievements)
   end
 
   context "when profile doesn't exist" do
