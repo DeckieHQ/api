@@ -9,7 +9,7 @@ class EmailVerificationInstructions < SimpleDelegator
 
   def email_verification_url
     UrlHelpers.front_for(
-      :verify_email, params: { token: email_verification_token }
+      'email-verification', params: { token: email_verification_token }
     )
   end
 end

@@ -16,7 +16,7 @@ class NotificationInformations < SimpleDelegator
   end
 
   def notification_url
-    UrlHelpers.front_for("notifications/#{id}")
+    UrlHelpers.front_for("notification/#{id}")
   end
 
   private
