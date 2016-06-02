@@ -14,8 +14,8 @@ module FileHelpers
       open_image(filename).read
     end
 
-    def open_image(filename)
-      File.open(Rails.root.join("spec/support/images/#{filename}"))
+    def open_image(filename, &block)
+      File.open(Rails.root.join("spec/support/images/#{filename}"), &block)
     end
   end
 end

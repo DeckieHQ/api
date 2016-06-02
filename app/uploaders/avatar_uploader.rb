@@ -6,7 +6,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
   process convert: 'jpg'
 
   def size_range
-    1000...5000
+    0...100000
   end
 
   def extension_white_list
