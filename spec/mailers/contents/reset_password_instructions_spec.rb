@@ -27,7 +27,7 @@ RSpec.describe ResetPasswordInstructions do
     subject(:reset_password_url) { content.reset_password_url }
 
     it do
-      is_expected.to equal_front_url_with("edit_password?token=#{reset_password_token}")
+      is_expected.to equal_front_url_with("reset-password?token=#{reset_password_token}")
     end
   end
 end

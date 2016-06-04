@@ -40,6 +40,6 @@ RSpec.describe InvitationInformations do
   describe '#invitation_url' do
     subject { content.invitation_url }
 
-    it { is_expected.to equal_front_url_with("events/#{invitation.event.id}") }
+    it { is_expected.to equal_front_url_with("event/#{invitation.event.id}") }
   end
 end

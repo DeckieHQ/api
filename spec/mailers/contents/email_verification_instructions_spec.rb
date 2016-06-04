@@ -27,7 +27,7 @@ RSpec.describe EmailVerificationInstructions do
 
     it do
       is_expected.to equal_front_url_with(
-        "verify_email?token=#{user.email_verification_token}"
+        "email-verification?token=#{user.email_verification_token}"
       )
     end
   end

@@ -17,11 +17,11 @@ function configure() {
         if [ $build == "production" ]; then
             api_domain_name="api.$CUSTOM_DOMAIN"
             front_domain_name="www.$CUSTOM_DOMAIN"
-            email_signature="no-reply@$CUSTOM_DOMAIN"
+            email_signature="notifications@$CUSTOM_DOMAIN"
         else
             api_domain_name="$build-api.$CUSTOM_DOMAIN"
             front_domain_name="$build-front.$CUSTOM_DOMAIN"
-            email_signature="no-reply.$build@$CUSTOM_DOMAIN"
+            email_signature="notifications.$build@$CUSTOM_DOMAIN"
         fi
         heroku domains:clear --app $app
 

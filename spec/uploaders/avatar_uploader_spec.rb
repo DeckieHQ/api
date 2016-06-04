@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe AvatarUploader, :type => :uploader do
-  include CarrierWave::Test::Matchers
-
   let(:profile) { FactoryGirl.create(:profile) }
 
   let(:uploader) { described_class.new(profile, :avatar) }
@@ -23,7 +21,7 @@ RSpec.describe AvatarUploader, :type => :uploader do
         end
       end
 
-      after  { uploader.remove! }
+      after { uploader.remove! }
 
       it 'has the correct format' do
         expect(uploader.format).to eq('jpg')

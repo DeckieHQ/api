@@ -67,7 +67,7 @@ RSpec.describe NotificationInformations do
     subject(:notification_url) { content.notification_url }
 
     it do
-      is_expected.to equal_front_url_with("notifications/#{notification.id}")
+      is_expected.to equal_front_url_with("notification/#{notification.id}")
     end
   end
 end

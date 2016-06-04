@@ -12,6 +12,6 @@ class InvitationInformations < SimpleDelegator
   end
 
   def invitation_url
-    UrlHelpers.front_for("events/#{event.id}")
+    UrlHelpers.front_for("event/#{event.id}")
   end
 end

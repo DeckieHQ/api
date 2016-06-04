@@ -14,7 +14,7 @@ class ResetPasswordInstructions < SimpleDelegator
   end
 
   def reset_password_url
-    UrlHelpers.front_for(:edit_password, params: { token: token })
+    UrlHelpers.front_for('reset-password', params: { token: token })
   end
 
   private
