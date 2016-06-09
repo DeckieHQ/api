@@ -38,6 +38,10 @@ function configure() {
         email_signature="$build@$EMAIL_DOMAIN"
     fi
 
+    if [ $build == "production" ]; then
+        heroku config:set --app $app CORS_ORIGINS="http://$front_domain_name"
+    fi
+
     heroku config:set --app $app API_URL="http://$api_domain_name" \
                                  FRONT_URL="http://$front_domain_name" \
                                  EMAIL_SIGNATURE=$email_signature
