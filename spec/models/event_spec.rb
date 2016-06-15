@@ -298,7 +298,7 @@ RSpec.describe Event, :type => :model do
       end
     end
 
-    %w(join).each do |type|
+    %w(join ready not_ready).each do |type|
       context "with a #{type} action" do
         let(:action) { double(type: type) }
 

@@ -28,8 +28,8 @@ FactoryGirl.define do
 
     association :host, factory: :profile_verified
 
-    after(:build) do |event|
-      event.min_capacity = Faker::Number.between(0, event.capacity)
+    after(:create) do |event|
+      event.update(min_capacity: Faker::Number.between(0, event.capacity))
     end
 
     trait :auto_accept do

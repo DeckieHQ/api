@@ -19,9 +19,7 @@ RSpec.describe 'Event update', :type => :request do
     context 'when event belongs to the user' do
       let(:authenticate) { event.host.user }
 
-      before do
-        event.reload
-      end
+      before { event.reload }
 
       include_examples 'check parameters for', :events
 

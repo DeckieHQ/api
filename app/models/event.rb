@@ -117,7 +117,7 @@ class Event < ApplicationRecord
       submissions.pluck('profile_id')
     when :remove_full, :remove_start
       pending_submissions.pluck('profile_id')
-    when :join
+    when :join, :ready, :not_ready
       attendees_with_host_ids
     when :update, :leave, :comment
       attendees_with_host_ids_except(action.actor)
