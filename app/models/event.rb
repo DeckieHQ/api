@@ -46,6 +46,11 @@ class Event < ApplicationRecord
   validates :capacity, presence: true, numericality: { only_integer: true,
     greater_than: 0, less_than: 1000, greater_than_or_equal_to: ->(e) { e.attendees_count }
   }
+
+  validates :min_capacity, numericality: { only_integer: true,
+    greater_than_or_equal_to: 0, less_than_or_equal_to: ->(e) { e.capacity || e.min_capacity }
+  }
+
   validates :auto_accept, inclusion: { in: [true, false] }
 
   validates :begin_at, presence: true
@@ -88,6 +93,10 @@ class Event < ApplicationRecord
 
   def full?
     attendees_count == capacity
+  end
+
+  def ready?
+    attendees_count >= min_capacity
   end
 
   def switched_to_auto_accept?

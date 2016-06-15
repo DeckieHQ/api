@@ -10,6 +10,8 @@ FactoryGirl.define do
 
     capacity { Faker::Number.between(1, 999) }
 
+    min_capacity 0
+
     short_description { Faker::Lorem.sentences(2) }
 
     description { Faker::Lorem.paragraph }
@@ -30,6 +32,18 @@ FactoryGirl.define do
 
     trait :auto_accept do
       auto_accept true
+    end
+
+    trait :ready do
+      after(:create) do |event|
+        event.update(min_capacity: event.attendees_count)
+      end
+    end
+
+    trait :not_ready do
+      after(:create) do |event|
+        event.update(min_capacity: event.attendees_count + 1)
+      end
     end
 
     trait :with_pending_submissions do

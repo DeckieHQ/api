@@ -68,6 +68,8 @@ RSpec.describe Event, :type => :model do
   end
 
   describe 'Validations' do
+    subject(:event) { FactoryGirl.create(:event) }
+
     it do
       is_expected.to have_many(:public_comments)
         .conditions(private: false).class_name('Comment')
@@ -94,6 +96,11 @@ RSpec.describe Event, :type => :model do
     it do
       is_expected.to validate_numericality_of(:capacity).only_integer
         .is_greater_than(0).is_less_than(1000)
+    end
+
+    it do
+      is_expected.to validate_numericality_of(:min_capacity).only_integer
+        .is_greater_than_or_equal_to(0)
     end
 
     context 'when event has attendees' do
@@ -329,6 +336,21 @@ RSpec.describe Event, :type => :model do
       it 'raises an error' do
         expect { receivers_ids_for }.to raise_error
       end
+    end
+  end
+
+  describe '#ready?' do
+
+    context 'when attendees_count is greater than or equal to min_capacity' do
+      subject(:event) { FactoryGirl.create(:event_with_attendees, :ready) }
+
+      it { is_expected.to be_ready }
+    end
+
+    context 'when attendees_count is less than min_capacity' do
+      subject(:event) { FactoryGirl.create(:event_with_attendees, :not_ready) }
+
+      it { is_expected.to_not be_ready }
     end
   end
 
