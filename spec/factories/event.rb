@@ -10,8 +10,6 @@ FactoryGirl.define do
 
     capacity { Faker::Number.between(1, 999) }
 
-    min_capacity 0
-
     short_description { Faker::Lorem.sentences(2) }
 
     description { Faker::Lorem.paragraph }
@@ -29,6 +27,10 @@ FactoryGirl.define do
     auto_accept false
 
     association :host, factory: :profile_verified
+
+    after(:build) do |event|
+      event.min_capacity = Faker::Number.between(0, event.capacity)
+    end
 
     trait :auto_accept do
       auto_accept true
