@@ -4,6 +4,7 @@ class EventSerializer < ActiveModel::Serializer
              :ambiance,
              :level,
              :capacity,
+             :min_capacity,
              :auto_accept,
              :short_description,
              :description,
@@ -21,7 +22,8 @@ class EventSerializer < ActiveModel::Serializer
              :public_comments_count,
              :private_comments_count,
              :opened,
-             :full
+             :full,
+             :ready
 
   belongs_to :host
 
@@ -51,5 +53,9 @@ class EventSerializer < ActiveModel::Serializer
 
   def full
     object.full?
+  end
+
+  def ready
+    object.ready?
   end
 end
