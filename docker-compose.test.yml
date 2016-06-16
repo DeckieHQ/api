@@ -5,7 +5,7 @@
 
 test:
   build: .
-  command: 'bundle exec rspec'
+  command: 'bundle exec rspec --format progress'
   working_dir: /app/user
   environment:
     - PORT=8080

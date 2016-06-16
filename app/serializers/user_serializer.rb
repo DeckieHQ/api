@@ -21,6 +21,18 @@ class UserSerializer < ActiveModel::Serializer
     include_data false
   end
 
+  has_many :submissions do
+    link :related, UrlHelpers.user_submissions
+
+    include_data false
+  end
+
+  has_many :notifications do
+    link :related, UrlHelpers.user_notifications
+
+    include_data false
+  end
+
   def email_verified
     object.email_verified?
   end

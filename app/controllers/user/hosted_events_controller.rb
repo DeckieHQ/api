@@ -10,8 +10,6 @@ class User::HostedEventsController < ApplicationController
   end
 
   def create
-    authorize Event
-
     unless current_user.hosted_events << hosted_event
       return render_validation_errors(hosted_event)
     end

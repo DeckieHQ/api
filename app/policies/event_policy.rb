@@ -4,6 +4,7 @@ class EventPolicy < ApplicationPolicy
 
   alias_method :event, :record
 
+  # Currently not used (we are waiting to have more users)
   def create?
     user_verified?
   end
