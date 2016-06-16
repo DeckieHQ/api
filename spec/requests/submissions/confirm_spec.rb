@@ -1,5 +1,21 @@
 require 'rails_helper'
 
+RSpec.shared_examples 'confirms and return the submission' do
+  it { is_expected.to return_status_code 200 }
+
+  it 'returns the submission' do
+    expect(response.body).to equal_serialized(submission.reload)
+  end
+
+  it 'confirms the submission' do
+    expect(submission.reload).to be_confirmed
+  end
+
+  it do
+    is_expected.to have_created_action(submission.profile, submission.event, 'join')
+  end
+end
+
 RSpec.describe 'Confirm event submission', :type => :request do
   let(:submission) { FactoryGirl.create(:submission, :pending) }
 
@@ -44,19 +60,7 @@ RSpec.describe 'Confirm event submission', :type => :request do
       end
 
       context 'when event is not full after confirmation' do
-        it { is_expected.to return_status_code 200 }
-
-        it 'returns the submission' do
-          expect(response.body).to equal_serialized(submission.reload)
-        end
-
-        it 'confirms the submission' do
-          expect(submission.reload).to be_confirmed
-        end
-
-        it do
-          is_expected.to have_created_action(submission.profile, submission.event, 'join')
-        end
+        include_examples 'confirms and return the submission'
       end
 
       context 'when event is full after confirmation' do
@@ -64,18 +68,42 @@ RSpec.describe 'Confirm event submission', :type => :request do
           FactoryGirl.create(:submission, :pending, :to_event_with_one_slot_remaining)
         end
 
-        it { is_expected.to return_status_code 200 }
+        include_examples 'confirms and return the submission'
+      end
 
-        it 'returns the submission' do
-          expect(response.body).to equal_serialized(submission.reload)
+      context 'when event is just ready after confirmation' do
+        let(:submission) do
+          FactoryGirl.create(:submission, :pending, :to_event_almost_ready)
         end
 
-        it 'confirms the submission' do
-          expect(submission.reload).to be_confirmed
-        end
+        include_examples 'confirms and return the submission'
 
         it do
-          is_expected.to have_created_action(submission.profile, submission.event, 'join')
+          is_expected.to have_created_action(submission.profile, submission.event, 'ready')
+        end
+      end
+
+      context 'when event is not ready after confirmation' do
+        let(:submission) do
+          FactoryGirl.create(:submission, :pending, :to_event_not_ready)
+        end
+
+        include_examples 'confirms and return the submission'
+
+        it do
+          is_expected.to_not have_created_action(submission.profile, submission.event, 'ready')
+        end
+      end
+
+      context 'when event was already ready before confirmation' do
+        let(:submission) do
+          FactoryGirl.create(:submission, :pending, :to_event_ready)
+        end
+
+        include_examples 'confirms and return the submission'
+
+        it do
+          is_expected.to_not have_created_action(submission.profile, submission.event, 'ready')
         end
       end
     end

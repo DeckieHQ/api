@@ -99,6 +99,10 @@ class Event < ApplicationRecord
     attendees_count >= min_capacity
   end
 
+  def just_ready?
+    attendees_count == min_capacity
+  end
+
   def switched_to_auto_accept?
     auto_accept_was, auto_accept = previous_changes['auto_accept']
 

@@ -36,25 +36,6 @@ FactoryGirl.define do
       auto_accept true
     end
 
-    trait :ready do
-      after(:create) do |event|
-        event.update(min_capacity: event.attendees_count)
-      end
-    end
-
-    trait :not_ready do
-      after(:create) do |event|
-        event.update(min_capacity: event.attendees_count + 1)
-      end
-    end
-
-    trait :with_pending_submissions do
-      transient { pendings_count 5 }
-
-      after(:create) do |event, evaluator|
-        create_list(:submission, evaluator.pendings_count, :pending, event: event)
-      end
-    end
 
     trait :with_comments do
       transient { comments_count 10 }
@@ -101,6 +82,38 @@ FactoryGirl.define do
 
       after(:create) do |event, evaluator|
         create_list(:submission, evaluator.attendees_count, :confirmed, event: event)
+      end
+
+      trait :ready do
+        after(:create) do |event|
+          event.update(min_capacity: event.attendees_count - 1)
+        end
+      end
+
+      trait :just_ready do
+        after(:create) do |event|
+          event.update(min_capacity: event.attendees_count)
+        end
+      end
+
+      trait :not_ready do
+        after(:create) do |event|
+          event.update(min_capacity: event.attendees_count + 2)
+        end
+      end
+
+      trait :almost_ready do
+        after(:create) do |event|
+          event.update(min_capacity: event.attendees_count + 1)
+        end
+      end
+
+      trait :with_pending_submissions do
+        transient { pendings_count 5 }
+
+        after(:create) do |event, evaluator|
+          create_list(:submission, evaluator.pendings_count, :pending, event: event)
+        end
       end
 
       factory :event_with_one_slot_remaining do

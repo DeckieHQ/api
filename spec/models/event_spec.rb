@@ -339,18 +339,29 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  describe '#ready?' do
-
-    context 'when attendees_count is greater than or equal to min_capacity' do
+  describe '#ready?, #just_ready?' do
+    context 'when attendees_count is greater than min_capacity' do
       subject(:event) { FactoryGirl.create(:event_with_attendees, :ready) }
 
       it { is_expected.to be_ready }
+
+      it { is_expected.to_not be_just_ready }
+    end
+
+    context 'when attendees_count is equal to min_capacity' do
+      subject(:event) { FactoryGirl.create(:event_with_attendees, :just_ready) }
+
+      it { is_expected.to be_ready }
+
+      it { is_expected.to be_just_ready }
     end
 
     context 'when attendees_count is less than min_capacity' do
       subject(:event) { FactoryGirl.create(:event_with_attendees, :not_ready) }
 
       it { is_expected.to_not be_ready }
+
+      it { is_expected.to_not be_just_ready }
     end
   end
 
