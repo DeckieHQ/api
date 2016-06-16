@@ -23,6 +23,18 @@ FactoryGirl.define do
       association :event, factory: :event_full
     end
 
+    trait :to_event_ready do
+      association :event, factory: [:event_with_attendees, :ready]
+    end
+
+    trait :to_event_not_ready do
+      association :event, factory: [:event_with_attendees, :not_ready]
+    end
+
+    trait :to_event_almost_ready do
+      association :event, factory: [:event_with_attendees, :almost_ready]
+    end
+
     trait :to_event_with_one_slot_remaining do
       association :event, factory: :event_with_one_slot_remaining
     end

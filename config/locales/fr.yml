@@ -32,6 +32,10 @@ fr:
         event-join:
           third_person: '%{display_name} a rejoint un évennement auquel vous participez'
           address_directly: 'Votre inscription à un évennement a été confirmée'
+        event-ready:
+          third_person: 'Un évennement auquel vous êtes inscrit est prêt à démarrer'
+        event-not_ready:
+          third_person: "Un évennement auquel vous êtes inscrit n'a plus assez de participants pour démarrer"
         comment-comment:
           third_person: '%{display_name} a répondu à un commentaire que vous suivez'
       description:
@@ -54,6 +58,10 @@ fr:
         event-join:
           third_person: "%{display_name} a rejoint l'évennement [%{title}]."
           address_directly: "Votre demande de participation à l'évennement [%{title}] a été confirmée."
+        event-ready:
+          third_person: '[%{title}] a atteint sa capacitié minimum et est donc prêt à démarrer'
+        event-not_ready:
+          third_person: "[%{title}] n'a plus assez de participants pour démarrer"
         comment-comment:
           third_person: '%{display_name} a répondu au commentaire [%{title}].'
       details: 'Vous avez reçu une nouvelle notification:'

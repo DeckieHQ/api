@@ -70,5 +70,29 @@ RSpec.describe ConfirmSubmission do
           .with(submission.event.pending_submissions, reason: :remove_full)
       end
     end
+
+    context 'when event becomes ready after confirmation' do
+      before do
+        allow(submission.event).to receive(:just_ready?).and_return(true)
+      end
+
+      it 'confirms and return the submission' do
+        is_expected.to eq(submission.reload).and be_confirmed
+      end
+
+      it { is_expected.to have_created_action(submission.profile, submission.event, :ready) }
+    end
+
+    context "when event doesn't become ready after confirmation" do
+      before do
+        allow(submission.event).to receive(:just_ready?).and_return(false)
+      end
+
+      it 'confirms and return the submission' do
+        is_expected.to eq(submission.reload).and be_confirmed
+      end
+
+      it { is_expected.to_not have_created_action(submission.profile, submission.event, :ready) }
+    end
   end
 end

@@ -31,6 +31,7 @@ class EventPolicy < ApplicationPolicy
       :ambiance,
       :level,
       :capacity,
+      :min_capacity,
       :auto_accept,
       :short_description,
       :description,

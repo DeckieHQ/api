@@ -59,27 +59,54 @@ RSpec.describe CancelSubmission do
     end
 
     context 'when reason is not specified' do
-      before { service.call }
-
       context 'when submission is confirmed' do
         let(:submission) { FactoryGirl.create(:submission, :confirmed) }
 
+        context 'when event is almost ready after cancellation' do
+          before do
+            allow(submission.event).to receive(:just_ready?).and_return(true)
 
-        it 'destroys the submission' do
-          expect(submission).to be_deleted
+            service.call
+          end
+
+          it 'destroys the submission' do
+            expect(submission).to be_deleted
+          end
+
+          it { is_expected.to have_created_action(submission.profile, submission.event, :leave) }
+
+          it { is_expected.to have_created_action(submission.profile, submission.event, :not_ready) }
         end
 
-        it { is_expected.to have_created_action(submission.profile, submission.event, :leave) }
+        context 'when event is not almost ready after cancellation' do
+          before do
+            allow(submission.event).to receive(:just_ready?).and_return(false)
+
+            service.call
+          end
+
+          it 'destroys the submission' do
+            expect(submission).to be_deleted
+          end
+
+          it { is_expected.to have_created_action(submission.profile, submission.event, :leave) }
+
+          it { is_expected.to_not have_created_action(submission.profile, submission.event, :not_ready) }
+        end
       end
 
       context 'when submission is not confirmed' do
         let(:submission) { FactoryGirl.create(:submission, :pending) }
+
+        before { service.call }
 
         it 'destroys the submission' do
           expect(submission).to be_deleted
         end
 
         it { is_expected.to have_created_action(submission.profile, submission.event, :unsubmit) }
+
+        it { is_expected.to_not have_created_action(submission.profile, submission.event, :not_ready) }
       end
     end
   end

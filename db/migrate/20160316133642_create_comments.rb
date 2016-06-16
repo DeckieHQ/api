@@ -1,4 +1,4 @@
-class CreateComments < ActiveRecord::Migration
+class CreateComments < ActiveRecord::Migration[5.0]
   def up
     create_table(:comments) do |t|
       t.belongs_to :profile, index: true, foreign_key: true

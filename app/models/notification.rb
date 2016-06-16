@@ -19,6 +19,10 @@ class Notification < ApplicationRecord
       event-update
       event-cancel
       event-join
+      event-remove_full
+      event-remove_start
+      event-ready
+      event-not_ready
       comment-comment
     )
   end

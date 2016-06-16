@@ -10,15 +10,22 @@ class CancelSubmission < ActionService
   end
 
   def call(reason = :quit)
-    if reason == :quit
-      create_action(submission.confirmed? ? :leave : :unsubmit)
-    else
-      create_action(reason)
-    end
+    create_action_according_to_reason(reason)
+
     submission.destroy
   end
 
   private
 
   attr_reader :submission
+
+  delegate :event, to: :submission
+
+  def create_action_according_to_reason(reason)
+    return create_action(reason)    unless reason == :quit
+    return create_action(:unsubmit) unless submission.confirmed?
+
+    create_action(:leave)
+    create_action(:not_ready) if event.just_ready?
+  end
 end

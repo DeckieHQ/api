@@ -10,13 +10,14 @@ RSpec.describe EventSerializer, :type => :serializer do
 
     it 'serializes the specified attributes' do
       expected_attributes = event.slice(
-        :title, :category, :ambiance, :level, :capacity, :auto_accept,
+        :title, :category, :ambiance, :level, :capacity, :min_capacity, :auto_accept,
         :short_description, :description, :begin_at, :end_at, :latitude, :longitude,
         :street, :postcode, :city, :state, :country, :attendees_count, :submissions_count,
         :public_comments_count, :private_comments_count
       ).merge({
         opened: !event.closed?,
-        full:    event.full?
+        full:    event.full?,
+        ready:   event.ready?
       })
       expect(serialized.attributes).to have_serialized_attributes(expected_attributes)
     end

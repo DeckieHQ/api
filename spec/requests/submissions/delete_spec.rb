@@ -46,9 +46,29 @@ RSpec.describe 'Destroy event submission', :type => :request do
       end
 
       context 'when submissions is confirmed' do
-        let(:submission) { FactoryGirl.create(:submission, :confirmed) }
+        context 'when event becomes not ready after submission cancellation' do
+          let(:submission) { FactoryGirl.create(:submission, :confirmed, :to_event_almost_ready) }
 
-        it { is_expected.to have_created_action(user.profile, submission.event, 'leave') }
+          it { is_expected.to have_created_action(user.profile, submission.event, 'leave') }
+
+          it { is_expected.to have_created_action(user.profile, submission.event, 'not_ready') }
+        end
+
+        context "when event doesn't become not ready after submission cancellation" do
+          let(:submission) { FactoryGirl.create(:submission, :confirmed, :to_event_ready) }
+
+          it { is_expected.to have_created_action(user.profile, submission.event, 'leave') }
+
+          it { is_expected.to_not have_created_action(user.profile, submission.event, 'not_ready') }
+        end
+
+        context 'when event was already not ready before submission cancellation' do
+          let(:submission) { FactoryGirl.create(:submission, :confirmed, :to_event_not_ready) }
+
+          it { is_expected.to have_created_action(user.profile, submission.event, 'leave') }
+
+          it { is_expected.to_not have_created_action(user.profile, submission.event, 'not_ready') }
+        end
       end
 
       # Test the service invokation. Therefore we don't need more tests here as

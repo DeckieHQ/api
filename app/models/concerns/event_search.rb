@@ -9,6 +9,7 @@ module EventSearch
                    :ambiance,
                    :level,
                    :capacity,
+                   :min_capacity,
                    :auto_accept,
                    :short_description,
                    :description,
@@ -28,6 +29,10 @@ module EventSearch
 
         attribute :full do
           full?
+        end
+
+        attribute :ready do
+          ready?
         end
 
         attribute :begin_at_i do

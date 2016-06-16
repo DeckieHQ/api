@@ -1,5 +1,5 @@
-class CreateBadgesSashes < ActiveRecord::Migration
-  def self.up
+class CreateBadgesSashes < ActiveRecord::Migration[5.0]
+  def up
     create_table :badges_sashes do |t|
       t.integer :badge_id, :sash_id
       t.boolean :notified_user, default: false
@@ -10,7 +10,7 @@ class CreateBadgesSashes < ActiveRecord::Migration
     add_index :badges_sashes, :sash_id
   end
 
-  def self.down
+  def down
     drop_table :badges_sashes
   end
 end
