@@ -24,8 +24,10 @@ RSpec.describe UserSerializer, :type => :serializer do
       expect(serialized).to have_relationship_link_for(:profile, target: user.profile)
     end
 
-    it 'adds the hosted events link' do
-      expect(serialized).to have_relationship_link_for(:hosted_events)
+    [:hosted_events, :submissions, :notifications].each do |link|
+      it "adds the #{link} link" do
+        expect(serialized).to have_relationship_link_for(link)
+      end
     end
   end
 end
