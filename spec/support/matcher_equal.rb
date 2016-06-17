@@ -48,8 +48,6 @@ RSpec::Matchers.define :equal_serialized do |records|
 
     expected = resource.to_json
 
-    p expected
-
     result = JSON.parse(actual).except('meta').to_json
 
     result == expected
