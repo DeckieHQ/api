@@ -1,4 +1,9 @@
 fr:
+  devise:
+    failure:
+      invalid: "L'email ou le mot de passe est invalide"
+      user:
+        not_found_in_database: "L'utilisateur n'existe pas"
   mailer:
     greetings: 'Bonjour %{username} !'
     reset_password_instructions:

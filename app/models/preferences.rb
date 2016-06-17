@@ -7,7 +7,7 @@ class Preferences
   validate :notifications_must_be_supported
 
   def initialize(attributes = {})
-    @notifications = attributes[:notifications]
+    @notifications = attributes['notifications']
   end
 
   def attributes
@@ -17,10 +17,14 @@ class Preferences
   private
 
   def notifications_must_be_supported
+    return add_notifications_error unless notifications.kind_of?(Array)
+
     notifications.tap(&:uniq!).each do |notification_type|
-      unless Notification.types.include?(notification_type)
-        errors.add(:notifications, :unsupported, accept: Notification.types)
-      end
+      add_notifications_error unless Notification.types.include?(notification_type)
     end
+  end
+
+  def add_notifications_error
+    errors.add(:notifications, :unsupported, accept: Notification.types)
   end
 end

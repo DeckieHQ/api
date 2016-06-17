@@ -5,6 +5,10 @@ RSpec.describe Preferences, :type => :model do
     it { is_expected.to allow_value(%w(event-update)).for(:notifications) }
 
     it { is_expected.to_not allow_value(%w(unsupported)).for(:notifications) }
+
+    it { is_expected.to_not allow_value(nil).for(:notifications) }
+
+    it { is_expected.to_not allow_value('string').for(:notifications) }
   end
 
   describe 'beforeValidation' do
