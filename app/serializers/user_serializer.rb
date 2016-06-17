@@ -15,6 +15,12 @@ class UserSerializer < ActiveModel::Serializer
     include_data false
   end
 
+  has_one :preferences do
+    link :related, UrlHelpers.user_preferences
+
+    include_data false
+  end
+
   has_many :hosted_events do
     link :related, UrlHelpers.user_hosted_events
 
