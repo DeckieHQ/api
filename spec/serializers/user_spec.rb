@@ -25,7 +25,9 @@ RSpec.describe UserSerializer, :type => :serializer do
     end
 
     it 'adds the preferences link' do
-      expect(serialized).to have_relationship_link_for(:preferences)
+      expect(serialized).to have_relationship_link_for(
+        :preferences, target: Preferences.for(user).id, singularize: true
+      )
     end
 
     [:hosted_events, :submissions, :notifications].each do |link|

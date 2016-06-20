@@ -16,7 +16,7 @@ class UserSerializer < ActiveModel::Serializer
   end
 
   has_one :preferences do
-    link :related, UrlHelpers.user_preferences
+    link :related, UrlHelpers.preference(object.id)
 
     include_data false
   end

@@ -16,6 +16,8 @@ end
 
 RSpec::Matchers.define :have_relationship_link_for do |attribute, options = {}|
   match do |actual|
+    singularize = options[:singularize]
+
     key = options[:key]
 
     relationship = key || attribute.to_s
@@ -26,7 +28,9 @@ RSpec::Matchers.define :have_relationship_link_for do |attribute, options = {}|
 
     target = options[:target]
 
-    method = target ? :"#{attribute}_url" : :"#{type}_#{attribute}_url"
+    helper_prefix = singularize ? attribute.to_s.singularize : attribute
+
+    method = target ? :"#{helper_prefix}_url" : :"#{type}_#{helper_prefix}_url"
 
     url_helpers = Rails.application.routes.url_helpers
 
@@ -34,7 +38,7 @@ RSpec::Matchers.define :have_relationship_link_for do |attribute, options = {}|
 
     args = options[:args] || ""
 
-    link == url_helpers.public_send(method, source) + args
+    link == "#{url_helpers.public_send(method, source)}#{args}"
   end
 end
 
