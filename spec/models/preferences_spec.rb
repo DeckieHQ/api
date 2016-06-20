@@ -38,4 +38,12 @@ RSpec.describe Preferences, :type => :model do
       })
     end
   end
+
+  describe '#id' do
+    let(:preferences) { FactoryGirl.build(:preferences) }
+
+    it 'is equal to its user id' do
+      expect(preferences.id).to eq(preferences.user.id)
+    end
+  end
 end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe NotificationPolicy do
-  subject { NotificationPolicy.new(user, notification) }
+  subject { described_class.new(user, notification) }
 
   let(:notification) { FactoryGirl.create(:notification) }
 

@@ -13,9 +13,5 @@ RSpec.describe PreferencesSerializer, :type => :serializer do
         preferences.attributes.slice('notifications')
       )
     end
-
-    it 'has an empty id' do
-      expect(serialized.id).to eq('')
-    end
   end
 end

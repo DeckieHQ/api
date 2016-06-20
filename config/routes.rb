@@ -19,7 +19,6 @@ Rails.application.routes.draw do
         post 'sign_in', to: 'sessions#create'
 
         resource  :profile,       only: [:show,   :update]
-        resource  :preferences,   only: [:show,   :update]
         resource  :password,      only: [:create, :update]
         resource  :verification,  only: [:create, :update]
         resources :hosted_events, only: [:index,  :create]
@@ -47,6 +46,8 @@ Rails.application.routes.draw do
       resources :invitations, only: :create, controller: 'event/invitations'
     end
   end
+
+  resources :preferences, only: [:show, :update]
 
   resources :comments, only: [:update, :destroy]
 
