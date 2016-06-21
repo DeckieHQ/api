@@ -77,4 +77,4 @@ fr:
       link: 'View on Deckie'
   smser:
     phone_number_verification_instructions:
-      message: 'Deckie : Pour vérifier votre numéro de téléphone, veuillez entrer le code : %{code}.'
+      message: 'Deckie : Vérification du numéro de téléphone, code : %{code}.'
