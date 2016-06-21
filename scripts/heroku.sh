@@ -20,8 +20,8 @@ function configure() {
             email_signature="notifications@$CUSTOM_DOMAIN"
         else
             api_domain_name="$build-api.$CUSTOM_DOMAIN"
-            front_domain_name="$build-front.$CUSTOM_DOMAIN"
-            email_signature="notifications.$build@$CUSTOM_DOMAIN"
+            front_domain_name="$build.$CUSTOM_DOMAIN"
+            email_signature="$build@$CUSTOM_DOMAIN"
         fi
         heroku domains:clear --app $app
 
@@ -32,7 +32,7 @@ function configure() {
         front_domain_name=${api_domain_name/api/front}
 
         if [ -z "$EMAIL_DOMAIN" ]; then
-            EMAIL_DOMAIN="deckie.io"
+            EMAIL_DOMAIN="deckie.fr"
         fi
 
         email_signature="$build@$EMAIL_DOMAIN"
@@ -50,13 +50,13 @@ function configure() {
 function deploy() {
     echo "Deploying heroku app $app..."
 
-    heroku maintenance:on --app $app
+    maintenance-on
 
     heroku docker:release --app $app
 
     heroku run --app $app bundle exec rake db:migrate
 
-    heroku maintenance:off --app $app
+    maintenance-off
 }
 
 function post-install() {
@@ -75,6 +75,27 @@ function env() {
     heroku config --app $app -s > .env
 }
 
+function upgrade() {
+    echo "Upgrading dynos..."
+
+    heroku dyno:type hobby --app $app
+
+    echo "Upgrading addons to production..."
+
+    maintenance-on
+
+    for addon in blowerio:starter heroku-redis:premium-0
+    do
+        heroku addons:upgrade $addon --app $app || true
+    done
+
+    echo "Waiting for redis upgrade..."
+
+    heroku redis:wait --app $app
+
+    maintenance-off
+}
+
 function clean() {
     heroku apps:destroy --app $app --confirm $app
 }
@@ -83,7 +104,23 @@ function name() {
     echo $app
 }
 
-for supported_cmd in init configure deploy post-install env clean name
+function maintenance-on() {
+    heroku maintenance:on --app $app
+
+    heroku ps:scale web=0 --app $app
+
+    heroku ps:scale worker=0 --app $app
+}
+
+function maintenance-off() {
+    heroku ps:scale web=1 --app $app
+
+    heroku ps:scale worker=1 --app $app
+
+    heroku maintenance:off --app $app
+}
+
+for supported_cmd in init configure deploy post-install env upgrade clean name
 do
     if [ "$cmd" == $supported_cmd ]; then
         if [ ! $build ]; then
@@ -98,6 +135,6 @@ do
     fi
 done
 
-echo "usage: bash scripts/heroku.sh [init|configure|deploy|post-install|env|clean|name] build"
+echo "usage: bash scripts/heroku.sh [init|configure|deploy|post-install|env|upgrade|clean|name] build"
 
 exit -1
