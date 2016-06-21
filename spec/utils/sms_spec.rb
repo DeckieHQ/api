@@ -12,7 +12,6 @@ RSpec.describe SMS do
   end
 
   describe '#deliver_now' do
-
     context 'when provider call is successful' do
       before do
         SMSDeliveries.use_fake_provider
@@ -32,6 +31,16 @@ RSpec.describe SMS do
     context 'when provider call fails with a bad request' do
       before do
         SMSDeliveries.use_fake_provider(status: 400)
+      end
+
+      it 'raises an error' do
+        expect { sms.deliver_now }.to raise_error
+      end
+    end
+
+    context 'when provider call fails with a bad request and an invalid number error' do
+      before do
+        SMSDeliveries.use_fake_provider(status: 400, body: "Test: #{options[:to]}")
       end
 
       it 'returns false' do

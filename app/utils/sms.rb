@@ -1,8 +1,6 @@
 require 'rest-client'
 
 class SMS
-  PATH ||= '/messages'
-
   extend Forwardable
 
   attr_reader :options
@@ -16,10 +14,11 @@ class SMS
 
   def deliver_now
     begin
-      @client[PATH].post(options)
+      @client['/messages'].post(options)
     rescue RestClient::ExceptionWithResponse => e
-      return false if e.response.code == 400
-
+      if e.response.code == 400 && e.response.body.include?(options[:to])
+        return false
+      end
       raise e
     end
   end

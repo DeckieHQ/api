@@ -3,10 +3,10 @@ require 'rails_helper'
 RSpec.describe 'User verification instructions', :type => :request do
   let(:params) { Serialize.params(verification_params, type: :verifications) }
 
-  let(:sms_status) { 200 }
+  let(:sms_fake) { { status: 200 } }
 
   before do
-    SMSDeliveries.use_fake_provider(status: sms_status)
+    SMSDeliveries.use_fake_provider(sms_fake)
 
     post user_verification_path, params: params, headers: json_headers
   end
@@ -44,9 +44,7 @@ RSpec.describe 'User verification instructions', :type => :request do
         context "when user's #{type} is not verified" do
           let(:user) { FactoryGirl.create(:user_with_phone_number) }
 
-          before do
-            user.reload
-          end
+          before { user.reload }
 
           it { is_expected.to return_no_content }
 
@@ -67,7 +65,7 @@ RSpec.describe 'User verification instructions', :type => :request do
 
           if type == :phone_number
             context "when user's phone_number is unassigned" do
-              let(:sms_status) { 400 }
+              let(:sms_fake) { { status: 400, body: user.phone_number } }
 
               it { is_expected.to return_service_error(:phone_number_unassigned) }
             end
