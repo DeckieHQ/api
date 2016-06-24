@@ -34,13 +34,13 @@ class Event < ApplicationRecord
   validates :description, length: { maximum: 8192 }
 
   validates :category, presence: true, inclusion: {
-    in: %w(party board role-playing card dice miniature strategy cooperative video tile-based)
+    in: %w(board role-playing card deck-building dice miniature video outdoor strategy cooperative)
   }
   validates :ambiance, presence: true, inclusion: {
-    in: %w(serious relaxed party)
+    in: %w(relaxed serious teasing)
   }
   validates :level, presence: true, inclusion: {
-    in: %w(beginner intermediate advanced expert)
+    in: %w(beginner intermediate advanced)
   }
 
   validates :capacity, presence: true, numericality: { only_integer: true,

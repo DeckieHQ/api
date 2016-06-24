@@ -34,15 +34,18 @@ module Fake
     extend self
 
     def category
-      %w(party board role-playing card dice video).sample
+      %w(
+        board role-playing card deck-building dice miniature video outdoor
+        strategy cooperative
+      ).sample
     end
 
     def ambiance
-      %w(serious relaxed party).sample
+      %w(relaxed serious teasing).sample
     end
 
     def level
-      %w(beginner intermediate advanced expert).sample
+      %w(beginner intermediate advanced).sample
     end
   end
 
@@ -80,7 +83,7 @@ module Fake
 
   module File
     extend self
-    
+
     def pdf
       "data:application/pdf;base64,/9j/4AAQSkZJRgABAQEASABKdhH//2Q=="
     end

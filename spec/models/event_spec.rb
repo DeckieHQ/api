@@ -84,11 +84,11 @@ RSpec.describe Event, :type => :model do
 
     {
       category: %w(
-        party board role-playing card dice miniature strategy cooperative video
-        tile-based
+        board role-playing card deck-building dice miniature video outdoor
+        strategy cooperative
       ),
-      ambiance: %w(serious relaxed party),
-      level: %w(beginner intermediate advanced expert)
+      ambiance: %w(relaxed serious teasing),
+      level: %w(beginner intermediate advanced)
     }.each do |attribute, values|
       it { is_expected.to validate_inclusion_of(attribute).in_array(values) }
     end
