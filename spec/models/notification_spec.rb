@@ -12,9 +12,11 @@ RSpec.describe Notification, :type => :model do
         .of_type(:string).with_options(null: false)
     end
 
-    it do
-      is_expected.to have_db_column(:viewed)
-        .of_type(:boolean).with_options(null: false, default: false)
+    [:viewed, :sent].each do |column_name|
+      it do
+        is_expected.to have_db_column(column_name)
+          .of_type(:boolean).with_options(null: false, default: false)
+      end
     end
 
     it do
