@@ -44,4 +44,29 @@ RSpec.describe UserMailer do
       labels:      [:details, :link, :notice],
       attributes:  [:email_verification_url]
   end
+
+  describe '#notifications_informations' do
+    let(:notifications) { FactoryGirl.create_list(:notification, 5) }
+
+    let(:user) { notifications.first.user }
+
+    let(:mail) { described_class.notifications_informations(user, notifications) }
+
+    let(:content) do
+      I18n.locale = culture
+
+      NotificationsInformations.new(user, notifications)
+    end
+
+    it_behaves_like 'a mail with', :notifications_informations,
+      greets_user: true, labels: [:details], attributes: []
+
+    [:description, :url].each do |attribute|
+      it "assigns the notifications #{attribute}" do
+        content.notifications.each do |notification|
+          expect(mail.body.encoded).to include(notification.public_send(attribute))
+        end
+      end
+    end
+  end
 end
