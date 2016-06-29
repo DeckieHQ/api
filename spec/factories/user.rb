@@ -101,5 +101,11 @@ FactoryGirl.define do
         create_list(:notification, e.notifications_count, user: user)
       end
     end
+
+    trait :with_random_subscriptions do
+      after(:create) do |user|
+        user.update(preferences: { notifications: Fake::Preferences.notifications })
+      end
+    end
   end
 end

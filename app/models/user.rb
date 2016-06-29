@@ -59,12 +59,12 @@ class User < ApplicationRecord
     update(notifications_count: 0)
   end
 
-  def subscribed_to?(notification)
-    preferences['notifications'].include?(notification.type)
-  end
-
   def host_of?(user)
     user.submissions.confirmed.where(event_id: hosted_events.pluck(:id)).count > 0
+  end
+
+  def notifications_to_send
+    notifications.where(sent: false, type: preferences['notifications'])
   end
 
   private

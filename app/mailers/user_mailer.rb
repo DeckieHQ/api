@@ -10,4 +10,10 @@ class UserMailer < ApplicationMailer
 
     send_mail(user)
   end
+
+  def notifications_informations(user, notifications)
+    @content = NotificationsInformations.new(user, notifications)
+
+    send_mail(user)
+  end
 end

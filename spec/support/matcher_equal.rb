@@ -62,13 +62,23 @@ RSpec::Matchers.define :equal_sort do |records|
   end
 end
 
+def mail_attributes(mail)
+  mail.instance_values.slice('from', 'reply_to', 'to', 'subject')
+end
+
 RSpec::Matchers.define :equal_mail do |expected|
   match do |actual|
-    actual != nil && attributes(actual) == attributes(expected)
+    actual != nil && mail_attributes(actual) == mail_attributes(expected)
   end
+end
 
-  def attributes(mail)
-    mail.instance_values.slice('from', 'reply_to', 'to', 'subject')
+RSpec::Matchers.define :equal_mails do |expected|
+  match do |actual|
+    expect(
+      actual.map   { |m| mail_attributes(m) }
+    ).to match_array(
+      expected.map { |m| mail_attributes(m) }
+    )
   end
 end
 

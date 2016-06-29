@@ -1,5 +1,5 @@
 RSpec.shared_examples 'a mail with' do |type, options = {}|
-  greets_user = options[:greets_user],
+  greets_user = options[:greets_user]
   to          = options[:to]         || :user
   labels      = options[:labels]     || []
   attributes  = options[:attributes] || []

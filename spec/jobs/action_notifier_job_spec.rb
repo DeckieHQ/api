@@ -19,40 +19,12 @@ RSpec.describe ActionNotifierJob, :type => :job do
     end
 
     context 'when receivers exists' do
-      before do
-        subscribe_to_action(receivers.sample)
-
-        perform
-      end
+      before { perform }
 
       it 'creates notifications for this action' do
         receivers.each do |receiver|
           expect(notification_of(receiver.user)).to be_present
         end
-      end
-
-      it 'sends an email to each user who subscribed to the notification' do
-        receivers.each do |receiver|
-          user = receiver.user
-
-          notification = notification_of(user)
-
-          is_expected.public_send(
-            user.subscribed_to?(notification) ? :to : :not_to,
-
-            have_enqueued_notification_mail_for(notification)
-          )
-        end
-      end
-
-      def subscribe_to_action(profile)
-        return unless profile
-
-        notification_type = Notification.new(action: action).send(:set_type)
-
-        profile.user.update(
-          preferences: { notifications: [notification_type] }
-        )
       end
     end
 

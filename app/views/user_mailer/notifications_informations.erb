@@ -1,0 +1,9 @@
+<%= t('mailer.greetings', username: @content.username) %>
+
+<%= t('mailer.notifications_informations.details') %>
+
+<% @content.notifications.each do |notification| %>
+  <%= notification.description %>
+
+  [<%= t('mailer.notification_informations.link') %>](<%= notification.url %>)
+<% end %>

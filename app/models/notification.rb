@@ -31,12 +31,6 @@ class Notification < ApplicationRecord
     update(viewed: true)
   end
 
-  def send_informations
-    if user.subscribed_to?(self)
-      NotificationMailer.informations(self).deliver_later
-    end
-  end
-
   private
 
   def increment_counter_cache

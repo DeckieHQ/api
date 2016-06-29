@@ -25,9 +25,7 @@ RSpec.describe 'User reset password', :type => :request do
           }
         end
 
-        before do
-          user.reload
-        end
+        before { user.reload }
 
         it { is_expected.to return_no_content }
 

@@ -172,31 +172,6 @@ RSpec.describe User, :type => :model do
     end
   end
 
-  describe '#subscribed_to?' do
-    let(:notification) { FactoryGirl.create(:notification) }
-
-    let(:user) { FactoryGirl.create(:user) }
-
-    subject { user.subscribed_to?(notification) }
-
-    context 'when user subscribed to the notification' do
-      before do
-        user.update(preferences: { notifications: [notification.type] })
-      end
-
-      it { is_expected.to be_truthy }
-    end
-
-    context "when user doesn't subscribed to the notification" do
-
-      before do
-        user.update(preferences: { notifications: [] })
-      end
-
-      it { is_expected.to be_falsy }
-    end
-  end
-
   describe '#host_of?' do
     let(:host) { FactoryGirl.create(:user_with_hosted_events) }
 
@@ -216,6 +191,20 @@ RSpec.describe User, :type => :model do
       end
 
       it { is_expected.to be_truthy }
+    end
+  end
+
+  describe '#notifications_to_send' do
+    let(:user) do
+      FactoryGirl.create(:user, :with_notifications, :with_random_subscriptions)
+    end
+
+    subject(:notifications_to_send) { user.notifications_to_send }
+
+    it 'equals to its sendable notifications' do
+      is_expected.to eq(
+        user.notifications.where(sent: false, type: user.preferences['notifications'])
+      )
     end
   end
 end

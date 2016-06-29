@@ -19,6 +19,7 @@ class SMS
       if e.response.code == 400 && e.response.body.include?(options[:to])
         return false
       end
+
       raise e
     end
   end

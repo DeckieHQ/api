@@ -1,21 +1,11 @@
 class NotificationInformations < SimpleDelegator
-  def username
-    user.email
-  end
-
-  def subject
-    I18n.t(translation_for(:subject),
-      display_name: action.actor.display_name
-    )
-  end
-
   def description
     I18n.t(translation_for(:description),
       display_name: action.actor.display_name, title: action.title
     )
   end
 
-  def notification_url
+  def url
     UrlHelpers.front_for("notification/#{id}")
   end
 

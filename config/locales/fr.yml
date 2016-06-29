@@ -16,33 +16,10 @@ fr:
       details: 'Vous avez récemment fait une demande de vérification de votre addresse email. Pour terminer le processus, veuillez cliquer sur le lien ci‑dessous.'
       link: 'Vérifier Addresse Email'
       notice: "Si vous n’êtes pas l’auteur de cette demande, il est probable qu’un autre utilisateur ait saisi votre adresse e-mail par erreur, vous pouvez ignorer cet email et votre adresse email ne sera pas vérifiée tant que vous n'accèderez pas au lien suivant."
+    notifications_informations:
+      subject: 'Vous avez reçu %{count} notifications auquelles vous avez souscrit'
+      details: 'Vous avez reçu de nouvelles notifications :'
     notification_informations:
-      subject:
-        event-submit:
-          third_person: '%{display_name} vous a envoyé une demande de participation à un évennement que vous organisez'
-        event-unsubmit:
-          third_person: '%{display_name} a supprimé sa demande de participation à un évennement que vous organisez'
-        event-leave:
-          third_person: '%{display_name} a quitté un évennement auquel vous participez'
-        event-comment:
-          third_person: '%{display_name} a commenté un évenemment auquel vous participez'
-        event-update:
-          third_person: "%{display_name} a mis à jour les informations d'un évennement auquel vous participez"
-        event-cancel:
-          third_person: '%{display_name} a supprimmé un évennement auquel vous êtes inscrit'
-        event-remove_full:
-          address_directly: 'Un évennement auquel vous êtes en attente de confirmation est désormais complet'
-        event-remove_start:
-          address_directly: 'Un évennement auquel vous êtes en attente de confirmation vient de démarrer'
-        event-join:
-          third_person: '%{display_name} a rejoint un évennement auquel vous participez'
-          address_directly: 'Votre inscription à un évennement a été confirmée'
-        event-ready:
-          third_person: 'Un évennement auquel vous êtes inscrit est prêt à démarrer'
-        event-not_ready:
-          third_person: "Un évennement auquel vous êtes inscrit n'a plus assez de participants pour démarrer"
-        comment-comment:
-          third_person: '%{display_name} a répondu à un commentaire que vous suivez'
       description:
         event-submit:
           third_person: "%{display_name} vous a envoyé une demande de participation à l'évennement [%{title}]."
@@ -69,7 +46,6 @@ fr:
           third_person: "[%{title}] n'a plus assez de participants pour démarrer"
         comment-comment:
           third_person: '%{display_name} a répondu au commentaire [%{title}].'
-      details: 'Vous avez reçu une nouvelle notification:'
       link: 'Voir sur Deckie'
     invitation_informations:
       subject: "Vous avez reçu une invitation à l'évennement : \"%{title}\""
@@ -77,4 +53,4 @@ fr:
       link: 'View on Deckie'
   smser:
     phone_number_verification_instructions:
-      message: 'Deckie : Pour vérifier votre numéro de téléphone, veuillez entrer le code : %{code}.'
+      message: 'Deckie : Vérification du numéro de téléphone, code : %{code}.'

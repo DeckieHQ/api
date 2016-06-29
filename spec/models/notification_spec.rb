@@ -12,9 +12,11 @@ RSpec.describe Notification, :type => :model do
         .of_type(:string).with_options(null: false)
     end
 
-    it do
-      is_expected.to have_db_column(:viewed)
-        .of_type(:boolean).with_options(null: false, default: false)
+    [:viewed, :sent].each do |column_name|
+      it do
+        is_expected.to have_db_column(column_name)
+          .of_type(:boolean).with_options(null: false, default: false)
+      end
     end
 
     it do
@@ -64,41 +66,6 @@ RSpec.describe Notification, :type => :model do
 
     it 'updates the notification with viewed = true' do
       expect(notification).to be_viewed
-    end
-  end
-
-  describe '#send_informations' do
-    let(:notification) { FactoryGirl.create(:notification) }
-
-    let(:informations_mail) { double(:deliver_later) }
-
-    before do
-      allow(NotificationMailer).to receive(:informations)
-        .with(notification).and_return(informations_mail)
-    end
-
-    context 'when user subscribed to this notification' do
-      before do
-        allow(notification.user).to receive(:subscribed_to?).with(notification).and_return(true)
-      end
-
-      it 'plans to deliver later a notification informations email' do
-        expect(informations_mail).to receive(:deliver_later).with(no_args)
-
-        notification.send_informations
-      end
-    end
-
-    context "when user didn't subscribed to this notification" do
-      before do
-        allow(notification.user).to receive(:subscribed_to?).with(notification).and_return(false)
-      end
-
-      it "doesn't send any email" do
-        notification.send_informations
-
-        expect(NotificationMailer).to_not have_received(:informations)
-      end
     end
   end
 end
