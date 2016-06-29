@@ -17,9 +17,7 @@ RSpec.describe NotificationsInformations do
     subject { content.subject }
 
     it do
-      is_expected.to eq(
-        I18n.t('mailer.notifications_informations.subject', count: notifications.count)
-      )
+      is_expected.to eq(I18n.t('mailer.notifications_informations.subject'))
     end
   end
 

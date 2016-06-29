@@ -17,7 +17,7 @@ en:
       link: 'Verify Email Address'
       notice: "If you didn't request this, please ignore this email. Your email address won't be verified until you access the link above."
     notifications_informations:
-      subject: 'You received %{count} notifications you subscribed to'
+      subject: 'You received new notifications'
       details: 'You received new notifications:'
     notification_informations:
       description:

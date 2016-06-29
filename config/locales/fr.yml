@@ -17,7 +17,7 @@ fr:
       link: 'Vérifier Addresse Email'
       notice: "Si vous n’êtes pas l’auteur de cette demande, il est probable qu’un autre utilisateur ait saisi votre adresse e-mail par erreur, vous pouvez ignorer cet email et votre adresse email ne sera pas vérifiée tant que vous n'accèderez pas au lien suivant."
     notifications_informations:
-      subject: 'Vous avez reçu %{count} notifications auquelles vous avez souscrit'
+      subject: 'Vous avez reçu de nouvelles notifications'
       details: 'Vous avez reçu de nouvelles notifications :'
     notification_informations:
       description:

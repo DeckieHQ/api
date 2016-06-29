@@ -13,6 +13,6 @@ class NotificationsInformations
   end
 
   def subject
-    I18n.t('mailer.notifications_informations.subject', count: notifications.count)
+    I18n.t('mailer.notifications_informations.subject')
   end
 end
