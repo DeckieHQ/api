@@ -34,7 +34,10 @@ class Event < ApplicationRecord
   validates :description, length: { maximum: 8192 }
 
   validates :category, presence: true, inclusion: {
-    in: %w(board role-playing card deck-building dice miniature video outdoor strategy cooperative)
+    in: %w(
+      board role-playing card deck-building dice miniature video outdoor
+      strategy cooperative ambiance playful tile-based
+    )
   }
   validates :ambiance, presence: true, inclusion: {
     in: %w(relaxed serious teasing)

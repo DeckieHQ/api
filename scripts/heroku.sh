@@ -17,7 +17,7 @@ function configure() {
         if [ $build == "production" ]; then
             api_domain_name="api.$CUSTOM_DOMAIN"
             front_domain_name="www.$CUSTOM_DOMAIN"
-            email_signature="notifications@$CUSTOM_DOMAIN"
+            email_signature="contact@$CUSTOM_DOMAIN"
         else
             api_domain_name="$build-api.$CUSTOM_DOMAIN"
             front_domain_name="$build.$CUSTOM_DOMAIN"
