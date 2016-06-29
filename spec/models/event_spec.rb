@@ -85,7 +85,7 @@ RSpec.describe Event, :type => :model do
     {
       category: %w(
         board role-playing card deck-building dice miniature video outdoor
-        strategy cooperative
+        strategy cooperative ambiance playful tile-based
       ),
       ambiance: %w(relaxed serious teasing),
       level: %w(beginner intermediate advanced)
