@@ -13,11 +13,22 @@ function init() {
     heroku apps:create $app --region eu
 }
 function configure() {
+    ssl_prefix="http"
+
     if [ "$CUSTOM_DOMAIN" ]; then
+
+        if [ $build == "staging" ]; then
+            ssl_prefix="https"
+        fi
+
         if [ $build == "production" ]; then
             api_domain_name="api.$CUSTOM_DOMAIN"
             front_domain_name="www.$CUSTOM_DOMAIN"
             email_signature="contact@$CUSTOM_DOMAIN"
+
+            ssl_prefix="https"
+
+            heroku config:set --app $app CORS_ORIGINS="$ssl_prefix://$CUSTOM_DOMAIN,$ssl_prefix://www.$CUSTOM_DOMAIN"
         else
             api_domain_name="$build-api.$CUSTOM_DOMAIN"
             front_domain_name="$build.$CUSTOM_DOMAIN"
@@ -38,12 +49,8 @@ function configure() {
         email_signature="$build@$EMAIL_DOMAIN"
     fi
 
-    if [ $build == "production" ]; then
-        heroku config:set --app $app CORS_ORIGINS="http://$front_domain_name"
-    fi
-
-    heroku config:set --app $app API_URL="http://$api_domain_name" \
-                                 FRONT_URL="http://$front_domain_name" \
+    heroku config:set --app $app API_URL="$ssl_prefix://$api_domain_name" \
+                                 FRONT_URL="$ssl_prefix://$front_domain_name" \
                                  EMAIL_SIGNATURE=$email_signature
 }
 
