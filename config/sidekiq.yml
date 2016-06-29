@@ -23,5 +23,10 @@ production:
     class: EventsStartedJob
     queue: scheduler
     description: 'This job will remove pending submissions of started events'
+  notifications_sender:
+    every: 1h
+    class: NotificationsSenderJob
+    queue: scheduler
+    description: 'This job will send a batch of notifications for each user in one email'
 :scheduler:
   :listened_queues_only:

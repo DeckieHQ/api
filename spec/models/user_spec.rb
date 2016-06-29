@@ -218,4 +218,18 @@ RSpec.describe User, :type => :model do
       it { is_expected.to be_truthy }
     end
   end
+
+  describe '#notifications_to_send' do
+    let(:user) do
+      FactoryGirl.create(:user, :with_notifications, :with_random_subscriptions)
+    end
+
+    subject(:notifications_to_send) { user.notifications_to_send }
+
+    it 'equals to its sendable notifications' do
+      is_expected.to eq(
+        user.notifications.where(sent: false, type: user.preferences['notifications'])
+      )
+    end
+  end
 end
