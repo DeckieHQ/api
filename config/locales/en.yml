@@ -41,8 +41,10 @@ en:
           third_person: '%{display_name} joined the event [%{title}].'
           address_directly: 'Your submission to the event [%{title}] has been confirmed.'
         event-ready:
+          address_directly: 'The event [%{title}] you organized reached is minimum capacity and is ready to go'
           third_person: '[%{title}] reached is minimum capacity and is ready to go'
         event-not_ready:
+          address_directly: 'The event [%{title}] you organized has no longer enough attendees to begin'
           third_person: '[%{title}] has no longer enough attendees to begin'
         comment-comment:
           third_person: '%{display_name} answered to the comment [%{title}].'

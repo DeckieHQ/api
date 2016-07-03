@@ -41,8 +41,10 @@ fr:
           third_person: "%{display_name} a rejoint l'évennement [%{title}]."
           address_directly: "Votre demande de participation à l'évennement [%{title}] a été confirmée."
         event-ready:
+          address_directly: "L'évennement [%{title}] que vous organisez a atteint sa capacitié minimum et est donc prêt à démarrer"
           third_person: '[%{title}] a atteint sa capacitié minimum et est donc prêt à démarrer'
         event-not_ready:
+          address_directly: "L'évennement [%{title}] que vous organisez n'a plus assez de participants pour démarrer"
           third_person: "[%{title}] n'a plus assez de participants pour démarrer"
         comment-comment:
           third_person: '%{display_name} a répondu au commentaire [%{title}].'
