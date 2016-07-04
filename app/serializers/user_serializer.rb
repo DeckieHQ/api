@@ -5,6 +5,7 @@ class UserSerializer < ActiveModel::Serializer
              :email,
              :phone_number,
              :culture,
+             :moderator,
              :email_verified,
              :phone_number_verified,
              :notifications_count

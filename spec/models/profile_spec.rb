@@ -11,14 +11,11 @@ RSpec.describe Profile, :type => :model do
         .of_type(:integer).with_options(null: false, default: 0)
     end
 
-    it do
-      is_expected.to have_db_column(:email_verified)
-        .of_type(:boolean).with_options(null: false, default: false)
-    end
-
-    it do
-      is_expected.to have_db_column(:phone_number_verified)
-        .of_type(:boolean).with_options(null: false, default: false)
+    [:email_verified, :phone_number_verified, :moderator].each do |column_name|
+      it do
+        is_expected.to have_db_column(column_name)
+          .of_type(:boolean).with_options(null: false, default: false)
+      end
     end
   end
 

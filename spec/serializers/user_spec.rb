@@ -12,7 +12,7 @@ RSpec.describe UserSerializer, :type => :serializer do
     it 'serializes the specified attributes' do
       expected_attributes = user.slice(
         :first_name, :last_name, :birthday, :email, :phone_number, :culture,
-        :notifications_count
+        :notifications_count, :moderator
       ).merge({
         email_verified: user.email_verified?,
         phone_number_verified: user.phone_number_verified?

@@ -82,13 +82,13 @@ class User < ApplicationRecord
   end
 
   def update_profile
-    profile.update(display_name: display_name,
+    profile.update(display_name: display_name, moderator: moderator?,
       email_verified: email_verified?, phone_number_verified: phone_number_verified?
     )
   end
 
   def propagate_changes?
-    first_name_changed?        || last_name_changed?  ||
+    first_name_changed?        || last_name_changed?  || moderator_changed? ||
     email_verified_at_changed? || phone_number_verified_at_changed?
   end
 end

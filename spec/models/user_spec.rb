@@ -18,6 +18,11 @@ RSpec.describe User, :type => :model do
       is_expected.to have_db_column(:notifications_count)
         .of_type(:integer).with_options(null: false, default: 0)
     end
+
+    it do
+      is_expected.to have_db_column(:moderator)
+        .of_type(:boolean).with_options(null: false, default: false)
+    end
   end
 
   describe 'Validations' do
@@ -73,10 +78,12 @@ RSpec.describe User, :type => :model do
   context 'after update' do
     subject(:user) { FactoryGirl.create(:user) }
 
-    let(:user_update) { FactoryGirl.build([:user, :user_verified].sample) }
+    let(:user_update) do
+      FactoryGirl.build([:user_update, :user_verified].sample)
+    end
 
     [
-      :first_name, :last_name, :email_verified_at, :phone_number_verified_at
+      :first_name, :last_name, :email_verified_at, :phone_number_verified_at, :moderator
     ].each do |attribute|
       context "with #{attribute}" do
         before do
@@ -94,7 +101,8 @@ RSpec.describe User, :type => :model do
     expect(user.profile).to have_attributes({
       display_name: "#{user.first_name} #{user.last_name.capitalize[0]}",
       email_verified:        user.email_verified?,
-      phone_number_verified: user.phone_number_verified?
+      phone_number_verified: user.phone_number_verified?,
+      moderator:             user.moderator?
     })
   end
 

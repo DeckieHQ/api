@@ -14,7 +14,7 @@ RSpec.describe ProfileSerializer, :type => :serializer do
         profile.slice(
           :nickname, :display_name, :short_description, :description,
           :hosted_events_count, :email_verified, :phone_number_verified,
-          :created_at, :deleted_at
+          :moderator, :created_at, :deleted_at
         ).merge(
           avatar_url: profile.avatar.url,
           deleted:    profile.deleted?
