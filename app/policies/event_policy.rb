@@ -10,7 +10,7 @@ class EventPolicy < ApplicationPolicy
   end
 
   def update?
-    event_host? && !event_closed?
+    (user.moderator? ||event_host?) && !event_closed?
   end
 
   def destroy?

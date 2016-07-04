@@ -31,6 +31,13 @@ RSpec.describe EventPolicy do
     end
   end
 
+  context 'being a user moderator' do
+    let(:user) { FactoryGirl.create(:user, :moderator) }
+
+    it { is_expected.to permit_action(:update)  }
+    it { is_expected.to permit_action(:destroy) }
+  end
+
   context 'being a verified user' do
     let(:user) { FactoryGirl.create(:user_verified) }
 

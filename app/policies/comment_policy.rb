@@ -10,11 +10,11 @@ class CommentPolicy < ApplicationPolicy
   end
 
   def update?
-    comment_owner?
+    user.moderator? || comment_owner?
   end
 
   def destroy?
-    comment_owner? || comment.resource.host == user.profile
+    user.moderator? || comment_owner? || comment.resource.host == user.profile
   end
 
   def permited_attributes_for_create

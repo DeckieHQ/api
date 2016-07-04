@@ -2,7 +2,7 @@ class ProfilePolicy < ApplicationPolicy
   alias_method :profile, :record
 
   def update?
-    profile_owner?
+    user.moderator? || profile_owner?
   end
 
   def permited_attributes

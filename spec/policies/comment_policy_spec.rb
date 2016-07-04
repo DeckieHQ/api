@@ -13,6 +13,13 @@ RSpec.describe CommentPolicy do
     it { is_expected.to permit_action(:destroy) }
   end
 
+  context 'being a user moderator' do
+    let(:user) { FactoryGirl.create(:user, :moderator) }
+
+    it { is_expected.to permit_action(:update)  }
+    it { is_expected.to permit_action(:destroy) }
+  end
+
   context 'being another user' do
     it { is_expected.to forbid_action(:update) }
     it { is_expected.to forbid_action(:destroy) }
