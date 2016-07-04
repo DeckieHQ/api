@@ -9,6 +9,13 @@ FactoryGirl.define do
     email    { Faker::Internet.email }
     password { Faker::Internet.password }
 
+
+    moderator false
+
+    factory :user_update do
+      moderator { [true, false].sample }
+    end
+
     factory :user_invalid do
       email nil
     end
@@ -74,6 +81,10 @@ FactoryGirl.define do
           after(:create) { |user| user.generate_phone_number_verification_token! }
         end
       end
+    end
+
+    trait :moderator do
+      moderator true
     end
 
     trait :with_submissions do

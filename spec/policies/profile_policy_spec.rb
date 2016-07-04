@@ -16,4 +16,10 @@ RSpec.describe ProfilePolicy do
 
     it { is_expected.to forbid_action(:update) }
   end
+
+  context 'being a user moderator' do
+    let(:user) { FactoryGirl.create(:user, :moderator) }
+
+    it { is_expected.to permit_action(:update)  }
+  end
 end
