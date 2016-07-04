@@ -7,7 +7,7 @@ class Comment < ApplicationRecord
 
   belongs_to :resource, polymorphic: true
 
-  validates :message, length: { maximum: 200 }
+  validates :message, presence: true, length: { maximum: 200 }
 
   has_many :comments, as: :resource, dependent: :destroy
 

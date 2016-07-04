@@ -43,6 +43,6 @@ module Deckie
 
     config.front_url = ENV['FRONT_URL'] || 'http://www.example.com'
 
-    config.launch_date = Date.strptime('10-07-2016', '%d-%m-%Y')
+    config.launch_date = Date.strptime('22-08-2016', '%d-%m-%Y')
   end
 end
