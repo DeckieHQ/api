@@ -42,6 +42,11 @@ class EventSerializer < ActiveModel::Serializer
     include_data false
   end
 
+  has_many :invitations do
+    link :related, UrlHelpers.event_invitations(object)
+    include_data false
+  end
+
   has_many :comments do
     link :related, UrlHelpers.event_comments(object)
     include_data false
