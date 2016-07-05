@@ -1,7 +1,7 @@
 <%= t('mailer.greetings', username: @content.username) %>
-
+</br></br>
 <%= t('mailer.email_verification_instructions.details') %>
-
-[<%= t('mailer.email_verification_instructions.link') %>](<%= @content.email_verification_url %>)
-
+</br></br>
+<a href="<%= @content.email_verification_url %>"><%= t('mailer.email_verification_instructions.link') %></a>
+</br></br>
 <%= t('mailer.email_verification_instructions.notice') %>
