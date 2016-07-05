@@ -1,10 +1,10 @@
 <%= t('mailer.greetings', username: @content.username) %>
-</br></br>
+<br><br>
 <%= t('mailer.notifications_informations.details') %>
-</br></br>
+<br><br>
 <% @content.notifications.each do |notification| %>
   <%= notification.description %> <a href="<%= notification.url %>"><%= t('mailer.notification_informations.link') %></a>
-  </br></br>
+  <br><br>
 <% end %>
-</br></br></hr></br>
+<br><br></hr><br>
 <%= t('mailer.notifications_informations.subscribe.label') %> <a href="<%= @content.subscribe_url %>"><%= t('mailer.notifications_informations.subscribe.link') %></a>
