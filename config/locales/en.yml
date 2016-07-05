@@ -19,6 +19,9 @@ en:
     notifications_informations:
       subject: 'You received new notifications'
       details: 'You received new notifications:'
+      subscribe:
+        label: 'To subscribe or unsubscribe to email notifications:'
+        link: 'Click here'
     notification_informations:
       description:
         event-submit:
@@ -30,8 +33,10 @@ en:
         event-comment:
           third_person: '%{display_name} posted a new comment on the event [%{title}].'
         event-update:
+          address_directly: 'You updated the event [%{title}].'
           third_person: '%{display_name} has updated the event [%{title}].'
         event-cancel:
+          address_directly: 'You cancelled the event [%{title}].'
           third_person: '%{display_name} cancelled the event [%{title}].'
         event-remove_full:
           address_directly: "[%{title}] is full and the event host didn't confirm your submission. Therefore your submission has been automatically removed."

@@ -15,4 +15,8 @@ class NotificationsInformations
   def subject
     I18n.t('mailer.notifications_informations.subject')
   end
+
+  def subscribe_url
+    UrlHelpers.front_for('/account/notifications')
+  end
 end

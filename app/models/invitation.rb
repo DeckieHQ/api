@@ -7,7 +7,7 @@ class Invitation < ApplicationRecord
 
   validates :email, presence: true, email: true, uniqueness: { scope: :event_id, case_sensitive: false }
 
-  validates :message, presence: true, length: { maximum: 512 }
+  validates :message, length: { maximum: 512 }
 
   def send_informations
     InvitationMailer.informations(self).deliver_now

@@ -19,6 +19,9 @@ fr:
     notifications_informations:
       subject: 'Vous avez reçu de nouvelles notifications'
       details: 'Vous avez reçu de nouvelles notifications :'
+      subscribe:
+        label: 'Pour vous abonner au vous désabonner aux notifications par email :'
+        link: 'Cliquez ici'
     notification_informations:
       description:
         event-submit:
@@ -30,8 +33,10 @@ fr:
         event-comment:
           third_person: "%{display_name} a commenté sur l'évennement [%{title}]."
         event-update:
+          address_directly: "Vous avez mis à jour l'évennement [%{title}]."
           third_person: "%{display_name} a mis à jour l'évennement [%{title}]."
         event-cancel:
+          address_directly: "Vous avez supprimmé l'évennement [%{title}]."
           third_person: "%{display_name} a supprimmé l'évennement [%{title}]."
         event-remove_full:
           address_directly: "[%{title}] est complet. Malheureusement votre demande de participation n'a pas été validée et a été automatiquement supprimmée."

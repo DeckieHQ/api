@@ -59,7 +59,7 @@ RSpec.describe UserMailer do
     end
 
     it_behaves_like 'a mail with', :notifications_informations,
-      greets_user: true, labels: [:details], attributes: []
+      greets_user: true, labels: %w(details subscribe.label subscribe.link), attributes: [:subscribe_url]
 
     [:description, :url].each do |attribute|
       it "assigns the notifications #{attribute}" do
