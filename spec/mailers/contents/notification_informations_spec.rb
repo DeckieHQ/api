@@ -14,7 +14,7 @@ RSpec.describe NotificationInformations do
       it do
         is_expected.to eq(I18n.t(
           "mailer.notification_informations.description.#{notification.type}.address_directly",
-          display_name: notification.action.actor.display_name, title: notification.action.title
+          display_name: notification.action.actor.display_name, title: "<b>#{notification.action.title}</b>"
         ))
       end
     end
@@ -25,7 +25,7 @@ RSpec.describe NotificationInformations do
       it do
         is_expected.to eq(I18n.t(
           "mailer.notification_informations.description.#{notification.type}.third_person",
-          display_name: notification.action.actor.display_name, title: notification.action.title
+          display_name: notification.action.actor.display_name, title: "<b>#{notification.action.title}</b>"
         ))
       end
     end

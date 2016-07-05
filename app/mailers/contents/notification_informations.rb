@@ -1,7 +1,7 @@
 class NotificationInformations < SimpleDelegator
   def description
     I18n.t(translation_for(:description),
-      display_name: action.actor.display_name, title: action.title
+      display_name: action.actor.display_name, title: "<b>#{action.title}</b>"
     )
   end
 
