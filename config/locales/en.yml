@@ -6,11 +6,6 @@ en:
         not_found_in_database: 'User not found in database'
   mailer:
     greetings: 'Hello %{username}!'
-    layouts:
-      user:
-        subscribe:
-          label: 'To subscribe or unsubscribe to email notifications:'
-          link: 'Click here'
     reset_password_instructions:
       subject: 'Reset password instructions'
       details: 'Someone has requested a link to change your password, and you can do this through the link below.'
@@ -24,6 +19,9 @@ en:
     notifications_informations:
       subject: 'You received new notifications'
       details: 'You received new notifications:'
+      subscribe:
+        label: 'To subscribe or unsubscribe to email notifications:'
+        link: 'Click here'
     notification_informations:
       description:
         event-submit:

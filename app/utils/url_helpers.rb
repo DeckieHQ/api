@@ -22,10 +22,6 @@ module UrlHelpers
     Rails.application.config.front_url
   end
 
-  def self.front_notifications
-    URI::join(self.front, '/account/notifications')
-  end
-
   def helpers
     Rails.application.routes.url_helpers
   end

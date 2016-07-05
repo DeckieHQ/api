@@ -21,6 +21,14 @@ RSpec.describe NotificationsInformations do
     end
   end
 
+  describe '#subscribe_url' do
+    subject { content.subscribe_url }
+
+    it do
+      is_expected.to eq(UrlHelpers.front_for('/account/notifications'))
+    end
+  end
+
   describe '#notifications' do
     it 'is equal to notification informations of each notifications' do
       content.notifications.each do |n|

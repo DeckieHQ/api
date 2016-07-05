@@ -1,6 +1,4 @@
 class UserMailer < ApplicationMailer
-  layout 'user'
-  
   def reset_password_instructions(user, token, opts={})
     @content = ResetPasswordInstructions.new(user, token)
 
