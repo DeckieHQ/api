@@ -37,9 +37,7 @@ RSpec.describe Invitation, :type => :model do
   describe 'Validations' do
     subject(:invitation) { FactoryGirl.build(:invitation) }
 
-    [:email, :message].each do |attribute|
-      it { is_expected.to validate_presence_of(attribute) }
-    end
+    it { is_expected.to validate_presence_of(:email) }
 
     it do
       is_expected.to validate_uniqueness_of(:email).scoped_to(:event_id).case_insensitive
