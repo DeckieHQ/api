@@ -82,6 +82,6 @@ RSpec.describe UserMailer do
     end
 
     it_behaves_like 'a mail with', :welcome_informations,
-      greets_user: true, labels: [:details], attributes: [:subject]
+      greets_user: true, labels: [], attributes: [:subject, :details]
   end
 end

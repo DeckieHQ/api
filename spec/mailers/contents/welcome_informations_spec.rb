@@ -18,4 +18,12 @@ RSpec.describe WelcomeInformations do
       is_expected.to eq(I18n.t('mailer.welcome_informations.subject'))
     end
   end
+
+  describe '#subject' do
+    subject { content.subject }
+
+    it do
+      I18n.t('mailer.welcome_informations.details').gsub("\n", '<br>')
+    end
+  end
 end
