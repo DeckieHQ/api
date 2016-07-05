@@ -4,6 +4,8 @@ RSpec.shared_examples 'a mail with' do |type, options = {}|
   labels      = options[:labels]     || []
   attributes  = options[:attributes] || []
 
+  let(:body) { mail.body.encoded.gsub("\r\n", "\n") }
+
   it 'sets the subject' do
     expect(mail.subject).to eq(content.subject)
   end
@@ -20,7 +22,7 @@ RSpec.shared_examples 'a mail with' do |type, options = {}|
 
   if greets_user
     it 'greets the user' do
-      expect(mail.body.encoded).to include(
+      expect(body).to include(
         I18n.t('mailer.greetings', username: content.username, locale: culture)
       )
     end
@@ -28,7 +30,7 @@ RSpec.shared_examples 'a mail with' do |type, options = {}|
 
   labels.each do |key|
     it "assigns label #{key}" do
-      expect(mail.body.encoded).to include(
+      expect(body).to include(
         CGI.escapeHTML(
           I18n.t("mailer.#{type}.#{key}", locale: culture)
         )
@@ -38,7 +40,7 @@ RSpec.shared_examples 'a mail with' do |type, options = {}|
 
   attributes.each do |attribute|
     it "assigns attribute #{attribute}" do
-      expect(mail.body.encoded).to include(content.public_send(attribute))
+      expect(body).to include(content.public_send(attribute))
     end
   end
 end

@@ -129,3 +129,13 @@ RSpec::Matchers.define :have_enqueued_notification_mail_for do |notification|
     })
   end
 end
+
+RSpec::Matchers.define :have_enqueued_welcome_email_for do |user|
+  match do
+    global_id = { '_aj_globalid' => user.to_global_id.to_s }
+
+    enqueued_jobs.include?({ job: ActionMailer::DeliveryJob, queue: 'mailers',
+      args: ['UserMailer', 'welcome_informations', 'deliver_now', global_id]
+    })
+  end
+end

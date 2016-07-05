@@ -215,4 +215,19 @@ RSpec.describe User, :type => :model do
       )
     end
   end
+
+  describe '#welcome' do
+    let(:user) { FactoryGirl.create(:user) }
+
+    let(:informations_mail) { double(:deliver_later) }
+
+    it 'delivers later a welcome informations email' do
+      allow(UserMailer).to receive(:welcome_informations).with(user)
+        .and_return(informations_mail)
+
+      expect(informations_mail).to receive(:deliver_later).with(no_args)
+
+      user.welcome
+    end
+  end
 end

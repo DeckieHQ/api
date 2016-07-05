@@ -67,6 +67,10 @@ class User < ApplicationRecord
     notifications.where(sent: false, type: preferences['notifications'])
   end
 
+  def welcome
+    UserMailer.welcome_informations(self).deliver_later
+  end
+
   private
 
   def display_name

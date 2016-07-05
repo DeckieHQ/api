@@ -58,6 +58,10 @@ en:
       subject: 'You received an invitation to the event: "%{title}"'
       details: '%{sender} sent you an invitation to an event:'
       link: 'View on Deckie'
+    welcome_informations:
+      subject: 'Welcome on Deckie!'
+      details: >
+        Good luck and have fun!
     # This doesn't need translation.
     feedback_informations:
       subject: '[ New Feedback ] - %{title}'

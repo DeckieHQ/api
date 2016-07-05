@@ -57,7 +57,18 @@ fr:
     invitation_informations:
       subject: "Vous avez reçu une invitation à l'évennement : \"%{title}\""
       details: "%{sender} vous a envoyé une invitation à l'évennement :"
-      link: 'View on Deckie'
+      link: 'Voir sur Deckie'
+    welcome_informations:
+      subject: 'Bienvenue sur Deckie !'
+      details: >
+        Nous sommes actuellement en version beta et donc notre nombre d'utilisateurs est encore limité.
+
+        Vous pouvez néanmoins rejoindre les parties proposées ou créer la votre et inviter vos amis pour nous
+        aider à faire grandir la plateforme.
+
+        Il reste encore quelques bugs et améliorations à faire, tous les avis sont bienvenus alors n'hésitez pas à nous en faire part.
+
+        Merci et bon jeu !
   smser:
     phone_number_verification_instructions:
       message: 'Deckie : Vérification du numéro de téléphone, code : %{code}.'
