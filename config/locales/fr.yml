@@ -6,6 +6,11 @@ fr:
         not_found_in_database: "L'utilisateur n'existe pas"
   mailer:
     greetings: 'Bonjour %{username} !'
+    layouts:
+      user:
+        subscribe:
+          label: 'Pour vous abonner au vous désabonner aux notifications par email :'
+          link: 'Cliquez ici'
     reset_password_instructions:
       subject: 'Réinitialisation du mot de passe'
       details: 'Vous avez récemment fait une demande de réinitialisation de votre mot de passe. Pour terminer le processus, veuillez cliquer sur le lien ci‑dessous.'
