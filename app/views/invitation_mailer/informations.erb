@@ -1,7 +1,5 @@
 <%= t('mailer.greetings', username: @content.username) %>
 <br><br>
-<%= @content.details %>
-<br><br>
-<a href="<%= @content.invitation_url %>"><%= t('mailer.invitation_informations.link') %></a>
+<%= raw @content.details %> <a href="<%= @content.invitation_url %>"><%= t('mailer.invitation_informations.link') %></a>
 <br><br>
 <%= @content.message %>
