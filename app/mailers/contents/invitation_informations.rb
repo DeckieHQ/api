@@ -9,7 +9,7 @@ class InvitationInformations < SimpleDelegator
 
   def details
     I18n.t('mailer.invitation_informations.details',
-      sender: sender.display_name, title: "<b>#{event.title}</b>"
+      sender: "<b>#{sender.display_name}</b>", title: "<b>#{event.title}</b>"
     )
   end
 
