@@ -6,7 +6,7 @@ class InvitationPolicy < ApplicationPolicy
   delegate :event, to: :invitation
 
   def create?
-    event_host? && !event_closed? #already_exist
+    event.member?(user.profile) && !event_closed?
   end
 
   def permited_attributes
