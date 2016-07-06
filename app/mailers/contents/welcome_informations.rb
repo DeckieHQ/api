@@ -8,6 +8,6 @@ class WelcomeInformations < SimpleDelegator
   end
 
   def details
-    I18n.t('mailer.welcome_informations.details').gsub("\n", '<br>')
+    I18n.t('mailer.welcome_informations.details').gsub("\n", '<br><br>')
   end
 end
