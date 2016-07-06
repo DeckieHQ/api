@@ -19,7 +19,7 @@ class User::RegistrationsController < Devise::RegistrationsController
       # to retrieve the registration.
       @registration = user
 
-      render json: user, status: :created and return
+      render json: user.tap(&:welcome), status: :created and return
     end
   end
 

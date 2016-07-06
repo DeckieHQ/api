@@ -13,8 +13,7 @@ RSpec.describe Invitation, :type => :model do
     end
 
     it do
-      is_expected.to have_db_column(:message)
-        .of_type(:text).with_options(null: false)
+      is_expected.to have_db_column(:message).of_type(:text)
     end
 
     it do

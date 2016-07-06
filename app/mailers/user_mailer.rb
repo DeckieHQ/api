@@ -1,4 +1,10 @@
 class UserMailer < ApplicationMailer
+  def welcome_informations(user)
+    @content = WelcomeInformations.new(user)
+
+    send_mail(user)
+  end
+
   def reset_password_instructions(user, token, opts={})
     @content = ResetPasswordInstructions.new(user, token)
 

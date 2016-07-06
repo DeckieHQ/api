@@ -25,39 +25,43 @@ en:
     notification_informations:
       description:
         event-submit:
-          third_person: '%{display_name} submitted to the event [%{title}].'
+          third_person: '%{display_name} submitted to the event %{title}.'
         event-unsubmit:
-          third_person: '%{display_name} unsubmitted from the event [%{title}].'
+          third_person: '%{display_name} unsubmitted from the event %{title}.'
         event-leave:
-          third_person: '%{display_name} left the event [%{title}].'
+          third_person: '%{display_name} left the event %{title}.'
         event-comment:
-          third_person: '%{display_name} posted a new comment on the event [%{title}].'
+          third_person: '%{display_name} posted a new comment on the event %{title}.'
         event-update:
-          address_directly: 'You updated the event [%{title}].'
-          third_person: '%{display_name} has updated the event [%{title}].'
+          address_directly: 'You updated the event %{title}.'
+          third_person: '%{display_name} has updated the event %{title}.'
         event-cancel:
-          address_directly: 'You cancelled the event [%{title}].'
-          third_person: '%{display_name} cancelled the event [%{title}].'
+          address_directly: 'You cancelled the event %{title}.'
+          third_person: '%{display_name} cancelled the event %{title}.'
         event-remove_full:
-          address_directly: "[%{title}] is full and the event host didn't confirm your submission. Therefore your submission has been automatically removed."
+          address_directly: "%{title} is full and the event host didn't confirm your submission. Therefore your submission has been automatically removed."
         event-remove_start:
-          address_directly: "[%{title}] started and the event host didn't confirm your submission before the beginning. Therefore your submission has been automatically removed."
+          address_directly: "%{title} started and the event host didn't confirm your submission before the beginning. Therefore your submission has been automatically removed."
         event-join:
-          third_person: '%{display_name} joined the event [%{title}].'
-          address_directly: 'Your submission to the event [%{title}] has been confirmed.'
+          third_person: '%{display_name} joined the event %{title}.'
+          address_directly: 'Your submission to the event %{title} has been confirmed.'
         event-ready:
-          address_directly: 'The event [%{title}] you organized reached is minimum capacity and is ready to go'
-          third_person: '[%{title}] reached is minimum capacity and is ready to go'
+          address_directly: 'The event %{title} you organized reached is minimum capacity and is ready to go'
+          third_person: '%{title} reached is minimum capacity and is ready to go'
         event-not_ready:
-          address_directly: 'The event [%{title}] you organized has no longer enough attendees to begin'
-          third_person: '[%{title}] has no longer enough attendees to begin'
+          address_directly: 'The event %{title} you organized has no longer enough attendees to begin'
+          third_person: '%{title} has no longer enough attendees to begin'
         comment-comment:
-          third_person: '%{display_name} answered to the comment [%{title}].'
+          third_person: '%{display_name} answered to the comment %{title}.'
       link: 'View on Deckie'
     invitation_informations:
       subject: 'You received an invitation to the event: "%{title}"'
       details: '%{sender} sent you an invitation to an event:'
       link: 'View on Deckie'
+    welcome_informations:
+      subject: 'Welcome on Deckie!'
+      details: >
+        Good luck and have fun!
     # This doesn't need translation.
     feedback_informations:
       subject: '[ New Feedback ] - %{title}'

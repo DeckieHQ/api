@@ -35,6 +35,8 @@ RSpec.describe 'User sign up', :type => :request do
     it 'grants the user with an achievement' do
       expect(created_user).to have_achievement('early-registration')
     end
+
+    it { is_expected.to have_enqueued_welcome_email_for(created_user) }
   end
 
   context 'when attributes are invalid' do
