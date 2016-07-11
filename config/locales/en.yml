@@ -56,7 +56,7 @@ en:
       link: 'View on Deckie'
     invitation_informations:
       subject: 'You received an invitation to the event: "%{title}"'
-      details: '%{sender} sent you an invitation to an event:'
+      details: '%{sender} sent you an invitation to the event %{title}.'
       link: 'View on Deckie'
     welcome_informations:
       subject: 'Welcome on Deckie!'

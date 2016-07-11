@@ -26,7 +26,9 @@ RSpec.describe InvitationInformations do
 
     it do
       is_expected.to eq(
-        I18n.t('mailer.invitation_informations.details', sender: invitation.sender.display_name)
+        I18n.t('mailer.invitation_informations.details',
+          sender: "<b>#{invitation.sender.display_name}</b>", title: "<b>#{invitation.event.title}</b>"
+        )
       )
     end
   end

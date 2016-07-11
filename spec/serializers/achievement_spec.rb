@@ -5,7 +5,7 @@ RSpec.describe AchievementSerializer, :type => :serializer do
     let(:achievement) { Merit::Badge.find(1) }
 
     let(:serialized) do
-      Serialized.new(AchievementSerializer.new(achievement))
+      Serialized.new(described_class.new(achievement))
     end
 
     it 'has an achievements type' do

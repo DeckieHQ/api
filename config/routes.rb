@@ -64,4 +64,6 @@ Rails.application.routes.draw do
   resources :achievements, only: :show
 
   resources :feedbacks, only: :create
+
+  resource :location, only: :show
 end
