@@ -36,7 +36,7 @@ module Fake
     def category
       %w(
         board role-playing card deck-building dice miniature video outdoor
-        strategy cooperative ambiance playful tile-based
+        strategy cooperative ambiance playful tile-based, other
       ).sample
     end
 
