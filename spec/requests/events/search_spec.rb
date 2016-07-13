@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Event search', :type => :search do
+  let(:indexable_events) { Event.opened.where(private: false) }
+
   before(:all) do
     Event.without_auto_index do
       FactoryGirl.create_list(:event,        5)
@@ -16,11 +18,11 @@ RSpec.describe 'Event search', :type => :search do
     Event.clear_index!(true)
   end
 
-  it 'indexes only opened events' do
-    expect(Event.search('').count).to eq(Event.opened.count)
+  it 'indexes only opened and public events' do
+    expect(Event.search('').count).to eq(indexable_events.count)
   end
 
-  let(:event) { Event.opened.sample }
+  let(:event) { indexable_events.sample }
 
   it 'includes its serialized attributes' do
     result = Event.raw_search('')['hits'].sample
@@ -56,7 +58,7 @@ RSpec.describe 'Event search', :type => :search do
         facets: attribute, facetFilters: ["#{attribute}:#{value}"]
       })
       expect(results).to have_records(
-        Event.opened.where("#{attribute} = ?", value)
+        indexable_events.where("#{attribute} = ?", value)
       )
     end
   end
@@ -69,7 +71,7 @@ RSpec.describe 'Event search', :type => :search do
         numericFilters: "#{attribute}=#{value}"
       })
       expect(results).to have_records(
-        Event.opened.select do |event|
+        indexable_events.select do |event|
           event.public_send("#{attribute}?") == value.to_b
         end
       )
@@ -91,7 +93,7 @@ RSpec.describe 'Event search', :type => :search do
       expect(
         Event.search('', { numericFilters: numericFilters })
       ).to have_records(
-        Event.opened.where("#{attribute} #{sign} ?", value)
+        indexable_events.where("#{attribute} #{sign} ?", value)
       )
     end
   end
