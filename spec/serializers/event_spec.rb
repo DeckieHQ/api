@@ -13,7 +13,7 @@ RSpec.describe EventSerializer, :type => :serializer do
         :title, :category, :ambiance, :level, :capacity, :min_capacity, :auto_accept,
         :short_description, :description, :begin_at, :end_at, :latitude, :longitude,
         :street, :postcode, :city, :state, :country, :attendees_count, :submissions_count,
-        :public_comments_count, :private_comments_count
+        :public_comments_count, :private_comments_count, :private
       ).merge({
         opened: !event.closed?,
         full:    event.full?,

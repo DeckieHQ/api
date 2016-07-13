@@ -21,6 +21,7 @@ class EventSerializer < ActiveModel::Serializer
              :submissions_count,
              :public_comments_count,
              :private_comments_count,
+             :private,
              :opened,
              :full,
              :ready
