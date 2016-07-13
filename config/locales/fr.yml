@@ -25,38 +25,38 @@ fr:
     notification_informations:
       description:
         event-submit:
-          third_person: "%{display_name} vous a envoyé une demande de participation à l'évennement %{title}."
+          third_person: "%{display_name} vous a envoyé une demande de participation à la partie %{title}."
         event-unsubmit:
-          third_person: "%{display_name} a supprimé sa demande de participation à l'évennement %{title}."
+          third_person: "%{display_name} a supprimé sa demande de participation à la partie %{title}."
         event-leave:
-          third_person: "%{display_name} a quitté l'évennement %{title}."
+          third_person: "%{display_name} a quitté la partie %{title}."
         event-comment:
-          third_person: "%{display_name} a commenté sur l'évennement %{title}."
+          third_person: "%{display_name} a commenté sur la partie %{title}."
         event-update:
-          address_directly: "Vous avez mis à jour l'évennement %{title}."
-          third_person: "%{display_name} a mis à jour l'évennement %{title}."
+          address_directly: "Vous avez mis à jour la partie %{title}."
+          third_person: "%{display_name} a mis à jour la partie %{title}."
         event-cancel:
-          address_directly: "Vous avez supprimmé l'évennement %{title}."
-          third_person: "%{display_name} a supprimmé l'évennement %{title}."
+          address_directly: "Vous avez supprimmé la partie %{title}."
+          third_person: "%{display_name} a supprimmé la partie %{title}."
         event-remove_full:
           address_directly: "%{title} est complet. Malheureusement votre demande de participation n'a pas été validée et a été automatiquement supprimmée."
         event-remove_start:
           address_directly: "%{title} vient de démarrer. Malheureusement votre demande de participation n'a pas été validée et a été automatiquement supprimmée."
         event-join:
-          third_person: "%{display_name} a rejoint l'évennement %{title}."
-          address_directly: "Votre demande de participation à l'évennement %{title} a été confirmée."
+          third_person: "%{display_name} a rejoint la partie %{title}."
+          address_directly: "Votre demande de participation à la partie %{title} a été confirmée."
         event-ready:
-          address_directly: "L'évennement %{title} que vous organisez a atteint sa capacitié minimum et est donc prêt à démarrer"
+          address_directly: "La partie %{title} que vous organisez a atteint sa capacitié minimum et est donc prêt à démarrer"
           third_person: '%{title} a atteint sa capacitié minimum et est donc prêt à démarrer'
         event-not_ready:
-          address_directly: "L'évennement %{title} que vous organisez n'a plus assez de participants pour démarrer"
+          address_directly: "La partie %{title} que vous organisez n'a plus assez de participants pour démarrer"
           third_person: "%{title} n'a plus assez de participants pour démarrer"
         comment-comment:
           third_person: '%{display_name} a répondu au commentaire %{title}.'
       link: 'Voir sur Deckie'
     invitation_informations:
-      subject: "Vous avez reçu une invitation à l'évennement : \"%{title}\""
-      details: "%{sender} vous a envoyé une invitation à l'évennement %{title}."
+      subject: "Vous avez reçu une invitation à la partie : \"%{title}\""
+      details: "%{sender} vous a envoyé une invitation à la partie %{title}."
       link: 'Voir sur Deckie'
     welcome_informations:
       subject: 'Bienvenue sur Deckie !'

@@ -36,7 +36,7 @@ class Event < ApplicationRecord
   validates :category, presence: true, inclusion: {
     in: %w(
       board role-playing card deck-building dice miniature video outdoor
-      strategy cooperative ambiance playful tile-based
+      strategy cooperative ambiance playful tile-based, other
     )
   }
   validates :ambiance, presence: true, inclusion: {
