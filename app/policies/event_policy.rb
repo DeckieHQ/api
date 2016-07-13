@@ -42,7 +42,8 @@ class EventPolicy < ApplicationPolicy
       :postcode,
       :city,
       :state,
-      :country
+      :country,
+      :private
     ]
   end
 

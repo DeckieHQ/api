@@ -32,7 +32,7 @@ RSpec.describe 'Event update', :type => :request do
       it 'updates the event with permited params' do
         permited_params = event_update.slice(
           :title, :category, :ambiance, :level, :capacity, :min_capacity, :auto_accept,
-          :description, :street, :postcode, :city, :state, :country
+          :description, :street, :postcode, :city, :state, :country, :private
         )
         expect(event).to have_attributes(permited_params)
 

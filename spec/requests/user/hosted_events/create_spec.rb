@@ -28,7 +28,7 @@ RSpec.describe 'User create hosted event', :type => :request do
         permited_params = event.slice(
           :title, :category, :min_capacity, :ambiance, :level, :capacity, :auto_accept,
           :short_description, :description, :street, :postcode, :city, :state,
-          :country
+          :country, :private
         )
         expect(created_event).to have_attributes(permited_params)
 
