@@ -13,7 +13,7 @@ RSpec.describe Event, :type => :model do
         .of_type(:integer).with_options(null: false)
     end
 
-    [:auto_accept, :private].each do |attribute|
+    [:auto_accept, :private, :flexible].each do |attribute|
       it do
         is_expected.to have_db_column(attribute)
           .of_type(:boolean).with_options(null: false, default: false)
@@ -145,6 +145,14 @@ RSpec.describe Event, :type => :model do
       country:           64
     }.each do |attribute, length|
       it { is_expected.to validate_length_of(attribute).is_at_most(length) }
+    end
+
+    context 'when event is flexible' do
+      subject(:event) { FactoryGirl.create(:event, :flexible) }
+
+      it { is_expected.to validate_absence_of(:begin_at) }
+
+      it { is_expected.to validate_absence_of(:end_at) }
     end
   end
 

@@ -38,6 +38,14 @@ FactoryGirl.define do
       auto_accept true
     end
 
+    trait :flexible do
+      begin_at nil
+
+      end_at nil
+
+      flexible true
+    end
+
     trait :with_comments do
       transient { comments_count 10 }
 

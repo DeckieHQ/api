@@ -26,7 +26,8 @@ module EventSearch
                    :submissions_count,
                    :public_comments_count,
                    :private_comments_count,
-                   :private
+                   :private,
+                   :flexible
 
         attribute :full do
           full?
