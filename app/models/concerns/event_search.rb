@@ -3,7 +3,7 @@ module EventSearch
     base.class_eval do
       include AlgoliaSearch
 
-      algoliasearch per_environment: true, enqueue: :index_worker, unless: :closed? do
+      algoliasearch per_environment: true, enqueue: :index_worker, if: :indexable? do
         attributes :title,
                    :category,
                    :ambiance,
@@ -25,7 +25,8 @@ module EventSearch
                    :attendees_count,
                    :submissions_count,
                    :public_comments_count,
-                   :private_comments_count
+                   :private_comments_count,
+                   :private
 
         attribute :full do
           full?
@@ -68,6 +69,12 @@ module EventSearch
       end
 
       after_touch -> { self.class.index_worker(self, false) }
+    end
+
+    private
+
+    def indexable?
+      !(closed? || private?)
     end
   end
 end

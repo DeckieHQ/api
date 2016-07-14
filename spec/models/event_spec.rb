@@ -13,6 +13,13 @@ RSpec.describe Event, :type => :model do
         .of_type(:integer).with_options(null: false)
     end
 
+    [:auto_accept, :private].each do |attribute|
+      it do
+        is_expected.to have_db_column(attribute)
+          .of_type(:boolean).with_options(null: false, default: false)
+      end
+    end
+
     [
       :submissions_count,      :attendees_count, :public_comments_count,
       :private_comments_count, :min_capacity

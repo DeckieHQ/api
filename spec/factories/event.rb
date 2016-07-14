@@ -26,6 +26,8 @@ FactoryGirl.define do
 
     auto_accept false
 
+    private { Faker::Boolean.boolean }
+
     association :host, factory: :profile_verified
 
     after(:create) do |event|

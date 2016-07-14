@@ -4,6 +4,6 @@ class AddModeratorToProfiles < ActiveRecord::Migration[5.0]
   end
 
   def down
-    remove_column :profiles
+    remove_column :profiles, :moderator
   end
 end
