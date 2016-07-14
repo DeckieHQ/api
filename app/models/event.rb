@@ -190,8 +190,8 @@ class Event < ApplicationRecord
         new_time_slots.tap(&:uniq!).length >= 1 && new_time_slots.length <= 5
         return errors.add(:new_time_slots, :unsupported)
       end
-      new_time_slots.each do |time|
-        unless time.kind_of?(Time) && time >= Time.now + 1.day
+      new_time_slots.each do |slot|
+        unless slot.respond_to?(:to_time) && slot.to_time >= Time.now + 1.day
           return errors.add(:new_time_slots, :unsupported)
         end
       end

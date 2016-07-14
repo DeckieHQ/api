@@ -18,14 +18,18 @@ class EventPolicy < ApplicationPolicy
   end
 
   def submit?
-    !event_host? && !submission_already_exist? && !event_closed? && !event_full?
+    !event_host? && !submission_already_exist? && !event_closed? && !event_full?  && !event_flexible?
   end
 
   def submissions?
     event_host?
   end
 
-  def permited_attributes
+  def permited_attributes_for_create
+    permited_attributes_for_update.concat([:flexible, new_time_slots: []])
+  end
+
+  def permited_attributes_for_update
     [
       :title,
       :category,

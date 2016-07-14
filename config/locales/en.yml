@@ -86,6 +86,7 @@ en:
         submission_already_confirmed: 'Submission already confirmed.'
         event_full: 'Event is full.'
         event_closed: 'Event is closed.'
+        event_flexible: 'Event is flexible.'
         email_already_verified: 'Email is already verified.'
         phone_number_already_verified: 'Email is already verified.'
       models:

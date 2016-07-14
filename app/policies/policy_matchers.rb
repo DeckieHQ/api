@@ -11,6 +11,10 @@ module PolicyMatchers
     def event_closed?
       add_error(:event_closed) if event.closed?
     end
+
+    def event_flexible?
+      add_error(:event_flexible) if event.flexible?
+    end
   end
 
   module User

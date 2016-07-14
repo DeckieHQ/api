@@ -17,4 +17,19 @@ RSpec.describe TimeSlot, :type => :model do
   describe 'Relationships' do
     it { is_expected.to belong_to(:event) }
   end
+
+  describe 'after destroy' do
+    subject(:time_slot) { FactoryGirl.create(:time_slot) }
+
+    before do
+      allow(ReindexRecordsJob).to receive(:perform_later)
+
+      time_slot.destroy
+    end
+
+    it 'plans to reindex its event' do
+      expect(ReindexRecordsJob).to have_received(:perform_later)
+        .with('Event', [time_slot.event.id])
+    end
+  end
 end
