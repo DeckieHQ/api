@@ -47,6 +47,12 @@ module Fake
     def level
       %w(beginner intermediate advanced).sample
     end
+
+    def time_slots
+      Array.new(5).map do
+        Faker::Time.between(Time.now + 1.day, Time.now + 10.day, :all)
+      end
+    end
   end
 
   module Submission

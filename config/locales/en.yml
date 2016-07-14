@@ -88,6 +88,11 @@ en:
         event_closed: 'Event is closed.'
         email_already_verified: 'Email is already verified.'
         phone_number_already_verified: 'Email is already verified.'
+      models:
+        event:
+          attributes:
+            new_time_slots:
+              unsupported: 'must be an array from 1 to 5 unique datetime values above 24 hours from current datetime.'
   activemodel:
     errors:
       models:

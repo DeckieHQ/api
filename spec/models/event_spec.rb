@@ -43,6 +43,8 @@ RSpec.describe Event, :type => :model do
 
     it { is_expected.to have_many(:comments).dependent(:destroy) }
 
+    it { is_expected.to have_many(:time_slots).dependent(:destroy) }
+
     it do
       is_expected.to have_many(:confirmed_submissions)
         .conditions(status: :confirmed).class_name('Submission')
@@ -132,7 +134,9 @@ RSpec.describe Event, :type => :model do
       it { is_expected.to be_valid }
     end
 
-    it { is_expected.to_not allow_value(nil).for(:auto_accept) }
+    [:auto_accept, :flexible, :private].each do |attribute|
+      it { is_expected.to_not allow_value(nil).for(attribute) }
+    end
 
     {
       title:             128,
@@ -147,12 +151,20 @@ RSpec.describe Event, :type => :model do
       it { is_expected.to validate_length_of(attribute).is_at_most(length) }
     end
 
+    it { is_expected.to validate_absence_of(:new_time_slots).on(:create) }
+
     context 'when event is flexible' do
       subject(:event) { FactoryGirl.create(:event, :flexible) }
 
       it { is_expected.to validate_absence_of(:begin_at) }
 
       it { is_expected.to validate_absence_of(:end_at) }
+
+      [
+        nil, 'lol', [Time.now + 2.days, nil], [], [2.days.ago]
+      ].each do |value|
+        it { is_expected.to_not allow_value(value).for(:new_time_slots).on(:create) }
+      end
     end
   end
 
@@ -161,6 +173,20 @@ RSpec.describe Event, :type => :model do
 
     it 'retrieves the event coordinates' do
       is_expected.to have_coordinates_of_address
+    end
+
+    it 'has no time slots' do
+      expect(event.time_slots).to be_empty
+    end
+
+    context 'when event is flexible' do
+      subject(:event) { FactoryGirl.create(:event, :flexible) }
+
+      it 'creates a time slot for each new_time_slots datetime' do
+        expect(
+          event.time_slots.where(begin_at: event.new_time_slots)
+        ).to_not be_empty
+      end
     end
   end
 
@@ -205,6 +231,12 @@ RSpec.describe Event, :type => :model do
         subject(:method) { FactoryGirl.create(:"event_#{state}").send(method) }
 
         it { is_expected.to be_truthy }
+      end
+
+      context 'when event is flexible' do
+        subject(:method) { FactoryGirl.create(:event, :flexible).send(method) }
+
+        it { is_expected.to be_falsy }
       end
     end
   end

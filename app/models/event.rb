@@ -5,6 +5,8 @@ class Event < ApplicationRecord
 
   include Filterable
 
+  attr_accessor :new_time_slots
+
   belongs_to :host, -> { with_deleted },
     class_name: 'Profile', foreign_key: 'profile_id', counter_cache: :hosted_events_count
 
@@ -26,6 +28,8 @@ class Event < ApplicationRecord
   has_many :public_comments, -> { publics }, as: :resource, class_name: 'Comment'
 
   has_many :invitations, dependent: :destroy
+
+  has_many :time_slots, dependent: :destroy
 
   validates :title, :street, presence: true, length: { maximum: 128 }
 
@@ -54,7 +58,15 @@ class Event < ApplicationRecord
     greater_than_or_equal_to: 0, less_than_or_equal_to: ->(e) { e.capacity || e.min_capacity }
   }
 
-  validates :auto_accept, inclusion: { in: [true, false] }
+  validates :auto_accept, :flexible, :private, inclusion: { in: [true, false] }
+
+  validates :postcode, presence: true, length: { maximum: 10 }
+
+  validates :city, :country, presence: true, length: { maximum: 64 }
+
+  validates :state, length: { maximum: 64 }
+
+  # Non-flexible validations
 
   validates :begin_at, presence: true, unless: :flexible?
 
@@ -66,19 +78,21 @@ class Event < ApplicationRecord
 
   validates :end_at, date: { after: :begin_at }, allow_nil: true, unless: :flexible?
 
+  validates :new_time_slots, absence: true, unless: :flexible?
+
+  # Flexible validations
+
   validates :begin_at, absence: true, if: :flexible?
 
   validates :end_at, absence: true, if: :flexible?
 
-  validates :postcode, presence: true, length: { maximum: 10 }
-
-  validates :city, :country, presence: true, length: { maximum: 64 }
-
-  validates :state, length: { maximum: 64 }
+  validate :new_time_slots_must_be_valid, on: :create
 
   geocoded_by :address
 
   before_save :geocode, if: :address_changed?
+
+  after_create :create_time_slots, if: :flexible?
 
   scope :with_pending_submissions,
     -> { joins(:submissions).merge(Submission.pending).distinct }
@@ -94,7 +108,7 @@ class Event < ApplicationRecord
   end
 
   def closed?
-    begin_at <= Time.now
+    !flexible? && begin_at <= Time.now
   end
 
   def full?
@@ -160,5 +174,28 @@ class Event < ApplicationRecord
     attendees_with_host_ids.delete(profile.id)
 
     attendees_with_host_ids
+  end
+
+  def create_time_slots
+    new_time_slots.each do |time|
+      time_slots << TimeSlot.new(begin_at: time)
+    end
+  end
+
+  def new_time_slots_must_be_valid
+    unless flexible?
+      return errors.add(:new_time_slots, :present)  if new_time_slots
+    else
+      unless new_time_slots.kind_of?(Array) &&
+        new_time_slots.tap(&:uniq!).length >= 1 && new_time_slots.length <= 5
+        return errors.add(:new_time_slots, :unsupported)
+      end
+      new_time_slots.each do |time|
+        unless time.kind_of?(Time) && time >= Time.now + 1.day
+          return errors.add(:new_time_slots, :unsupported)
+        end
+      end
+    end
+    true
   end
 end
