@@ -11,11 +11,20 @@ RSpec.describe TimeSlot, :type => :model do
       end
     end
 
+    it do
+      is_expected.to have_db_column(:members_count)
+        .of_type(:integer).with_options(null: false, default: 0)
+    end
+
     it { is_expected.to have_db_index([:event_id, :begin_at]).unique(true) }
   end
 
   describe 'Relationships' do
     it { is_expected.to belong_to(:event) }
+
+    it { is_expected.to have_many(:time_slot_submissions).dependent(:destroy) }
+
+    it { is_expected.to have_many(:members).through(:time_slot_submissions).source(:profile) }
   end
 
   describe 'after destroy' do

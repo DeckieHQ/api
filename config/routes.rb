@@ -69,5 +69,7 @@ Rails.application.routes.draw do
 
   resource :location, only: :show
 
-  resources :time_slots, only: [:show, :destroy]
+  resources :time_slots, only: [:show, :destroy] do
+    resources :members, only: :index, controller: 'time_slot/members'
+  end
 end
