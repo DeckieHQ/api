@@ -7,6 +7,14 @@ class TimeSlotSubmissionsController < ApplicationController
     render json: time_slot_submission
   end
 
+  def destroy
+    authorize time_slot_submission
+
+    CancelTimeSlotSubmission.new(time_slot_submission).call
+
+    head :no_content
+  end
+
   protected
 
   def time_slot_submission
