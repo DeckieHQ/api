@@ -17,6 +17,8 @@ class User < ApplicationRecord
 
   delegate :submissions, to: :profile
 
+  delegate :time_slot_submissions, to: :profile
+
   has_secure_token :authentication_token
 
   before_create :subscribe_to_notifications

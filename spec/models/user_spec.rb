@@ -138,7 +138,7 @@ RSpec.describe User, :type => :model do
     end
   end
 
-  [:invitations, :hosted_events].each do |method_name|
+  [:invitations, :hosted_events, :time_slot_submissions].each do |method_name|
     describe "##{method_name}" do
       let(:user) { FactoryGirl.create(:user_with_hosted_events) }
 
