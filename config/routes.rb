@@ -44,6 +44,8 @@ Rails.application.routes.draw do
       end
 
       resources :invitations, only: :create, controller: 'event/invitations'
+
+      resources :time_slots, only: :index, controller: 'event/time_slots'
     end
   end
 

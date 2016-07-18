@@ -1,4 +1,6 @@
 class TimeSlot < ApplicationRecord
+  include Filterable
+  
   belongs_to :event
 
   after_destroy :reindex_event

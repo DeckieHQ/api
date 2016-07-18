@@ -7,13 +7,13 @@ class TimeSlotsController < ApplicationController
 
   def destroy
     authorize time_slot
-    
+
     time_slot.destroy
 
     head :no_content
   end
 
-  private
+  protected
 
   def time_slot
     @time_slot ||= TimeSlot.find(params[:id])
