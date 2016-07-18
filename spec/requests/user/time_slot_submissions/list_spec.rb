@@ -7,7 +7,7 @@ RSpec.describe 'List user time slot submissions', :type => :request do
     get user_time_slot_submissions_path, params: params, headers: json_headers
   end
 
-#  it_behaves_like 'an action requiring authentication'
+  it_behaves_like 'an action requiring authentication'
 
   context 'when user is authenticated' do
     let(:user) { FactoryGirl.create(:user, :with_time_slot_submissions) }

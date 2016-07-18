@@ -47,7 +47,7 @@ RSpec.describe SubmissionPolicy do
     end
   end
 
-  context 'being the subscribtion owner' do
+  context 'being the submission owner' do
     let(:user) { submission.profile.user }
 
     it { is_expected.to permit_action(:show) }
