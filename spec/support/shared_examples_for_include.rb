@@ -50,7 +50,7 @@ RSpec.shared_examples 'an action with include' do |owner_name, collection_name, 
   # e.g. Event host is a profile object, including 'event.host' should return
   # objects with type 'profiles' instead of 'hosts'.
   def relation_type(relationship)
-    collection_relations_for(relationship).first.class.name.downcase.pluralize
+    collection_relations_for(relationship).first.class.name.underscore.pluralize
   end
 
   # This doesn't support hasMany relationships as we should never accept

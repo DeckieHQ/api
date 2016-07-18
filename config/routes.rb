@@ -18,12 +18,13 @@ Rails.application.routes.draw do
       resource :user, controller: :registrations do
         post 'sign_in', to: 'sessions#create'
 
-        resource  :profile,       only: [:show,   :update]
-        resource  :password,      only: [:create, :update]
-        resource  :verification,  only: [:create, :update]
-        resources :hosted_events, only: [:index,  :create]
-        resources :submissions,   only: :index
-        resources :notifications, only: :index
+        resource  :profile,               only: [:show,   :update]
+        resource  :password,              only: [:create, :update]
+        resource  :verification,          only: [:create, :update]
+        resources :hosted_events,         only: [:index,  :create]
+        resources :submissions,           only: :index
+        resources :time_slot_submissions, only: :index
+        resources :notifications,         only: :index
 
         post 'reset_notifications_count', to: 'notifications#reset_count'
       end

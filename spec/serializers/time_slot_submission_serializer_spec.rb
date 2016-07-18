@@ -1,20 +1,20 @@
 require 'rails_helper'
 
-RSpec.describe SubmissionSerializer, :type => :serializer do
+RSpec.describe TimeSlotSubmissionSerializer, :type => :serializer do
   context 'Individual Resource Representation' do
-    let(:submission) { FactoryGirl.create(:submission) }
+    let(:time_slot_submission) { FactoryGirl.create(:time_slot_submission) }
 
     let(:serialized) do
-      Serialized.new(described_class.new(submission))
+      Serialized.new(described_class.new(time_slot_submission))
     end
 
     it 'serializes the specified attributes' do
       expect(serialized.attributes).to have_serialized_attributes(
-        submission.slice(:status, :created_at, :updated_at)
+        time_slot_submission.slice(:created_at)
       )
     end
 
-    %w(profile event).each do |relation_name|
+    %w(time_slot profile).each do |relation_name|
       it "serializes the #{relation_name} relation" do
         expect(serialized.relationships).to have_key(relation_name)
       end
