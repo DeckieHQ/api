@@ -6,7 +6,7 @@ RSpec.describe ProfileSerializer, :type => :serializer do
     let(:profile) { FactoryGirl.create([:profile, :profile_verified].sample) }
 
     let(:serialized) do
-      Serialized.new(ProfileSerializer.new(profile))
+      Serialized.new(described_class.new(profile))
     end
 
     it 'serializes the specified attributes' do

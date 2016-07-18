@@ -66,4 +66,6 @@ Rails.application.routes.draw do
   resources :feedbacks, only: :create
 
   resource :location, only: :show
+
+  resources :time_slots, only: [:show]
 end
