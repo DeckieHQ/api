@@ -1,6 +1,14 @@
 class TimeSlotSubmissionsController < ApplicationController
   before_action :authenticate!
 
+  def create
+    authorize time_slot, :join?
+
+    render json: TimeSlotSubmission.create(
+      time_slot: time_slot, profile: current_user.profile
+    ), status: 201
+  end
+
   def show
     authorize time_slot_submission
 
@@ -19,5 +27,9 @@ class TimeSlotSubmissionsController < ApplicationController
 
   def time_slot_submission
     @time_slot_submission ||= TimeSlotSubmission.find(params[:id])
+  end
+
+  def time_slot
+    @time_slot ||= TimeSlot.find(params[:time_slot_id])
   end
 end

@@ -41,4 +41,34 @@ RSpec.describe TimeSlot, :type => :model do
         .with('Event', [time_slot.event.id])
     end
   end
+
+  describe '#member?' do
+    let(:time_slot) { FactoryGirl.create(:time_slot) }
+
+    let(:profile) { FactoryGirl.create(:profile) }
+
+    subject { time_slot.member?(profile) }
+
+    it { is_expected.to be_falsy }
+
+    context 'when profile is a time slot member' do
+      before { time_slot.members << profile }
+
+      it { is_expected.to be_truthy }
+    end
+  end
+
+  describe '#full?' do
+    let(:time_slot) { FactoryGirl.create(:time_slot) }
+
+    subject { time_slot.full? }
+
+    it { is_expected.to be_falsy }
+
+    context 'when time slot is full' do
+      let(:time_slot) { FactoryGirl.create(:time_slot, :full) }
+
+      it { is_expected.to be_truthy }
+    end
+  end
 end

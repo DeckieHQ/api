@@ -8,4 +8,18 @@ class TimeSlotPolicy < ApplicationPolicy
   def destroy?
     event_host?
   end
+
+  def join?
+    !event_host? && !time_slot_submission_already_exist? && !time_slot_full?
+  end
+
+  private
+
+  def time_slot_submission_already_exist?
+    add_error(:time_slot_submission_already_exist) if time_slot.member?(user.profile)
+  end
+
+  def time_slot_full?
+    add_error(:time_slot_full) if time_slot.full?
+  end
 end

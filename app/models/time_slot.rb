@@ -9,6 +9,14 @@ class TimeSlot < ApplicationRecord
 
   after_destroy :reindex_event
 
+  def member?(profile)
+    members.find_by(id: profile.id)
+  end
+
+  def full?
+    members_count == event.capacity
+  end
+
   private
 
   def reindex_event

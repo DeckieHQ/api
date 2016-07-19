@@ -72,7 +72,9 @@ Rails.application.routes.draw do
 
   resources :time_slots, only: [:show, :destroy] do
     resources :members, only: :index, controller: 'time_slot/members'
+
+    resources :time_slot_submissions, only: [:create, :show, :destroy], shallow: true
   end
 
-  resources :time_slot_submissions, only: [:show, :destroy]
+
 end

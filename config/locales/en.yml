@@ -82,13 +82,15 @@ en:
     errors:
       messages:
         user_unverified: 'User must be verified.'
-        submission_already_exist: 'Profile already submited.'
+        submission_already_exist: 'Profile already submited to this event.'
         submission_already_confirmed: 'Submission already confirmed.'
         event_full: 'Event is full.'
         event_closed: 'Event is closed.'
         event_flexible: 'Event is flexible.'
         email_already_verified: 'Email is already verified.'
         phone_number_already_verified: 'Email is already verified.'
+        time_slot_submission_already_exist: 'Profile is already a member of this time slot.'
+        time_slot_full: 'Time slot is full.'
       models:
         event:
           attributes:

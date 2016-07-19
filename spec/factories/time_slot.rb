@@ -13,5 +13,15 @@ FactoryGirl.define do
         create_list(:time_slot_submission, evaluator.members_count, time_slot: time_slot)
       end
     end
+
+    trait :full do
+      transient { members_count 5 }
+
+      after(:create) do |time_slot, evaluator|
+        time_slot.event.update(capacity: evaluator.members_count)
+
+        create_list(:time_slot_submission, evaluator.members_count, time_slot: time_slot)
+      end
+    end
   end
 end
