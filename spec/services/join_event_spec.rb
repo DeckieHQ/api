@@ -1,6 +1,33 @@
 require 'rails_helper'
 
 RSpec.describe JoinEvent do
+  describe '.for' do
+    let(:profile) { double() }
+
+    let(:profiles)   { Array.new(5).map { double() } }
+
+    let(:event) { double() }
+
+    let(:services) { Array.new(5).map { double(call: true) } }
+
+    before do
+      allow(described_class).to receive(:new).and_return(*services)
+
+      described_class.for(event, profiles)
+    end
+
+    it "gets an instance of #{described_class} for given event and each given profile" do
+      profiles.each do |profile|
+        expect(described_class).to have_received(:new).with(profile, event)
+      end
+    end
+
+    it "call on each services of #{described_class}" do
+      services.each do |service|
+        expect(service).to have_received(:call).with(no_args)
+      end
+    end
+  end
 
   describe '#call' do
     let(:profile) { FactoryGirl.create(:profile) }

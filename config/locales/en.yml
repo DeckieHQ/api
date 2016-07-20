@@ -91,6 +91,7 @@ en:
         phone_number_already_verified: 'Email is already verified.'
         time_slot_submission_already_exist: 'Profile is already a member of this time slot.'
         time_slot_full: 'Time slot is full.'
+        time_slot_closed: 'Time slot is closed.'
       models:
         event:
           attributes:

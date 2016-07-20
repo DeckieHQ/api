@@ -58,17 +58,19 @@ RSpec.describe TimeSlot, :type => :model do
     end
   end
 
-  describe '#full?' do
-    let(:time_slot) { FactoryGirl.create(:time_slot) }
+  [:full, :closed].each do |state|
+    describe "##{state}?" do
+      let(:time_slot) { FactoryGirl.create(:time_slot) }
 
-    subject { time_slot.full? }
+      subject { time_slot.public_send(:"#{state}?") }
 
-    it { is_expected.to be_falsy }
+      it { is_expected.to be_falsy }
 
-    context 'when time slot is full' do
-      let(:time_slot) { FactoryGirl.create(:time_slot, :full) }
+      context "when time slot is #{state}" do
+        let(:time_slot) { FactoryGirl.create(:time_slot, state) }
 
-      it { is_expected.to be_truthy }
+        it { is_expected.to be_truthy }
+      end
     end
   end
 end

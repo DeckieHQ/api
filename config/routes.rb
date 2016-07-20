@@ -71,6 +71,8 @@ Rails.application.routes.draw do
   resource :location, only: :show
 
   resources :time_slots, only: [:show, :destroy] do
+    post 'confirm', on: :member
+
     resources :members, only: :index, controller: 'time_slot/members'
 
     resources :time_slot_submissions, only: [:create, :show, :destroy], shallow: true

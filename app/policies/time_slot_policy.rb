@@ -5,6 +5,10 @@ class TimeSlotPolicy < ApplicationPolicy
 
   delegate :event, to: :time_slot
 
+  def confirm?
+    event_host? && !time_slot_closed?
+  end
+
   def destroy?
     event_host?
   end
@@ -21,5 +25,9 @@ class TimeSlotPolicy < ApplicationPolicy
 
   def time_slot_full?
     add_error(:time_slot_full) if time_slot.full?
+  end
+
+  def time_slot_closed?
+    add_error(:time_slot_closed) if time_slot.closed?
   end
 end

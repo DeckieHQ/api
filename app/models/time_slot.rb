@@ -17,6 +17,10 @@ class TimeSlot < ApplicationRecord
     members_count == event.capacity
   end
 
+  def closed?
+    begin_at <= Time.now
+  end
+
   private
 
   def reindex_event

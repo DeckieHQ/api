@@ -23,5 +23,13 @@ FactoryGirl.define do
         create_list(:time_slot_submission, evaluator.members_count, time_slot: time_slot)
       end
     end
+
+    trait :closed do
+      begin_at { Faker::Time.backward(5, :all) }
+
+      to_create do |time_slot|
+        time_slot.save(validate: false)
+      end
+    end
   end
 end
