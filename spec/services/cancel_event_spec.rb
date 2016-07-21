@@ -29,7 +29,8 @@ RSpec.describe CancelEvent do
 
   describe '#call' do
     let(:profile) { FactoryGirl.create(:profile) }
-    let(:event)   { FactoryGirl.create(:event)   }
+
+    let(:event) { FactoryGirl.create(:event) }
 
     subject(:service) { described_class.new(profile, event) }
 
@@ -39,7 +40,7 @@ RSpec.describe CancelEvent do
 
     it { is_expected.to have_created_action(profile, event, :cancel) }
 
-    it 'destroy the resource' do
+    it 'destroys the resource' do
       expect(event).to be_deleted
     end
   end

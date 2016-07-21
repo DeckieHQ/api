@@ -10,7 +10,7 @@ class CancelTimeSlotSubmission < ActionService
   end
 
   def call
-  #  create_action(:unsubmit)
+    create_action(:leave)
 
     submission.destroy
   end

@@ -34,7 +34,7 @@ RSpec.describe JoinEvent do
 
     let(:event)   { FactoryGirl.create(:event)   }
 
-    subject(:call) { JoinEvent.new(profile, event).call }
+    subject(:call) { described_class.new(profile, event).call }
 
     context 'when event has auto_accept' do
       before do

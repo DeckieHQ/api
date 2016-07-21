@@ -4,9 +4,7 @@ class TimeSlotSubmissionsController < ApplicationController
   def create
     authorize time_slot, :join?
 
-    render json: TimeSlotSubmission.create(
-      time_slot: time_slot, profile: current_user.profile
-    ), status: 201
+    render json: JoinTimeSlot.new(time_slot, current_user.profile).call, status: 201
   end
 
   def show

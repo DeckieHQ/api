@@ -53,6 +53,15 @@ en:
           third_person: '%{title} has no longer enough attendees to begin'
         comment-comment:
           third_person: '%{display_name} answered to the comment %{title}.'
+        time_slot-join:
+          third_person: '%{display_name} joined the time slot %{title}'
+        time_slot-leave:
+          third_person: '%{display_name} left the time slot %{title}'
+        time_slot-cancel:
+          third_person: '%{display_name} cancelled the time slot %{title}'
+        time_slot-confirm:
+          third_person: '%{display_name} confirmed the time slot %{title}'
+
       link: 'View on Deckie'
     invitation_informations:
       subject: 'You received an invitation to the event: "%{title}"'

@@ -1,5 +1,7 @@
 class ConfirmTimeSlot < ActionService
   def call
+    create_action(:confirm)
+
     JoinEvent.for(event, time_slot.members)
 
     event.update(flexible: false, begin_at: time_slot.begin_at)

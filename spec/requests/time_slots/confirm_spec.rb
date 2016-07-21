@@ -42,6 +42,8 @@ RSpec.describe 'Time slot delete', :type => :request do
       it "destroys all the event time slots" do
         expect(event.time_slots).to be_empty
       end
+
+      it { is_expected.to have_created_action(authenticate.profile, time_slot, :confirm) }
     end
 
     context "when time slot doesn't exists" do
@@ -60,6 +62,8 @@ RSpec.describe 'Time slot delete', :type => :request do
       it "doesn't confirm the time slot" do
         expect(event).to be_flexible
       end
+
+      it { is_expected.to_not have_created_action(authenticate.profile, time_slot, :confirm) }
     end
   end
 end

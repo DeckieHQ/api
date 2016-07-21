@@ -9,6 +9,10 @@ class TimeSlot < ApplicationRecord
 
   after_destroy :reindex_event
 
+  def title
+    "#{event.title} - #{begin_at}"
+  end
+
   def member?(profile)
     members.find_by(id: profile.id)
   end
@@ -19,6 +23,21 @@ class TimeSlot < ApplicationRecord
 
   def closed?
     begin_at <= Time.now
+  end
+
+  def receivers_ids_for(action)
+    case action.type.to_sym
+    when :join, :leave
+      [ event.host.id ]
+    when :cancel
+      members.pluck('id')
+    when :confirm
+      TimeSlotSubmission.where(
+        time_slot_id: event.time_slots.pluck('id')
+      ).pluck('id')
+    else
+      throw "Unsupported action: #{action.type}"
+    end
   end
 
   private

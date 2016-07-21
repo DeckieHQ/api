@@ -29,5 +29,7 @@ RSpec.describe ConfirmTimeSlot do
     it 'assigns time slot begin_at to the event' do
       expect(time_slot.event.begin_at).to eq(time_slot.begin_at)
     end
+
+    it { is_expected.to have_created_action(profile, time_slot, :confirm) }
   end
 end

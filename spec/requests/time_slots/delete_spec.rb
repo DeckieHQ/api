@@ -18,6 +18,10 @@ RSpec.describe 'Time slot delete', :type => :request do
       it 'deletes the time slot' do
         expect(TimeSlot.find_by(id: time_slot.id)).to be_nil
       end
+
+      it do
+        is_expected.to have_created_action(authenticate.profile, time_slot, :cancel)
+      end
     end
 
     context "when time slot doesn't exists" do
@@ -35,6 +39,10 @@ RSpec.describe 'Time slot delete', :type => :request do
 
       it "doesn't destroy the time slot" do
         expect(time_slot.reload).to be_persisted
+      end
+
+      it do
+        is_expected.to_not have_created_action(authenticate.profile, time_slot, :cancel)
       end
     end
   end

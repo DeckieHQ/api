@@ -16,7 +16,7 @@ class TimeSlotsController < ApplicationController
   def destroy
     authorize time_slot
 
-    time_slot.destroy
+    CancelTimeSlot.new(current_user.profile, time_slot).call
 
     head :no_content
   end

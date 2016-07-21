@@ -42,6 +42,14 @@ RSpec.describe TimeSlot, :type => :model do
     end
   end
 
+  describe '#title' do
+    let(:time_slot) { FactoryGirl.create(:time_slot) }
+
+    subject { time_slot.title }
+
+    it { is_expected.to eq("#{time_slot.event.title} - #{time_slot.begin_at}") }
+  end
+
   describe '#member?' do
     let(:time_slot) { FactoryGirl.create(:time_slot) }
 
@@ -70,6 +78,46 @@ RSpec.describe TimeSlot, :type => :model do
         let(:time_slot) { FactoryGirl.create(:time_slot, state) }
 
         it { is_expected.to be_truthy }
+      end
+    end
+  end
+
+  describe '#receivers_ids_for' do
+    let(:time_slot) { FactoryGirl.create(:time_slot, :with_members) }
+
+    subject(:receivers_ids_for) { time_slot.receivers_ids_for(action) }
+
+    %w(join leave).each do |type|
+      context "with a #{type} action" do
+        let(:action) { double(type: type) }
+
+        it 'returns only the time slot event host id' do
+          is_expected.to eq([time_slot.event.host.id])
+        end
+      end
+    end
+
+    context 'with a cancel action' do
+      let(:action) { double(type: 'cancel') }
+
+      it 'returns the members profile ids' do
+        is_expected.to eq(time_slot.members.pluck('id'))
+      end
+    end
+
+    context 'with a confirm action' do
+      let(:action) { double(type: 'confirm') }
+
+      it 'returns all the event time slots members ids' do
+        is_expected.to eq(
+          TimeSlotSubmission.where(time_slot_id: time_slot.event.time_slots).pluck('id')
+        )
+      end
+    end
+
+    context 'with unsupported type' do
+      it 'raises an error' do
+        expect { receivers_ids_for }.to raise_error
       end
     end
   end

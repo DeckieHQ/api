@@ -53,6 +53,14 @@ fr:
           third_person: "%{title} n'a plus assez de participants pour démarrer"
         comment-comment:
           third_person: '%{display_name} a répondu au commentaire %{title}.'
+        time_slot-join:
+          third_person: '%{display_name} à rejoint le créneau horaire %{title}'
+        time_slot-leave:
+          third_person: '%{display_name} à quitté le créneau horaire %{title}'
+        time_slot-cancel:
+          third_person: '%{display_name} à annulé le créneau horaire %{title}'
+        time_slot-confirm:
+          third_person: '%{display_name} à confirmé le créneau horaire %{title}'
       link: 'Voir sur Deckie'
     invitation_informations:
       subject: "Vous avez reçu une invitation à la partie : \"%{title}\""

@@ -30,8 +30,10 @@ RSpec.describe CancelTimeSlotSubmission do
       expect(TimeSlot.find_by(id: time_slot_submission.id)).to_not be_present
     end
 
-    xit do
-      is_expected.to have_created_action(time_slot_submission.profile, time_slot_submission.time_slot, :unsubmit)
+    it do
+      is_expected.to have_created_action(
+        time_slot_submission.profile, time_slot_submission.time_slot, :leave
+      )
     end
   end
 end

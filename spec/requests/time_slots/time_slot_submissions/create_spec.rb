@@ -24,6 +24,10 @@ RSpec.describe 'Create time slot submission', :type => :request do
       expect(response.body).to equal_serialized(created_time_slot_submission)
     end
 
+    it do
+      is_expected.to have_created_action(user.profile, time_slot, :join)
+    end
+
     context 'when authenticated as the time slot event host' do
       let(:authenticate) { time_slot.event.host.user }
 
@@ -31,6 +35,10 @@ RSpec.describe 'Create time slot submission', :type => :request do
 
       it "doesn't create a time slot submission" do
         expect(created_time_slot_submission).to_not be_present
+      end
+
+      it do
+        is_expected.to_not have_created_action(user.profile, time_slot, :join)
       end
     end
 

@@ -24,6 +24,12 @@ RSpec.describe 'Delete time slot submission', :type => :request do
       let(:user) { FactoryGirl.create(:user) }
 
       it { is_expected.to return_forbidden }
+
+      it do
+        is_expected.to_not have_created_action(
+          time_slot_submission.profile, time_slot_submission.time_slot, 'leave'
+        )
+      end
     end
 
     context 'when time slot submissions belongs to the user' do
@@ -33,6 +39,12 @@ RSpec.describe 'Delete time slot submission', :type => :request do
 
       it 'deletes the time slot submission' do
         expect(TimeSlotSubmission.find_by(id: time_slot_submission.id)).to_not be_present
+      end
+
+      it do
+        is_expected.to have_created_action(
+          time_slot_submission.profile, time_slot_submission.time_slot, 'leave'
+        )
       end
     end
   end

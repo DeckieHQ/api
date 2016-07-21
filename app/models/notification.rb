@@ -24,6 +24,10 @@ class Notification < ApplicationRecord
       event-ready
       event-not_ready
       comment-comment
+      time_slot-join
+      time_slot-leave
+      time_slot-cancel
+      time_slot-confirm
     )
   end
 
