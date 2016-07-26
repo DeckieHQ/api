@@ -103,6 +103,16 @@ class Event < ApplicationRecord
     where("begin_at #{sign} ?", Time.now)
   end
 
+  def self.confirmables(percentage:)
+    joins(:time_slots).where(
+      "time_slots.begin_at - ((time_slots.begin_at - time_slots.created_at) * #{percentage} / 100) <= ?", Time.now
+    )
+  end
+
+  def optimum_time_slot
+    time_slots.order('begin_at ASC').max_by(&:members_count)
+  end
+
   def address
     [street, postcode, city, state, country].compact.join(', ')
   end

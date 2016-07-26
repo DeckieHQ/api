@@ -412,6 +412,22 @@ RSpec.describe Event, :type => :model do
     end
   end
 
+  describe '#optimum_time_slot' do
+    let(:event) { FactoryGirl.create(:event_with_time_slot_members) }
+
+    subject(:optimum_time_slot) { event.optimum_time_slot }
+
+    it do
+      is_expected.to eq(
+        event.time_slots.order('begin_at ASC').max_by(&:members_count)
+      )
+    end
+  end
+
+  describe '.confirmable' do
+
+  end
+
   describe '.opened' do
     let(:events) { Event.all.opened }
 

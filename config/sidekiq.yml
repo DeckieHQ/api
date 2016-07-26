@@ -28,5 +28,10 @@ production:
     class: NotificationsSenderJob
     queue: scheduler
     description: 'This job will send a batch of notifications for each user in one email'
+  notifications_sender:
+    every: 5min
+    class: ConfirmFlexibleEvents
+    queue: scheduler
+    description: 'This job will automatically confirm flexible events close the limit'
 :scheduler:
   :listened_queues_only:
