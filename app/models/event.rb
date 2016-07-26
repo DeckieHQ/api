@@ -86,7 +86,7 @@ class Event < ApplicationRecord
 
   validates :end_at, absence: true, if: :flexible?
 
-  validate :new_time_slots_must_be_valid, on: :create
+  validate :new_time_slots_must_be_valid, on: :create, if: :flexible?
 
   geocoded_by :address
 
@@ -193,19 +193,14 @@ class Event < ApplicationRecord
   end
 
   def new_time_slots_must_be_valid
-    unless flexible?
-      return errors.add(:new_time_slots, :present)  if new_time_slots
-    else
-      unless new_time_slots.kind_of?(Array) &&
-        new_time_slots.tap(&:uniq!).length >= 1 && new_time_slots.length <= 5
+    unless new_time_slots.kind_of?(Array) &&
+      new_time_slots.tap(&:uniq!).length >= 2 && new_time_slots.length <= 5
+      return errors.add(:new_time_slots, :unsupported)
+    end
+    new_time_slots.each do |slot|
+      unless slot.respond_to?(:to_time) && slot.to_time >= Time.now + 1.day
         return errors.add(:new_time_slots, :unsupported)
       end
-      new_time_slots.each do |slot|
-        unless slot.respond_to?(:to_time) && slot.to_time >= Time.now + 1.day
-          return errors.add(:new_time_slots, :unsupported)
-        end
-      end
     end
-    true
   end
 end

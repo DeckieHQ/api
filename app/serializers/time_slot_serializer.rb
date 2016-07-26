@@ -1,5 +1,7 @@
 class TimeSlotSerializer < ActiveModel::Serializer
-  attributes :begin_at, :created_at, :full
+  attributes :begin_at, :created_at, :full, :member
+
+  alias_method :current_user, :scope
 
   has_one :event do
     link :related, UrlHelpers.event(object.event_id)
@@ -14,5 +16,9 @@ class TimeSlotSerializer < ActiveModel::Serializer
 
   def full
     object.full?
+  end
+
+  def member
+    current_user.present? && object.member?(current_user.profile)
   end
 end

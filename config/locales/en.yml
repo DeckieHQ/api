@@ -105,7 +105,7 @@ en:
         event:
           attributes:
             new_time_slots:
-              unsupported: 'must be an array from 1 to 5 unique datetime values above 24 hours from current datetime.'
+              unsupported: 'must be an array from 2 to 5 unique datetime values above 24 hours from current datetime.'
   activemodel:
     errors:
       models:

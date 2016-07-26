@@ -14,7 +14,7 @@ class TimeSlot < ApplicationRecord
   end
 
   def member?(profile)
-    members.find_by(id: profile.id)
+    members.find_by(id: profile.id).present?
   end
 
   def full?

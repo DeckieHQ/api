@@ -18,4 +18,22 @@ RSpec.describe 'Time slot show', :type => :request do
 
     it { is_expected.to return_not_found }
   end
+
+  context 'when user is authenticated' do
+    let(:authenticate) { FactoryGirl.create(:user) }
+
+    it 'serializes the membership attribute to false' do
+      expect(json_attributes[:member]).to be_falsy
+    end
+
+    context 'as a time slot member' do
+      let(:time_slot) { FactoryGirl.create(:time_slot, :with_members) }
+
+      let(:authenticate) { time_slot.members.shuffle.first.user }
+
+      it 'serializes the membership attribute to true' do
+        expect(json_attributes[:member]).to be_truthy
+      end
+    end
+  end
 end

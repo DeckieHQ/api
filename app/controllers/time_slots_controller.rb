@@ -1,8 +1,10 @@
 class TimeSlotsController < ApplicationController
+  before_action :authenticate, only: :show
+
   before_action :authenticate!, only: [:confirm, :destroy]
 
   def show
-    render json: time_slot
+    render json: time_slot, scope: current_user
   end
 
   def confirm

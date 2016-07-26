@@ -12,7 +12,7 @@ RSpec.describe TimeSlotSerializer, :type => :serializer do
     it 'serializes the specified attributes' do
       expect(serialized.attributes).to have_serialized_attributes(
         time_slot.slice(:begin_at, :created_at).merge({
-          full: time_slot.full?
+          full: time_slot.full?, member: false
         })
       )
     end

@@ -151,8 +151,6 @@ RSpec.describe Event, :type => :model do
       it { is_expected.to validate_length_of(attribute).is_at_most(length) }
     end
 
-    it { is_expected.to validate_absence_of(:new_time_slots).on(:create) }
-
     context 'when event is flexible' do
       subject(:event) { FactoryGirl.create(:event, :flexible) }
 
@@ -161,7 +159,7 @@ RSpec.describe Event, :type => :model do
       it { is_expected.to validate_absence_of(:end_at) }
 
       [
-        nil, 'lol', [Time.now + 2.days, nil], [], [2.days.ago]
+        nil, 'lol', [], [Time.now + 2.days], [Time.now + 2.days, nil], [Time.now + 2.days, 2.days.ago]
       ].each do |value|
         it { is_expected.to_not allow_value(value).for(:new_time_slots).on(:create) }
       end
