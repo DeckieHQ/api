@@ -1,5 +1,5 @@
 class TimeSlotSerializer < ActiveModel::Serializer
-  attributes :begin_at, :created_at, :full, :member
+  attributes :begin_at, :created_at, :members_count, :full, :member
 
   alias_method :current_user, :scope
 

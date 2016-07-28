@@ -7,7 +7,7 @@ class TimeSlot < ApplicationRecord
 
   has_many :members, through: :time_slot_submissions, source: :profile
 
-  after_destroy :reindex_event
+  after_destroy :update_event_begin_at_range
 
   def title
     "#{event.title} - #{begin_at}"
@@ -42,7 +42,9 @@ class TimeSlot < ApplicationRecord
 
   private
 
-  def reindex_event
-    ReindexRecordsJob.perform_later('Event', [event.id])
+  def update_event_begin_at_range
+    begin_at_values = event.time_slots.pluck(:begin_at)
+
+    event.update(begin_at_range: { min: begin_at_values.min, max: begin_at_values.max })
   end
 end

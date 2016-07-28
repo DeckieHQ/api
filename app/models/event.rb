@@ -92,6 +92,8 @@ class Event < ApplicationRecord
 
   before_save :geocode, if: :address_changed?
 
+  before_create :assign_begin_at_range, if: :flexible?
+
   after_create :create_time_slots, if: :flexible?
 
   scope :with_pending_submissions,
@@ -184,6 +186,10 @@ class Event < ApplicationRecord
     attendees_with_host_ids.delete(profile.id)
 
     attendees_with_host_ids
+  end
+
+  def assign_begin_at_range
+    self.begin_at_range = { min: new_time_slots.min, max: new_time_slots.max }
   end
 
   def create_time_slots

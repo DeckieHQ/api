@@ -10,6 +10,7 @@ class EventSerializer < ActiveModel::Serializer
              :description,
              :begin_at,
              :end_at,
+             :begin_at_range,
              :latitude,
              :longitude,
              :street,

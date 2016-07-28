@@ -30,15 +30,14 @@ RSpec.describe TimeSlot, :type => :model do
   describe 'after destroy' do
     subject(:time_slot) { FactoryGirl.create(:time_slot) }
 
-    before do
-      allow(ReindexRecordsJob).to receive(:perform_later)
+    before { time_slot.destroy }
 
-      time_slot.destroy
-    end
+    it 'updates its event begin_at_range' do
+      values = time_slot.event.time_slots.pluck(:begin_at)
 
-    it 'plans to reindex its event' do
-      expect(ReindexRecordsJob).to have_received(:perform_later)
-        .with('Event', [time_slot.event.id])
+      expect(time_slot.event.reload.begin_at_range).to eq(
+        { min: values.min, max: values.max }.as_json
+      )
     end
   end
 

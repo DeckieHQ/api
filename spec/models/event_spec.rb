@@ -29,6 +29,11 @@ RSpec.describe Event, :type => :model do
           .of_type(:integer).with_options(null: false, default: 0)
       end
     end
+
+    it do
+      is_expected.to have_db_column(:begin_at_range)
+        .of_type(:jsonb).with_options(null: false, default: {})
+    end
   end
 
   describe 'Relationships' do
@@ -184,6 +189,12 @@ RSpec.describe Event, :type => :model do
         expect(
           event.time_slots.where(begin_at: event.new_time_slots)
         ).to_not be_empty
+      end
+
+      it 'assigns begin_at_range' do
+        expect(event.begin_at_range).to eq(
+          { min: event.new_time_slots.min, max: event.new_time_slots.max }.as_json
+        )
       end
     end
   end
