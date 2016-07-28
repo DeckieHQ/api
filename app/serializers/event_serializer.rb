@@ -24,6 +24,7 @@ class EventSerializer < ActiveModel::Serializer
              :private_comments_count,
              :private,
              :flexible,
+             :reached_time_slot_min,
              :opened,
              :full,
              :ready
@@ -70,5 +71,9 @@ class EventSerializer < ActiveModel::Serializer
 
   def ready
     object.ready?
+  end
+
+  def reached_time_slot_min
+    object.reached_time_slot_min?
   end
 end

@@ -54,5 +54,15 @@ RSpec.describe TimeSlotPolicy do
         is_expected.to have_authorization_error(:time_slot_closed, on: :confirm)
       end
     end
+
+    context 'when time slot event has reached time slot minimum required' do
+      let(:time_slot) { FactoryGirl.create(:time_slot, :to_event_reached_time_slot_min) }
+
+      it { is_expected.to forbid_action(:destroy) }
+
+      it do
+        is_expected.to have_authorization_error(:event_reached_time_slot_min, on: :destroy)
+      end
+    end
   end
 end

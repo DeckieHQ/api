@@ -228,7 +228,7 @@ RSpec.describe Event, :type => :model do
 
   it_behaves_like 'an indexable resource'
 
-  [:full, :closed].each do |state|
+  [:full, :closed, :reached_time_slot_min].each do |state|
     method = "#{state}?"
 
     describe "##{method}" do

@@ -17,7 +17,8 @@ RSpec.describe EventSerializer, :type => :serializer do
       ).merge({
         opened: !event.closed?,
         full:    event.full?,
-        ready:   event.ready?
+        ready:   event.ready?,
+        reached_time_slot_min: event.reached_time_slot_min?
       })
       expect(serialized.attributes).to have_serialized_attributes(expected_attributes)
     end

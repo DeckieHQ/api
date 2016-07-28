@@ -85,6 +85,10 @@ FactoryGirl.define do
       end
     end
 
+    factory :event_reached_time_slot_min, traits: [:flexible] do
+      new_time_slots { Fake::Event.time_slots[0..1] }
+    end
+
     factory :event_with_submissions do
       transient do
         submissions_count 10

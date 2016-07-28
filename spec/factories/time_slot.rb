@@ -31,5 +31,13 @@ FactoryGirl.define do
         time_slot.save(validate: false)
       end
     end
+
+    trait :to_event_reached_time_slot_min do
+      association :event, factory: [:event_reached_time_slot_min]
+
+      after(:create) do |time_slot|
+        time_slot.event.time_slots.where.not(id: time_slot.id).first.destroy
+      end
+    end
   end
 end

@@ -28,7 +28,8 @@ module EventSearch
                    :public_comments_count,
                    :private_comments_count,
                    :private,
-                   :flexible
+                   :flexible,
+                   :reached_time_slot_min
 
         attribute :full do
           full?
@@ -36,6 +37,10 @@ module EventSearch
 
         attribute :ready do
           ready?
+        end
+
+        attribute :reached_time_slot_min do
+          reached_time_slot_min?
         end
 
         attribute :begin_at_i do

@@ -10,7 +10,7 @@ class TimeSlotPolicy < ApplicationPolicy
   end
 
   def destroy?
-    event_host?
+    event_host? && !event_reached_time_slot_min?
   end
 
   def join?

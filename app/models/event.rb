@@ -127,6 +127,10 @@ class Event < ApplicationRecord
     attendees_count == capacity
   end
 
+  def reached_time_slot_min?
+    time_slots.count == 2
+  end
+
   def ready?
     attendees_count >= min_capacity
   end

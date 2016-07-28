@@ -25,6 +25,10 @@ class TimeSlot < ApplicationRecord
     begin_at <= Time.now
   end
 
+  def limit?
+    event.time_slots.count == 2
+  end
+
   def receivers_ids_for(action)
     case action.type.to_sym
     when :join, :leave
