@@ -5,8 +5,8 @@ FactoryGirl.define do
     longitude { Faker::Address.longitude }
 
     factory :location_localhost do
-      latitude  0
-      longitude 0
+      latitude  0.0
+      longitude 0.0
     end
   end
 end

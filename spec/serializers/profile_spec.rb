@@ -31,7 +31,7 @@ RSpec.describe ProfileSerializer, :type => :serializer do
     end
 
     it 'adds the time slot submissions link' do
-      expect(serialized).to have_relationship_link_for(:time_slot_submissions)
+      expect(serialized).to have_relationship_link_for(:time_slot_submissions, source: profile)
     end
   end
 end
