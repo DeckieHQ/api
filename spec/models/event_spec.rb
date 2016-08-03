@@ -422,7 +422,7 @@ RSpec.describe Event, :type => :model do
   end
 
   describe '#optimum_time_slot' do
-    let(:event) { FactoryGirl.create(:event_with_time_slot_members) }
+    let(:event) { FactoryGirl.create(:event_with_time_slots_members) }
 
     subject(:optimum_time_slot) { event.optimum_time_slot }
 
@@ -431,6 +431,14 @@ RSpec.describe Event, :type => :model do
         event.time_slots.order('begin_at ASC').max_by(&:members_count)
       )
     end
+  end
+
+  describe '#time_slots_members' do
+    let(:event) { FactoryGirl.create(:event_with_time_slots_members) }
+
+    subject { event.time_slots_members }
+
+    it { is_expected.to_not be_empty }
   end
 
   describe '.confirmable' do

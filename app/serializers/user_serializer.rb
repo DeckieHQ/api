@@ -34,12 +34,6 @@ class UserSerializer < ActiveModel::Serializer
     include_data false
   end
 
-  has_many :time_slot_submissions do
-    link :related, UrlHelpers.user_time_slot_submissions
-
-    include_data false
-  end
-
   has_many :notifications do
     link :related, UrlHelpers.user_notifications
 

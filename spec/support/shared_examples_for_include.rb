@@ -53,11 +53,9 @@ RSpec.shared_examples 'an action with include' do |owner_name, collection_name, 
     collection_relations_for(relationship).first.class.name.underscore.pluralize
   end
 
-  # This doesn't support hasMany relationships as we should never accept
-  # hasMany relationships as a valid include.
   def collection_relations_for(relationship)
     relationship.split('.').inject(collection) do |relations, relation_name|
       relations.map(&:"#{relation_name}")
-    end
+    end.flatten
   end
 end

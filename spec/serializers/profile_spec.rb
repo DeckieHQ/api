@@ -29,5 +29,9 @@ RSpec.describe ProfileSerializer, :type => :serializer do
     it 'adds the achievements link' do
       expect(serialized).to have_relationship_link_for(:achievements, source: profile)
     end
+
+    it 'adds the time slot submissions link' do
+      expect(serialized).to have_relationship_link_for(:time_slot_submissions)
+    end
   end
 end

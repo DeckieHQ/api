@@ -20,7 +20,7 @@ RSpec.describe 'List event time slots', :type => :request do
   end
 
   context 'when user is authenticated as a member of an event time slot' do
-    let(:event) { FactoryGirl.create(:event_with_time_slot_members) }
+    let(:event) { FactoryGirl.create(:event_with_time_slots_members) }
 
     let(:time_slot) { event.time_slots.shuffle.first }
 

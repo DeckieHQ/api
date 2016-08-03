@@ -149,6 +149,12 @@ class Event < ApplicationRecord
     pending_submissions.take(capacity - attendees_count)
   end
 
+  def time_slots_members
+    Profile.where(
+      id: TimeSlotSubmission.where(time_slot_id: time_slots.pluck('id')).pluck('profile_id')
+    ).distinct
+  end
+
   def receivers_ids_for(action)
     case action.type.to_sym
     when :submit, :unsubmit

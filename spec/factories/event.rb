@@ -50,7 +50,7 @@ FactoryGirl.define do
       new_time_slots { Fake::Event.time_slots }
     end
 
-    factory :event_with_time_slot_members, traits: [:flexible] do
+    factory :event_with_time_slots_members, traits: [:flexible] do
       after(:create) do |event|
         event.time_slots.each do |time_slot|
           members_count = Faker::Number.between(1, 1)

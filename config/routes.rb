@@ -23,7 +23,6 @@ Rails.application.routes.draw do
         resource  :verification,          only: [:create, :update]
         resources :hosted_events,         only: [:index,  :create]
         resources :submissions,           only: :index
-        resources :time_slot_submissions, only: :index
         resources :notifications,         only: :index
 
         post 'reset_notifications_count', to: 'notifications#reset_count'
@@ -47,6 +46,8 @@ Rails.application.routes.draw do
       resources :invitations, only: :create, controller: 'event/invitations'
 
       resources :time_slots, only: :index, controller: 'event/time_slots'
+
+      resources :time_slots_members, only: :index, controller: 'event/time_slots_members'
     end
   end
 
@@ -60,6 +61,8 @@ Rails.application.routes.draw do
 
   resources :profiles, only: [:show, :update] do
     resources :achievements, only: [:index], controller: 'profile/achievements'
+
+    resources :time_slot_submissions, only: [:index], controller: 'profile/time_slot_submissions'
   end
 
   resources :contacts, only: :show
@@ -77,6 +80,4 @@ Rails.application.routes.draw do
 
     resources :time_slot_submissions, only: [:create, :show, :destroy], shallow: true
   end
-
-
 end

@@ -30,7 +30,7 @@ RSpec.describe UserSerializer, :type => :serializer do
       )
     end
 
-    [:hosted_events, :submissions, :time_slot_submissions, :notifications].each do |link|
+    [:hosted_events, :submissions, :notifications].each do |link|
       it "adds the #{link} link" do
         expect(serialized).to have_relationship_link_for(link)
       end
