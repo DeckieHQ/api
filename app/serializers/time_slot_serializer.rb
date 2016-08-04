@@ -14,6 +14,11 @@ class TimeSlotSerializer < ActiveModel::Serializer
     include_data false
   end
 
+  has_many :time_slot_submissions do
+    link :related, UrlHelpers.time_slot_time_slot_submissions(object)
+    include_data false
+  end
+
   def full
     object.full?
   end

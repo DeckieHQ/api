@@ -61,6 +61,11 @@ class EventSerializer < ActiveModel::Serializer
     include_data false
   end
 
+  has_many :time_slots_members do
+    link :related, UrlHelpers.event_time_slots_members(object)
+    include_data false
+  end
+
   def opened
     !object.closed?
   end

@@ -33,7 +33,7 @@ RSpec.describe EventSerializer, :type => :serializer do
       )
     end
 
-    [:attendees, :submissions, :comments, :invitations, :time_slots].each do |link|
+    [:attendees, :submissions, :comments, :invitations, :time_slots, :time_slots_members].each do |link|
       it "adds the #{link} link" do
         expect(serialized).to have_relationship_link_for(link, source: event)
       end

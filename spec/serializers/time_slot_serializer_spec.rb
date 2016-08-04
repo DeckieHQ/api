@@ -21,8 +21,10 @@ RSpec.describe TimeSlotSerializer, :type => :serializer do
       expect(serialized).to have_relationship_link_for(:event, target: time_slot.event_id)
     end
 
-    it 'adds the members link' do
-      expect(serialized).to have_relationship_link_for(:members, source: time_slot)
+    [:members, :time_slot_submissions].each do |link|
+      it "adds the #{link} link" do
+        expect(serialized).to have_relationship_link_for(link, source: time_slot)
+      end
     end
   end
 end
