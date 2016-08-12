@@ -100,9 +100,11 @@ class Event < ApplicationRecord
     -> { joins(:submissions).merge(Submission.pending).distinct }
 
   def self.opened(opened = true)
-    sign = opened.to_s.to_b ? '>' : '<='
+    show = opened.to_s.to_b
 
-    where("begin_at #{sign} ?", Time.now)
+    sign = show ? '>' : '<='
+
+    where("flexible = ? OR begin_at #{sign} ?", show, Time.now)
   end
 
   def self.confirmables(percentage:)

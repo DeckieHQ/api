@@ -451,6 +451,7 @@ RSpec.describe Event, :type => :model do
     before do
       FactoryGirl.create_list(:event,        Faker::Number.between(1, 4))
       FactoryGirl.create_list(:event_closed, Faker::Number.between(1, 4))
+      FactoryGirl.create_list(:event,        Faker::Number.between(1, 4), :flexible)
     end
 
     it 'returns the opened events' do
@@ -464,6 +465,10 @@ RSpec.describe Event, :type => :model do
         it 'returns the opened events' do
           expect_opened_events(true)
         end
+
+        it 'includes flexible events' do
+          expect(events.where(flexible: true)).to_not be_empty
+        end
       end
     end
 
@@ -474,11 +479,15 @@ RSpec.describe Event, :type => :model do
         it 'returns the closed events' do
           expect_opened_events(false)
         end
+
+        it "doesn't include flexible events" do
+          expect(events.where(flexible: true)).to be_empty
+        end
       end
     end
 
     def expect_opened_events(opened)
-      results = events.pluck(:begin_at).keep_if do |begin_at|
+      results = events.where(flexible: false).pluck(:begin_at).keep_if do |begin_at|
         opened ? begin_at > Time.now : begin_at <= Time.now
       end
       expect(results).to_not be_empty
