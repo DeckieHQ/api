@@ -100,11 +100,11 @@ class Event < ApplicationRecord
     -> { joins(:submissions).merge(Submission.pending).distinct }
 
   def self.opened(opened = true)
-    show = opened.to_s.to_b
-
-    sign = show ? '>' : '<='
-
-    where("flexible = ? OR begin_at #{sign} ?", show, Time.now)
+    if opened.to_s.to_b
+      where("flexible = 't' OR begin_at > ?", Time.now)
+    else
+      where("flexible = 'f' AND begin_at <= ?", Time.now)
+    end
   end
 
   def self.confirmables(percentage:)
@@ -162,7 +162,11 @@ class Event < ApplicationRecord
     when :submit, :unsubmit
       [ host.id ]
     when :cancel
-      submissions.pluck('profile_id')
+      if flexible
+        time_slots_members.pluck('id')
+      else
+        submissions.pluck('profile_id')
+      end
     when :remove_full, :remove_start
       pending_submissions.pluck('profile_id')
     when :join, :ready, :not_ready

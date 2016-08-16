@@ -348,8 +348,17 @@ RSpec.describe Event, :type => :model do
       context "with a #{type} action" do
         let(:action) { double(type: type) }
 
-        it 'returns the event submissions profiles ids + host ids' do
+        it 'returns the event submissions profiles ids' do
           is_expected.to eq(event.submissions.pluck('profile_id'))
+        end
+
+
+        context 'when event is flexible' do
+          let(:event) { FactoryGirl.create(:event_with_time_slots_members) }
+
+          it 'returns the event time slots members ids' do
+            is_expected.to eq(event.time_slots_members.pluck('id'))
+          end
         end
       end
     end
