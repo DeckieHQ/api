@@ -445,9 +445,15 @@ RSpec.describe Event, :type => :model do
   describe '#time_slots_members' do
     let(:event) { FactoryGirl.create(:event_with_time_slots_members) }
 
-    subject { event.time_slots_members }
+    subject(:time_slots_members) { event.time_slots_members }
 
     it { is_expected.to_not be_empty }
+
+    it do
+      expect(time_slots_members.pluck('id')).to match_array(
+        TimeSlotSubmission.where(time_slot_id: event.time_slots.pluck('id')).pluck('profile_id').uniq
+      )
+    end
   end
 
   describe '.confirmable' do
