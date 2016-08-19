@@ -42,6 +42,6 @@ class Notification < ApplicationRecord
   end
 
   def set_type
-    self.type = "#{action.resource_type.downcase}-#{action.type}"
+    self.type = "#{action.resource_type.underscore}-#{action.type}"
   end
 end
