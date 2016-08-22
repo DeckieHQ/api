@@ -30,7 +30,7 @@ RSpec.describe Comment, :type => :model do
 
   describe 'Validations' do
     it { is_expected.to validate_presence_of(:message) }
-    
+
     it { is_expected.to validate_length_of(:message).is_at_most(200) }
   end
 
@@ -84,19 +84,32 @@ RSpec.describe Comment, :type => :model do
     end
   end
 
+  describe '#top_resource' do
+    let(:comment) { FactoryGirl.create(:comment) }
+
+    subject { comment.top_resource }
+
+    it 'delegates its resource top resource' do
+      is_expected.to eq(comment.resource.top_resource)
+    end
+  end
+
+
   describe '#receivers_ids_for comment' do
     let(:comment) { FactoryGirl.create(:comment, :with_comments) }
+
     let(:profile) { FactoryGirl.create(:profile) }
+
     let(:action)  { double(type: 'comment', actor: profile) }
 
     subject(:receivers_ids_for) { comment.receivers_ids_for(action) }
 
     it 'returns the profile ids in the comment thread except the author' do
-      expected_profiles = comment.comments.pluck('profile_id').push(comment.author.id)
-
-      expected_profiles.delete(action.actor.id)
-
-      is_expected.to eq(expected_profiles)
+      is_expected.to eq(
+        comment.comments.pluck('profile_id').push(comment.author.id).tap do |ids|
+          ids.delete(action.actor.id)
+        end
+      )
     end
   end
 end

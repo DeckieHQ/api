@@ -29,6 +29,8 @@ class TimeSlot < ApplicationRecord
     event.time_slots.count == 2
   end
 
+  alias_method :top_resource, :event
+
   def receivers_ids_for(action)
     case action.type.to_sym
     when :join, :leave

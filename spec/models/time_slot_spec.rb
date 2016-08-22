@@ -81,6 +81,14 @@ RSpec.describe TimeSlot, :type => :model do
     end
   end
 
+  describe '#top_resource' do
+    let(:time_slot) { FactoryGirl.create(:time_slot) }
+    
+    subject { time_slot.top_resource }
+
+    it { is_expected.to eq(time_slot.event) }
+  end
+
   describe '#receivers_ids_for' do
     let(:time_slot) { FactoryGirl.create(:time_slot, :with_members) }
 

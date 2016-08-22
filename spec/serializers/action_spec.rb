@@ -14,7 +14,7 @@ RSpec.describe ActionSerializer, :type => :serializer do
       )
     end
 
-    %w(actor resource).each do |relation_name|
+    %w(actor resource top_resource).each do |relation_name|
       it "serializes the #{relation_name} relation" do
         expect(serialized.relationships).to have_key(relation_name)
       end

@@ -3,7 +3,10 @@ require 'rails_helper'
 RSpec.describe Action, :type => :model do
   describe 'Database' do
     it { is_expected.to have_db_index(:profile_id) }
+
     it { is_expected.to have_db_index([:resource_type, :resource_id]) }
+
+    it { is_expected.to have_db_index([:top_resource_type, :top_resource_id]) }
 
     it do
       is_expected.to have_db_column(:title)
@@ -37,6 +40,8 @@ RSpec.describe Action, :type => :model do
     it { is_expected.to include_deleted(:actor) }
 
     it { is_expected.to belong_to(:resource) }
+
+    it { is_expected.to belong_to(:top_resource) }
   end
 
   context 'before create' do

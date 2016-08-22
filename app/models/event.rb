@@ -157,6 +157,8 @@ class Event < ApplicationRecord
     ).distinct
   end
 
+  def top_resource ; self ; end
+
   def receivers_ids_for(action)
     case action.type.to_sym
     when :submit, :unsubmit
@@ -172,7 +174,7 @@ class Event < ApplicationRecord
     when :join, :ready, :not_ready
       attendees_with_host_ids
     when :update, :leave, :comment
-      attendees_with_host_ids_except(action.actor)
+      attendees_with_host_ids.tap { |ids| ids.delete(action.actor.id) }
     else
       throw "Unsupported action: #{action.type}"
     end
@@ -196,12 +198,6 @@ class Event < ApplicationRecord
 
   def attendees_with_host_ids
     @attendees_with_host_ids ||= attendees.pluck('id').push(host.id)
-  end
-
-  def attendees_with_host_ids_except(profile)
-    attendees_with_host_ids.delete(profile.id)
-
-    attendees_with_host_ids
   end
 
   def assign_begin_at_range

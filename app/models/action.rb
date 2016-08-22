@@ -9,9 +9,13 @@ class Action < ApplicationRecord
 
   belongs_to :resource, polymorphic: true
 
+  belongs_to :top_resource, polymorphic: true
+
   before_create :set_title
 
   before_create :set_receivers_ids
+
+  before_create :set_top_resource
 
   after_commit :create_notifications
 
@@ -23,6 +27,10 @@ class Action < ApplicationRecord
 
   def set_receivers_ids
     self.receivers_ids = resource.receivers_ids_for(self)
+  end
+
+  def set_top_resource
+    self.top_resource = resource.top_resource
   end
 
   def create_notifications

@@ -327,6 +327,14 @@ RSpec.describe Event, :type => :model do
     end
   end
 
+  describe '#top_resource' do
+    let(:event) { FactoryGirl.create(:event) }
+    
+    subject { event.top_resource }
+
+    it { is_expected.to eq(event) }
+  end
+
   describe '#receivers_ids_for' do
     let(:event) do
       FactoryGirl.create(:event_with_attendees, :with_pending_submissions)

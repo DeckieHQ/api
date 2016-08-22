@@ -15,16 +15,14 @@ class Comment < ApplicationRecord
 
   scope :publics, -> { where(private: false) }
 
+  delegate :top_resource, to: :resource
+
   def title
     message.first(40)
   end
 
   def receivers_ids_for(action)
-    ids = comments.pluck(:profile_id).push(author.id)
-
-    ids.delete(action.actor.id)
-
-    ids
+    comments.pluck(:profile_id).push(author.id).tap { |ids| ids.delete(action.actor.id) }
   end
 
   def self.privates(choice)
