@@ -84,4 +84,23 @@ RSpec.describe UserMailer do
     it_behaves_like 'a mail with', :welcome_informations,
       greets_user: true, labels: [], attributes: [:subject, :details]
   end
+
+  describe '#flexible_event_reminder' do
+    let(:user) { event.host.user }
+
+    let(:event) { FactoryGirl.create(:event, :flexible) }
+
+    let(:mail) do
+      described_class.flexible_event_reminder(user, event)
+    end
+
+    let(:content) do
+      I18n.locale = culture
+
+      FlexibleEventReminder.new(user, event)
+    end
+
+    it_behaves_like 'a mail with', :flexible_event_reminder,
+      greets_user: true, labels: [:link], attributes: [:details, :event_url]
+  end
 end

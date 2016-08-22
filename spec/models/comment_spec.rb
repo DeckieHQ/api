@@ -94,7 +94,6 @@ RSpec.describe Comment, :type => :model do
     end
   end
 
-
   describe '#receivers_ids_for comment' do
     let(:comment) { FactoryGirl.create(:comment, :with_comments) }
 

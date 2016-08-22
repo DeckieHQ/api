@@ -74,6 +74,9 @@ en:
     # This doesn't need translation.
     feedback_informations:
       subject: '[ New Feedback ] - %{title}'
+    flexible_event_reminder:
+      subject: "You didn't confirm a time slot for the event %{title}"
+      link: 'View on Deckie'
   smser:
     phone_number_verification_instructions:
       message: 'Deckie: To verify your phone number, please enter this code: %{code}.'
