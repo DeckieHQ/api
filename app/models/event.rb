@@ -107,7 +107,7 @@ class Event < ApplicationRecord
     end
   end
 
-  def self.confirmables(percentage:)
+  def self.confirmable_in(percentage:)
     joins(:time_slots).where(
       "time_slots.begin_at - ((time_slots.begin_at - time_slots.created_at) * #{percentage} / 100) <= ?", Time.now
     )

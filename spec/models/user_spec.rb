@@ -53,6 +53,8 @@ RSpec.describe User, :type => :model do
     it { is_expected.to have_one(:profile).dependent(:destroy) }
 
     it { is_expected.to have_many(:notifications).dependent(:destroy) }
+
+    it { is_expected.to have_many(:email_deliveries).dependent(:destroy) }
   end
 
   context 'after create' do
@@ -219,7 +221,7 @@ RSpec.describe User, :type => :model do
   describe '#welcome' do
     let(:user) { FactoryGirl.create(:user) }
 
-    let(:informations_mail) { double(:deliver_later) }
+    let(:informations_mail) { double(deliver_later: true) }
 
     it 'delivers later a welcome informations email' do
       allow(UserMailer).to receive(:welcome_informations).with(user)
@@ -228,6 +230,49 @@ RSpec.describe User, :type => :model do
       expect(informations_mail).to receive(:deliver_later).with(no_args)
 
       user.welcome
+    end
+  end
+
+  describe '#received_email?' do
+    let(:user) { FactoryGirl.create(:user) }
+
+    let(:resource) { FactoryGirl.create(:event) }
+
+    subject { user.received_email?(:test, resource) }
+
+    context 'when user already received the according email delivery' do
+      before { EmailDelivery.create(type: :test, receiver: user, resource: resource) }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context "when user doesn't receive the according email delivery" do
+      it { is_expected.to be_falsy }
+    end
+  end
+
+  describe '#deliver_email' do
+    let(:user) { FactoryGirl.create(:user) }
+
+    let(:resource) { FactoryGirl.create(:event) }
+
+    let(:reminder_mail) { double(deliver_now: true) }
+
+    before do
+      allow(UserMailer).to receive(:flexible_event_reminder).with(user, resource)
+        .and_return(reminder_mail)
+
+      user.deliver_email(:flexible_event_reminder, resource)
+    end
+
+    it 'delivers the appropriate mail' do
+      expect(reminder_mail).to have_received(:deliver_now).with(no_args)
+    end
+
+    it 'creates the appropriate email delivery for the user' do
+      expect(
+        EmailDelivery.find_by(type: :flexible_event_reminder, receiver: user, resource: resource)
+      ).to be_present
     end
   end
 end

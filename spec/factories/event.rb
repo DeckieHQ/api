@@ -60,6 +60,12 @@ FactoryGirl.define do
       end
     end
 
+    factory :event_confirmable, traits: [:flexible] do
+      after(:create) do |event|
+        event.time_slots << TimeSlot.new(created_at: 2.days.ago, begin_at: Time.now + 2.hours)
+      end
+    end
+
     trait :with_comments do
       transient { comments_count 10 }
 

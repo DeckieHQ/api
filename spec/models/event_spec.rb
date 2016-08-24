@@ -329,7 +329,7 @@ RSpec.describe Event, :type => :model do
 
   describe '#top_resource' do
     let(:event) { FactoryGirl.create(:event) }
-    
+
     subject { event.top_resource }
 
     it { is_expected.to eq(event) }
@@ -464,8 +464,20 @@ RSpec.describe Event, :type => :model do
     end
   end
 
-  describe '.confirmable' do
+  describe '.confirmable_in' do
+    [10, 40, 60].each do |percents|
+      context "with #{percents}%" do
+        subject { Event.confirmable_in(percentage: percents) }
 
+        let!(:confirmable) { FactoryGirl.create(:event_confirmable) }
+
+        before { FactoryGirl.create_list(:event, 5, :flexible) }
+
+        it "is equal to flexible events confirmables under #{percents}%" do
+          is_expected.to eq([confirmable])
+        end
+      end
+    end
   end
 
   describe '.opened' do

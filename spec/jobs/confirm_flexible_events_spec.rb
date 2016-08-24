@@ -8,11 +8,7 @@ RSpec.describe ConfirmFlexibleEvents, type: :job do
   describe '#perform' do
     let!(:events) { FactoryGirl.create_list(:event, 5, :flexible) }
 
-    let!(:confirmable) do
-      events.shuffle.first.tap do |event|
-        event.time_slots << TimeSlot.new(created_at: 2.days.ago, begin_at: Time.now + 2.hours)
-      end
-    end
+    let!(:confirmable) { FactoryGirl.create(:event_confirmable) }
 
     let!(:optimum_time_slot) { confirmable.optimum_time_slot }
 

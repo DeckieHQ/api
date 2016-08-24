@@ -28,6 +28,11 @@ production:
     class: NotificationsSenderJob
     queue: scheduler
     description: 'This job will send a batch of notifications for each user in one email'
+  remind_flexible_events:
+    every: 5min
+    class: RemindFlexibleEvents
+    queue: scheduler
+    description: 'This job will send a reminder to flexible events close to the limit'
   confirm_flexible_events:
     every: 5min
     class: ConfirmFlexibleEvents

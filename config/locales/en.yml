@@ -61,7 +61,6 @@ en:
           third_person: '%{display_name} cancelled the time slot %{title}'
         time_slot-confirm:
           third_person: '%{display_name} confirmed the time slot %{title}'
-
       link: 'View on Deckie'
     invitation_informations:
       subject: 'You received an invitation to the event: "%{title}"'
