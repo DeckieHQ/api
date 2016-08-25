@@ -21,11 +21,31 @@ RSpec.describe 'User account cancel', :type => :request do
       let(:user) { FactoryGirl.create(:user_with_hosted_events) }
 
       it 'deletes the user opened hosted events' do
-        expect(user.hosted_events.opened).to be_empty
+        expect(user.opened_hosted_events).to be_empty
       end
 
       it "doesn't delete the user closed hosted events" do
         expect(user.hosted_events).to_not be_empty
+      end
+    end
+
+    context 'when user has submissions' do
+      let(:user) { FactoryGirl.create(:user, :with_submissions) }
+
+      it 'deletes the user submissions to opened events' do
+        expect(user.opened_submissions).to be_empty
+      end
+
+      it "doesn't delete the user submissions to closed events" do
+        expect(user.submissions).to_not be_empty
+      end
+    end
+
+    context('when user has time slot submissions') do
+      let(:user) { FactoryGirl.create(:user, :with_time_slot_submissions) }
+
+      it 'deletes the user time slot submissions' do
+        expect(user.time_slot_submissions).to be_empty
       end
     end
   end

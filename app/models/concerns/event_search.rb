@@ -15,6 +15,7 @@ module EventSearch
                    :description,
                    :begin_at,
                    :end_at,
+                   :begin_at_range,
                    :latitude,
                    :longitude,
                    :street,
@@ -26,7 +27,9 @@ module EventSearch
                    :submissions_count,
                    :public_comments_count,
                    :private_comments_count,
-                   :private
+                   :private,
+                   :flexible,
+                   :reached_time_slot_min
 
         attribute :full do
           full?
@@ -34,6 +37,10 @@ module EventSearch
 
         attribute :ready do
           ready?
+        end
+
+        attribute :reached_time_slot_min do
+          reached_time_slot_min?
         end
 
         attribute :begin_at_i do

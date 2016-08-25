@@ -8,6 +8,14 @@ module RequestHelpers
       @json_data ||= json_response[:data]
     end
 
+    def json_attributes
+      @json_attributes ||= json_data[:attributes]
+    end
+
+    def json_attributes_for(record)
+      @json_attributes_for ||= json_data[ json_data.index { |data| data[:id] == record.id.to_s } ][:attributes]
+    end
+
     def json_headers
       headers = {}
 

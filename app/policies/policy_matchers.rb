@@ -1,15 +1,17 @@
 module PolicyMatchers
   module Event
+    def self.included(base)
+      base.instance_eval do
+        [:full, :closed, :flexible, :reached_time_slot_min].each do |state|
+          define_method :"event_#{state}?" do
+            add_error(:"event_#{state}") if event.public_send(:"#{state}?")
+          end
+        end
+      end
+    end
+
     def event_host?
       user.profile == event.host
-    end
-
-    def event_full?
-      add_error(:event_full) if event.full?
-    end
-
-    def event_closed?
-      add_error(:event_closed) if event.closed?
     end
   end
 

@@ -11,6 +11,8 @@ class Profile < ApplicationRecord
 
   has_many :submissions
 
+  has_many :time_slot_submissions
+
   has_many :hosted_events, class_name: :Event
 
   has_many :opened_hosted_events, -> { opened }, class_name: :Event

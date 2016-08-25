@@ -53,6 +53,14 @@ fr:
           third_person: "%{title} n'a plus assez de participants pour démarrer"
         comment-comment:
           third_person: '%{display_name} a répondu au commentaire %{title}.'
+        time_slot-join:
+          third_person: '%{display_name} à rejoint le créneau horaire %{title}'
+        time_slot-leave:
+          third_person: '%{display_name} à quitté le créneau horaire %{title}'
+        time_slot-cancel:
+          third_person: '%{display_name} à annulé le créneau horaire %{title}'
+        time_slot-confirm:
+          third_person: '%{display_name} à confirmé le créneau horaire %{title}'
       link: 'Voir sur Deckie'
     invitation_informations:
       subject: "Vous avez reçu une invitation à la partie : \"%{title}\""
@@ -69,6 +77,9 @@ fr:
         Il reste encore quelques bugs et améliorations à faire, tous les avis sont bienvenus alors n'hésitez pas à nous en faire part.
 
         Merci et bon jeu !
+    flexible_event_reminder:
+      subject: "Vous n'avez pas confirmé de créneau pour l'évennement %{title}"
+      link: 'Voir sur Deckie'
   smser:
     phone_number_verification_instructions:
       message: 'Deckie : Vérification du numéro de téléphone, code : %{code}.'

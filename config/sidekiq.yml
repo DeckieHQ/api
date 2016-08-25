@@ -12,7 +12,7 @@ production:
   - [scheduler, 3]
   - [mailers, 4]
 :schedule:
-  events_reindex:
+  reindex_events:
     every: 1h
     class: ReindexRecordsJob
     queue: scheduler
@@ -28,5 +28,15 @@ production:
     class: NotificationsSenderJob
     queue: scheduler
     description: 'This job will send a batch of notifications for each user in one email'
+  remind_flexible_events:
+    every: 5min
+    class: RemindFlexibleEvents
+    queue: scheduler
+    description: 'This job will send a reminder to flexible events close to the limit'
+  confirm_flexible_events:
+    every: 5min
+    class: ConfirmFlexibleEvents
+    queue: scheduler
+    description: 'This job will automatically confirm flexible events close to the limit'
 :scheduler:
   :listened_queues_only:

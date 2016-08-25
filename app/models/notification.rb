@@ -24,6 +24,10 @@ class Notification < ApplicationRecord
       event-ready
       event-not_ready
       comment-comment
+      time_slot-join
+      time_slot-leave
+      time_slot-cancel
+      time_slot-confirm
     )
   end
 
@@ -38,6 +42,6 @@ class Notification < ApplicationRecord
   end
 
   def set_type
-    self.type = "#{action.resource_type.downcase}-#{action.type}"
+    self.type = "#{action.resource_type.underscore}-#{action.type}"
   end
 end

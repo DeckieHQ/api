@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'User create hosted event', :type => :request do
   let(:params)       { Serialize.params(event_params, type: :events) }
-  let(:event_params) { event.attributes }
+
+  let(:event_params) { event.attributes.merge('new_time_slots' => event.new_time_slots) }
 
   before do
     post user_hosted_events_path, params: params, headers: json_headers
@@ -42,6 +43,14 @@ RSpec.describe 'User create hosted event', :type => :request do
 
       it 'grants the user with an achievement' do
         expect(user).to have_achievement('early-event')
+      end
+
+      context 'with flexible event' do
+        let(:event) { FactoryGirl.build(:event, :flexible) }
+
+        it 'creates associated times slots' do
+          expect(created_event.time_slots).to_not be_empty
+        end
       end
     end
 

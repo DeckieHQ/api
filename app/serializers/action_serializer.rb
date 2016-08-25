@@ -3,4 +3,5 @@ class ActionSerializer < ActiveModel::Serializer
 
   belongs_to :actor
   belongs_to :resource
+  belongs_to :top_resource
 end

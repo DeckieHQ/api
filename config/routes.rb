@@ -18,12 +18,12 @@ Rails.application.routes.draw do
       resource :user, controller: :registrations do
         post 'sign_in', to: 'sessions#create'
 
-        resource  :profile,       only: [:show,   :update]
-        resource  :password,      only: [:create, :update]
-        resource  :verification,  only: [:create, :update]
-        resources :hosted_events, only: [:index,  :create]
-        resources :submissions,   only: :index
-        resources :notifications, only: :index
+        resource  :profile,               only: [:show,   :update]
+        resource  :password,              only: [:create, :update]
+        resource  :verification,          only: [:create, :update]
+        resources :hosted_events,         only: [:index,  :create]
+        resources :submissions,           only: :index
+        resources :notifications,         only: :index
 
         post 'reset_notifications_count', to: 'notifications#reset_count'
       end
@@ -44,6 +44,10 @@ Rails.application.routes.draw do
       end
 
       resources :invitations, only: :create, controller: 'event/invitations'
+
+      resources :time_slots, only: :index, controller: 'event/time_slots'
+
+      resources :time_slots_members, only: :index, controller: 'event/time_slots_members'
     end
   end
 
@@ -57,6 +61,8 @@ Rails.application.routes.draw do
 
   resources :profiles, only: [:show, :update] do
     resources :achievements, only: [:index], controller: 'profile/achievements'
+
+    resources :time_slot_submissions, only: [:index], controller: 'profile/time_slot_submissions'
   end
 
   resources :contacts, only: :show
@@ -66,4 +72,12 @@ Rails.application.routes.draw do
   resources :feedbacks, only: :create
 
   resource :location, only: :show
+
+  resources :time_slots, only: [:show, :destroy] do
+    post 'confirm', on: :member
+
+    resources :members, only: :index, controller: 'time_slot/members'
+
+    resources :time_slot_submissions, only: [:create, :show, :destroy], shallow: true
+  end
 end

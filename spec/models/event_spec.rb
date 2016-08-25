@@ -13,7 +13,7 @@ RSpec.describe Event, :type => :model do
         .of_type(:integer).with_options(null: false)
     end
 
-    [:auto_accept, :private].each do |attribute|
+    [:auto_accept, :private, :flexible].each do |attribute|
       it do
         is_expected.to have_db_column(attribute)
           .of_type(:boolean).with_options(null: false, default: false)
@@ -29,6 +29,11 @@ RSpec.describe Event, :type => :model do
           .of_type(:integer).with_options(null: false, default: 0)
       end
     end
+
+    it do
+      is_expected.to have_db_column(:begin_at_range)
+        .of_type(:jsonb).with_options(null: false, default: {})
+    end
   end
 
   describe 'Relationships' do
@@ -42,6 +47,8 @@ RSpec.describe Event, :type => :model do
     it { is_expected.to have_many(:submissions).dependent(:destroy) }
 
     it { is_expected.to have_many(:comments).dependent(:destroy) }
+
+    it { is_expected.to have_many(:time_slots).dependent(:destroy) }
 
     it do
       is_expected.to have_many(:confirmed_submissions)
@@ -132,7 +139,9 @@ RSpec.describe Event, :type => :model do
       it { is_expected.to be_valid }
     end
 
-    it { is_expected.to_not allow_value(nil).for(:auto_accept) }
+    [:auto_accept, :flexible, :private].each do |attribute|
+      it { is_expected.to_not allow_value(nil).for(attribute) }
+    end
 
     {
       title:             128,
@@ -146,6 +155,20 @@ RSpec.describe Event, :type => :model do
     }.each do |attribute, length|
       it { is_expected.to validate_length_of(attribute).is_at_most(length) }
     end
+
+    context 'when event is flexible' do
+      subject(:event) { FactoryGirl.create(:event, :flexible) }
+
+      it { is_expected.to validate_absence_of(:begin_at) }
+
+      it { is_expected.to validate_absence_of(:end_at) }
+
+      [
+        nil, 'lol', [], [Time.now + 2.days], [Time.now + 2.days, nil], [Time.now + 2.days, 2.days.ago]
+      ].each do |value|
+        it { is_expected.to_not allow_value(value).for(:new_time_slots).on(:create) }
+      end
+    end
   end
 
   context 'after create' do
@@ -153,6 +176,26 @@ RSpec.describe Event, :type => :model do
 
     it 'retrieves the event coordinates' do
       is_expected.to have_coordinates_of_address
+    end
+
+    it 'has no time slots' do
+      expect(event.time_slots).to be_empty
+    end
+
+    context 'when event is flexible' do
+      subject(:event) { FactoryGirl.create(:event, :flexible) }
+
+      it 'creates a time slot for each new_time_slots datetime' do
+        expect(
+          event.time_slots.where(begin_at: event.new_time_slots)
+        ).to_not be_empty
+      end
+
+      it 'assigns begin_at_range' do
+        expect(event.begin_at_range).to eq(
+          { min: event.new_time_slots.min, max: event.new_time_slots.max }.as_json
+        )
+      end
     end
   end
 
@@ -185,7 +228,7 @@ RSpec.describe Event, :type => :model do
 
   it_behaves_like 'an indexable resource'
 
-  [:full, :closed].each do |state|
+  [:full, :closed, :reached_time_slot_min].each do |state|
     method = "#{state}?"
 
     describe "##{method}" do
@@ -197,6 +240,12 @@ RSpec.describe Event, :type => :model do
         subject(:method) { FactoryGirl.create(:"event_#{state}").send(method) }
 
         it { is_expected.to be_truthy }
+      end
+
+      context 'when event is flexible' do
+        subject(:method) { FactoryGirl.create(:event, :flexible).send(method) }
+
+        it { is_expected.to be_falsy }
       end
     end
   end
@@ -278,6 +327,14 @@ RSpec.describe Event, :type => :model do
     end
   end
 
+  describe '#top_resource' do
+    let(:event) { FactoryGirl.create(:event) }
+
+    subject { event.top_resource }
+
+    it { is_expected.to eq(event) }
+  end
+
   describe '#receivers_ids_for' do
     let(:event) do
       FactoryGirl.create(:event_with_attendees, :with_pending_submissions)
@@ -299,8 +356,17 @@ RSpec.describe Event, :type => :model do
       context "with a #{type} action" do
         let(:action) { double(type: type) }
 
-        it 'returns the event submissions profiles ids + host ids' do
+        it 'returns the event submissions profiles ids' do
           is_expected.to eq(event.submissions.pluck('profile_id'))
+        end
+
+
+        context 'when event is flexible' do
+          let(:event) { FactoryGirl.create(:event_with_time_slots_members) }
+
+          it 'returns the event time slots members ids' do
+            is_expected.to eq(event.time_slots_members.pluck('id'))
+          end
         end
       end
     end
@@ -372,12 +438,55 @@ RSpec.describe Event, :type => :model do
     end
   end
 
+  describe '#optimum_time_slot' do
+    let(:event) { FactoryGirl.create(:event_with_time_slots_members) }
+
+    subject(:optimum_time_slot) { event.optimum_time_slot }
+
+    it do
+      is_expected.to eq(
+        event.time_slots.order('begin_at ASC').max_by(&:members_count)
+      )
+    end
+  end
+
+  describe '#time_slots_members' do
+    let(:event) { FactoryGirl.create(:event_with_time_slots_members) }
+
+    subject(:time_slots_members) { event.time_slots_members }
+
+    it { is_expected.to_not be_empty }
+
+    it do
+      expect(time_slots_members.pluck('id')).to match_array(
+        TimeSlotSubmission.where(time_slot_id: event.time_slots.pluck('id')).pluck('profile_id').uniq
+      )
+    end
+  end
+
+  describe '.confirmable_in' do
+    [10, 40, 60].each do |percents|
+      context "with #{percents}%" do
+        subject { Event.confirmable_in(percentage: percents) }
+
+        let!(:confirmable) { FactoryGirl.create(:event_confirmable) }
+
+        before { FactoryGirl.create_list(:event, 5, :flexible) }
+
+        it "is equal to flexible events confirmables under #{percents}%" do
+          is_expected.to eq([confirmable])
+        end
+      end
+    end
+  end
+
   describe '.opened' do
     let(:events) { Event.all.opened }
 
     before do
       FactoryGirl.create_list(:event,        Faker::Number.between(1, 4))
       FactoryGirl.create_list(:event_closed, Faker::Number.between(1, 4))
+      FactoryGirl.create_list(:event,        Faker::Number.between(1, 4), :flexible)
     end
 
     it 'returns the opened events' do
@@ -391,6 +500,10 @@ RSpec.describe Event, :type => :model do
         it 'returns the opened events' do
           expect_opened_events(true)
         end
+
+        it 'includes flexible events' do
+          expect(events.where(flexible: true)).to_not be_empty
+        end
       end
     end
 
@@ -401,11 +514,15 @@ RSpec.describe Event, :type => :model do
         it 'returns the closed events' do
           expect_opened_events(false)
         end
+
+        it "doesn't include flexible events" do
+          expect(events.where(flexible: true)).to be_empty
+        end
       end
     end
 
     def expect_opened_events(opened)
-      results = events.pluck(:begin_at).keep_if do |begin_at|
+      results = events.where(flexible: false).pluck(:begin_at).keep_if do |begin_at|
         opened ? begin_at > Time.now : begin_at <= Time.now
       end
       expect(results).to_not be_empty

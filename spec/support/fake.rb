@@ -47,6 +47,20 @@ module Fake
     def level
       %w(beginner intermediate advanced).sample
     end
+
+    def time_slots
+      Array.new(5).map do
+        TimeSlot.begin_at
+      end
+    end
+  end
+
+  module TimeSlot
+    extend self
+
+    def begin_at
+      Faker::Time.between(Time.now + 1.day, Time.now + 10.day, :all)
+    end
   end
 
   module Submission

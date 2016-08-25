@@ -1,0 +1,3 @@
+<%= t('mailer.greetings', username: @content.username) %>
+<br><br>
+<%= raw @content.details %><a href="<%= @content.event_url %>"><%= t('mailer.flexible_event_reminder.link') %></a>

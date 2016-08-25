@@ -44,6 +44,8 @@ RSpec.describe Profile, :type => :model do
 
     it { is_expected.to have_many(:submissions) }
 
+    it { is_expected.to have_many(:time_slot_submissions) }
+
     it { is_expected.to have_many(:hosted_events) }
   end
 

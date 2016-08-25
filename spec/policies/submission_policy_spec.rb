@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe SubmissionPolicy do
-  subject { SubmissionPolicy.new(user, submission) }
+  subject { described_class.new(user, submission) }
 
   let(:submission) { FactoryGirl.create(:submission, :pending) }
 
@@ -13,7 +13,7 @@ RSpec.describe SubmissionPolicy do
     it { is_expected.to forbid_action(:confirm) }
   end
 
-  context 'being the subscribtion event host' do
+  context 'being the submission event host' do
     let(:user) { submission.event.host.user }
 
     it { is_expected.to permit_action(:show) }
@@ -47,7 +47,7 @@ RSpec.describe SubmissionPolicy do
     end
   end
 
-  context 'being the subscribtion owner' do
+  context 'being the submission owner' do
     let(:user) { submission.profile.user }
 
     it { is_expected.to permit_action(:show) }

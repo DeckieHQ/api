@@ -103,6 +103,16 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_time_slot_submissions do
+      transient do
+        time_slot_submissions_count 5
+      end
+
+      after(:create) do |user, e|
+        create_list(:time_slot_submission, e.time_slot_submissions_count, profile: user.profile)
+      end
+    end
+
     trait :with_notifications do
       transient do
         notifications_count 5

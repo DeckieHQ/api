@@ -48,7 +48,7 @@ RSpec.describe Notification, :type => :model do
       action = notification.action
 
       expect(notification.type).to eq(
-        "#{action.resource_type.downcase}-#{action.type}"
+        "#{action.resource_type.underscore}-#{action.type}"
       )
     end
 

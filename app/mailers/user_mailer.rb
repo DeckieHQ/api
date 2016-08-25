@@ -22,4 +22,10 @@ class UserMailer < ApplicationMailer
 
     send_mail(user)
   end
+
+  def flexible_event_reminder(user, event)
+    @content = FlexibleEventReminder.new(user, event)
+
+    send_mail(user)
+  end
 end

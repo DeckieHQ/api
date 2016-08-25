@@ -10,6 +10,7 @@ class EventSerializer < ActiveModel::Serializer
              :description,
              :begin_at,
              :end_at,
+             :begin_at_range,
              :latitude,
              :longitude,
              :street,
@@ -22,6 +23,8 @@ class EventSerializer < ActiveModel::Serializer
              :public_comments_count,
              :private_comments_count,
              :private,
+             :flexible,
+             :reached_time_slot_min,
              :opened,
              :full,
              :ready
@@ -53,6 +56,16 @@ class EventSerializer < ActiveModel::Serializer
     include_data false
   end
 
+  has_many :time_slots do
+    link :related, UrlHelpers.event_time_slots(object)
+    include_data false
+  end
+
+  has_many :time_slots_members do
+    link :related, UrlHelpers.event_time_slots_members(object)
+    include_data false
+  end
+
   def opened
     !object.closed?
   end
@@ -63,5 +76,9 @@ class EventSerializer < ActiveModel::Serializer
 
   def ready
     object.ready?
+  end
+
+  def reached_time_slot_min
+    object.reached_time_slot_min?
   end
 end

@@ -5,7 +5,7 @@ RSpec.describe SubmissionSerializer, :type => :serializer do
     let(:submission) { FactoryGirl.create(:submission) }
 
     let(:serialized) do
-      Serialized.new(SubmissionSerializer.new(submission))
+      Serialized.new(described_class.new(submission))
     end
 
     it 'serializes the specified attributes' do

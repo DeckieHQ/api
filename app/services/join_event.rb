@@ -1,4 +1,8 @@
 class JoinEvent < ActionService
+  def self.for(event, profiles)
+    profiles.map { |profile| new(profile, event).call }
+  end
+
   def initialize(profile, event)
     super(profile, event)
 

@@ -24,7 +24,6 @@ end
 RSpec::Matchers.define :equal_serialized do |records|
   match do |actual|
     if records.kind_of?(ActiveRecord::AssociationRelation) && json_data.count > 1
-
       order = collection_order(actual)
 
       records = records.order("id #{order}")

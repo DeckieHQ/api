@@ -18,6 +18,8 @@ FactoryGirl.define do
 
     end_at { Faker::Time.between(Time.now + 10.day, Time.now + 20.day, :all) }
 
+    flexible false
+
     street   { Faker::Address.street_address }
     postcode { Faker::Address.postcode       }
     city     { Faker::Address.country        }
@@ -36,6 +38,32 @@ FactoryGirl.define do
 
     trait :auto_accept do
       auto_accept true
+    end
+
+    trait :flexible do
+      begin_at nil
+
+      end_at nil
+
+      flexible true
+
+      new_time_slots { Fake::Event.time_slots }
+    end
+
+    factory :event_with_time_slots_members, traits: [:flexible] do
+      after(:create) do |event|
+        event.time_slots.each do |time_slot|
+          members_count = Faker::Number.between(1, 1)
+
+          create_list(:time_slot_submission, members_count, time_slot: time_slot)
+        end
+      end
+    end
+
+    factory :event_confirmable, traits: [:flexible] do
+      after(:create) do |event|
+        event.time_slots << TimeSlot.new(created_at: 2.days.ago, begin_at: Time.now + 2.hours)
+      end
     end
 
     trait :with_comments do
@@ -61,6 +89,10 @@ FactoryGirl.define do
       to_create do |event|
         event.save(validate: false)
       end
+    end
+
+    factory :event_reached_time_slot_min, traits: [:flexible] do
+      new_time_slots { Fake::Event.time_slots[0..1] }
     end
 
     factory :event_with_submissions do

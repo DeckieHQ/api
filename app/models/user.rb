@@ -9,6 +9,8 @@ class User < ApplicationRecord
 
   has_many :notifications, dependent: :destroy
 
+  has_many :email_deliveries, dependent: :destroy
+
   delegate :hosted_events, to: :profile
 
   delegate :opened_hosted_events, to: :profile
@@ -16,6 +18,8 @@ class User < ApplicationRecord
   delegate :invitations, to: :profile
 
   delegate :submissions, to: :profile
+
+  delegate :time_slot_submissions, to: :profile
 
   has_secure_token :authentication_token
 
@@ -69,6 +73,16 @@ class User < ApplicationRecord
 
   def welcome
     UserMailer.welcome_informations(self).deliver_later
+  end
+
+  def received_email?(type, resource)
+    email_deliveries.find_by(type: type, resource: resource)
+  end
+
+  def deliver_email(type, resource)
+    UserMailer.public_send(type, self, resource).deliver_now
+
+    EmailDelivery.create(type: type, receiver: self, resource: resource)
   end
 
   private
