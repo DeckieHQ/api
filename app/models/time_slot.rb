@@ -40,7 +40,7 @@ class TimeSlot < ApplicationRecord
     when :confirm
       TimeSlotSubmission.where(
         time_slot_id: event.time_slots.pluck('id')
-      ).pluck('id')
+      ).pluck('profile_id')
     else
       throw "Unsupported action: #{action.type}"
     end
