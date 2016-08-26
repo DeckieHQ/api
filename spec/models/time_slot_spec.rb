@@ -83,7 +83,7 @@ RSpec.describe TimeSlot, :type => :model do
 
   describe '#top_resource' do
     let(:time_slot) { FactoryGirl.create(:time_slot) }
-    
+
     subject { time_slot.top_resource }
 
     it { is_expected.to eq(time_slot.event) }
@@ -117,7 +117,7 @@ RSpec.describe TimeSlot, :type => :model do
 
       it 'returns all the event time slots members ids' do
         is_expected.to eq(
-          TimeSlotSubmission.where(time_slot_id: time_slot.event.time_slots).pluck('id')
+          TimeSlotSubmission.where(time_slot_id: time_slot.event.time_slots).pluck('profile_id')
         )
       end
     end
