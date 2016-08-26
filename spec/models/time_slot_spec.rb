@@ -117,7 +117,7 @@ RSpec.describe TimeSlot, :type => :model do
 
       it 'returns all the event time slots members ids' do
         is_expected.to eq(
-          TimeSlotSubmission.where(time_slot_id: time_slot.event.time_slots).pluck('profile_id')
+          TimeSlotSubmission.where(time_slot_id: time_slot.event.time_slots).pluck('profile_id').uniq
         )
       end
     end
