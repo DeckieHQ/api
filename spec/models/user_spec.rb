@@ -101,7 +101,7 @@ RSpec.describe User, :type => :model do
 
   def expect_profile_propagation
     expect(user.profile).to have_attributes({
-      display_name: "#{user.first_name} #{user.last_name.capitalize[0]}",
+      display_name:          user.display_name,
       email_verified:        user.email_verified?,
       phone_number_verified: user.phone_number_verified?,
       moderator:             user.moderator?
@@ -274,5 +274,13 @@ RSpec.describe User, :type => :model do
         EmailDelivery.find_by(type: :flexible_event_reminder, receiver: user, resource: resource)
       ).to be_present
     end
+  end
+
+  describe '#display_name' do
+    let(:user) { FactoryGirl.create(:user) }
+
+    subject { user.display_name }
+
+    it { is_expected.to eq("#{user.first_name} #{user.last_name.capitalize[0]}") }
   end
 end
