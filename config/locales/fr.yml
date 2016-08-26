@@ -5,23 +5,35 @@ fr:
       user:
         not_found_in_database: "L'utilisateur n'existe pas"
   mailer:
-    greetings: 'Bonjour %{username} !'
+    shared:
+      greetings: 'Bonjour %{username} !'
+      good_game: 'Bon jeu !'
+      team: "L'équipe Deckie"
+      facebook:
+        label: 'Notre Facebook'
+        link: 'https://www.facebook.com/DeckieFR'
+      twitter:
+        label: 'Notre Twitter'
+        link: 'https://twitter.com/DeckieFR'
     reset_password_instructions:
       subject: 'Réinitialisation du mot de passe'
       details: 'Vous avez récemment fait une demande de réinitialisation de votre mot de passe. Pour terminer le processus, veuillez cliquer sur le lien ci‑dessous.'
-      link: 'Changer Mot de Passe'
+      link: 'cliquez ici'
       notice: "Si vous n’êtes pas l’auteur de cette demande, il est probable qu’un autre utilisateur ait saisi votre adresse e-mail par erreur, vous pouvez ignorer cet email et votre mot de passe restera inchangé tant que vous n'accèderez pas au lien suivant."
     email_verification_instructions:
       subject: "Vérification de l'adresse email"
-      details: 'Vous avez récemment fait une demande de vérification de votre addresse email. Pour terminer le processus, veuillez cliquer sur le lien ci‑dessous.'
-      link: 'Vérifier Addresse Email'
-      notice: "Si vous n’êtes pas l’auteur de cette demande, il est probable qu’un autre utilisateur ait saisi votre adresse e-mail par erreur, vous pouvez ignorer cet email et votre adresse email ne sera pas vérifiée tant que vous n'accèderez pas au lien suivant."
+      details: 'Pour vérifier votre email sur Deckie'
+      link: 'cliquez ici'
+      notice: >
+        Si vous n’êtes pas l’auteur de cette demande, il est probable qu’un autre utilisateur ait saisi votre adresse e-mail
+        par erreur, vous pouvez ignorer cet email et votre mot de passe restera inchangé.
     notifications_informations:
       subject: 'Vous avez reçu de nouvelles notifications'
+      title: 'Nouvelles notifications'
       details: 'Vous avez reçu de nouvelles notifications :'
       subscribe:
-        label: 'Pour vous abonner au vous désabonner aux notifications par email :'
-        link: 'Cliquez ici'
+        label: 'Pour vous abonner au vous désabonner aux notifications par email'
+        link: 'cliquez ici'
     notification_informations:
       description:
         event-submit:
@@ -63,23 +75,26 @@ fr:
           third_person: '%{display_name} à confirmé le créneau horaire %{title}'
       link: 'Voir sur Deckie'
     invitation_informations:
-      subject: "Vous avez reçu une invitation à la partie : \"%{title}\""
-      details: "%{sender} vous a envoyé une invitation à la partie %{title}."
-      link: 'Voir sur Deckie'
+      subject: "%{display_name} vous invite à participer à la partie %{title}"
+      link: 'Voir la partie'
+      when: 'Quand ? %{begin_at}'
+      address: >
+        Où ?
+
+        %{street}
+        %{city}, %{state}
+        %{country}
+      capacity_range: 'De %{min_capacity} à %{capacity} joueurs'
     welcome_informations:
       subject: 'Bienvenue sur Deckie !'
       details: >
-        Nous sommes actuellement en version beta et donc notre nombre d'utilisateurs est encore limité.
-
-        Vous pouvez néanmoins rejoindre les parties proposées ou créer la votre et inviter vos amis pour nous
-        aider à faire grandir la plateforme.
-
-        Il reste encore quelques bugs et améliorations à faire, tous les avis sont bienvenus alors n'hésitez pas à nous en faire part.
-
-        Merci et bon jeu !
+        Nous sommes encore en version beta et donc notre nombre d'utilisateurs est encore faible pour rencontrer de nouveaux joueurs. Néanmoins vous pouvez organiser vos parties en toute simplicité avec notre sondage de date et inviter vos amis par email et partage Facebook pour nous aider à faire connaitre et grandir la plateforme. Il reste encore quelques bugs donc n'hésitez pas à nous en faire part si vous en voyez ou pour toute suggestion d'amélioration.
+      link:
+        'Voir les parties sur Deckie'
     flexible_event_reminder:
-      subject: "Vous n'avez pas confirmé de créneau pour l'évennement %{title}"
-      link: 'Voir sur Deckie'
+      subject: "Rappel : vous devez valider le créneau horaire final pour la partie %{title}"
+      link: 'Voir la partie sur Deckie'
+      time_slot: "%{begin_at} : %{members_count} inscrits"
   smser:
     phone_number_verification_instructions:
       message: 'Deckie : Vérification du numéro de téléphone, code : %{code}.'

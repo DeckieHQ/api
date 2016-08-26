@@ -10,7 +10,7 @@ RSpec.describe NotificationsInformations do
   describe '#username' do
     subject(:username) { content.username }
 
-    it { is_expected.to eq(user.email) }
+    it { is_expected.to eq(user.display_name) }
   end
 
   describe '#subject' do

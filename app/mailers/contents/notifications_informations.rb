@@ -9,7 +9,7 @@ class NotificationsInformations
   end
 
   def username
-    user.email
+    user.display_name
   end
 
   def subject
@@ -17,6 +17,6 @@ class NotificationsInformations
   end
 
   def subscribe_url
-    UrlHelpers.front_for('/account/notifications')
+    UrlHelpers.front_for('account/notifications')
   end
 end

@@ -5,7 +5,16 @@ en:
       user:
         not_found_in_database: 'User not found in database'
   mailer:
-    greetings: 'Hello %{username}!'
+    shared:
+      greetings: 'Hello %{username}!'
+      good_game: 'Good game!'
+      team: 'Team Deckie'
+      facebook:
+        label: 'Follow us on Facebook'
+        link: 'https://www.facebook.com/DeckieFR'
+      twitter:
+        label: 'Follow us on Twitter'
+        link: 'https://twitter.com/DeckieFR'
     reset_password_instructions:
       subject: 'Reset password instructions'
       details: 'Someone has requested a link to change your password, and you can do this through the link below.'
@@ -18,6 +27,7 @@ en:
       notice: "If you didn't request this, please ignore this email. Your email address won't be verified until you access the link above."
     notifications_informations:
       subject: 'You received new notifications'
+      title: 'New notifications'
       details: 'You received new notifications:'
       subscribe:
         label: 'To subscribe or unsubscribe to email notifications:'
@@ -63,19 +73,28 @@ en:
           third_person: '%{display_name} confirmed the time slot %{title}'
       link: 'View on Deckie'
     invitation_informations:
-      subject: 'You received an invitation to the event: "%{title}"'
-      details: '%{sender} sent you an invitation to the event %{title}.'
+      subject: '%{display_name} sent you an invitation to the event %{title}.'
       link: 'View on Deckie'
+      when: 'Quand ? %{begin_at}'
+      address: >
+        Where?
+
+        %{street}
+        %{city}, %{state}
+        %{country}
+      capacity_range: 'From %{min_capacity} to %{capacity} players'
     welcome_informations:
       subject: 'Welcome on Deckie!'
       details: >
         Good luck and have fun!
+      link: 'View events on Deckie'
     # This doesn't need translation.
     feedback_informations:
       subject: '[ New Feedback ] - %{title}'
     flexible_event_reminder:
       subject: "You didn't confirm a time slot for the event %{title}"
       link: 'View on Deckie'
+      time_slot: "%{begin_at}: %{members_count} members"
   smser:
     phone_number_verification_instructions:
       message: 'Deckie: To verify your phone number, please enter this code: %{code}.'

@@ -5,12 +5,6 @@ RSpec.describe WelcomeInformations do
 
   subject(:content) { described_class.new(user) }
 
-  describe '#username' do
-    subject(:username) { content.username }
-
-    it { is_expected.to eq(user.email) }
-  end
-
   describe '#subject' do
     subject { content.subject }
 
@@ -27,5 +21,11 @@ RSpec.describe WelcomeInformations do
         I18n.t('mailer.welcome_informations.details').gsub("\n", '<br><br>')
       )
     end
+  end
+
+  describe '#search_url' do
+    subject { content.search_url }
+
+    it { is_expected.to equal_front_url_with('search') }
   end
 end

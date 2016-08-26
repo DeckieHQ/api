@@ -6,7 +6,7 @@ class ResetPasswordInstructions < SimpleDelegator
   end
 
   def username
-    email
+    display_name
   end
 
   def subject

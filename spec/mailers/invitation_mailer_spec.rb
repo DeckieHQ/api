@@ -17,8 +17,8 @@ RSpec.describe InvitationMailer do
     end
 
     it_behaves_like 'a mail with', :invitation_informations, to: :invitation,
-      greets_user: true,
+      greets_user: false,
       labels:      [:link],
-      attributes:  [:details, :invitation_url, :message]
+      attributes:  [:details, :when, :address, :capacity_range, :short_description, :invitation_url]
   end
 end

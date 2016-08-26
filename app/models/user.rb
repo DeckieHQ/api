@@ -85,11 +85,11 @@ class User < ApplicationRecord
     EmailDelivery.create(type: type, receiver: self, resource: resource)
   end
 
-  private
-
   def display_name
     "#{first_name} #{last_name.capitalize.chr}"
   end
+
+  private
 
   def subscribe_to_notifications
     preferences['notifications'] = Notification.types

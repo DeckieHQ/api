@@ -1,13 +1,11 @@
 class FlexibleEventReminder
   attr_reader :user, :event
 
+  delegate :time_slots, to: :event
+
   def initialize(user, event)
     @user  = user
     @event = event
-  end
-
-  def username
-    user.email
   end
 
   def subject

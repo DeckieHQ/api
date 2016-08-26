@@ -8,7 +8,7 @@ RSpec.describe EmailVerificationInstructions do
   describe '#username' do
     subject(:username) { content.username }
 
-    it { is_expected.to eq(user.email) }
+    it { is_expected.to eq(user.display_name) }
   end
 
   describe '#subject' do
@@ -22,7 +22,6 @@ RSpec.describe EmailVerificationInstructions do
   end
 
   describe '#email_verification_url' do
-
     subject(:email_verification_url) { content.email_verification_url }
 
     it do
