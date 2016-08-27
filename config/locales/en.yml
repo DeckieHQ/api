@@ -6,7 +6,7 @@ en:
         not_found_in_database: 'User not found in database'
   mailer:
     shared:
-      greetings: 'Hello %{username}!'
+      greetings: 'Hello <b>%{username}</b>!'
       good_game: 'Good game!'
       team: 'Team Deckie'
       facebook:
@@ -73,15 +73,10 @@ en:
           third_person: '%{display_name} confirmed the time slot %{title}'
       link: 'View on Deckie'
     invitation_informations:
-      subject: '%{display_name} sent you an invitation to the event %{title}.'
+      subject: '%{display_name} sent you an invitation to the event %{title}'
       link: 'View on Deckie'
-      when: 'Quand ? %{begin_at}'
-      address: >
-        Where?
-
-        %{street}
-        %{city}, %{state}
-        %{country}
+      when: 'When? %{begin_at}'
+      address: 'Where? %{street}, %{city}, %{state}, %{country}'
       capacity_range: 'From %{min_capacity} to %{capacity} players'
     welcome_informations:
       subject: 'Welcome on Deckie!'
