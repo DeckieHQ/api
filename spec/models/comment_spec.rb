@@ -19,13 +19,21 @@ RSpec.describe Comment, :type => :model do
       is_expected.to have_db_column(:updated_at)
       .of_type(:datetime).with_options(null: false)
     end
+
+    it do
+      is_expected.to have_db_column(:comments_count)
+        .of_type(:integer).with_options(null: false, default: 0)
+    end
   end
 
   describe 'Relationships' do
     it { is_expected.to belong_to(:author).with_foreign_key(:profile_id) }
+
     it { is_expected.to belong_to(:resource) }
+
     it { is_expected.to include_deleted(:author) }
-    it { is_expected.to have_many(:comments) }
+
+    it { is_expected.to have_many(:comments).counter_cache(true) }
   end
 
   describe 'Validations' do
@@ -38,9 +46,11 @@ RSpec.describe Comment, :type => :model do
 
   context 'after create' do
     context 'with Comment resource' do
-      subject(:comment) { FactoryGirl.build(:comment, :of_comment) }
+      subject(:comment) { FactoryGirl.create(:comment, :of_comment) }
 
-      it { expect(comment.save).to be_truthy }
+      it 'assigns private with its resource private' do
+        expect(comment.private).to eq(comment.resource.private)
+      end
     end
 
     context 'with another resource' do
@@ -53,6 +63,30 @@ RSpec.describe Comment, :type => :model do
           comment.resource.public_send("#{prefix}_comments_count")
         }.by(1)
       end
+    end
+  end
+
+  context 'after update' do
+    context 'with Comment resource' do
+      subject(:comment) { FactoryGirl.create(:comment, :of_comment) }
+
+      before { comment.update(private: true) }
+
+      it 'assigns private with its resource private' do
+        expect(comment.private).to eq(comment.resource.private)
+      end
+    end
+  end
+
+  context 'after destroy' do
+    let!(:comment) { FactoryGirl.create(:comment) }
+
+    it 'updates the resource counter cache' do
+      prefix = comment.private? ? :private : :public
+
+      expect { comment.destroy }.to change {
+        comment.resource.public_send("#{prefix}_comments_count")
+      }.by(-1)
     end
   end
 
