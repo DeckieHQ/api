@@ -9,9 +9,11 @@ class Comment < ApplicationRecord
 
   validates :message, presence: true, length: { maximum: 200 }
 
-  has_many :comments, as: :resource, dependent: :destroy
+  has_many :comments, as: :resource, dependent: :destroy, counter_cache: true
 
   after_create :update_counter_cache, unless: :of_comment?
+
+  after_destroy :update_counter_cache, unless: :of_comment?
 
   scope :publics, -> { where(private: false) }
 
