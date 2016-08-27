@@ -1,3 +1,32 @@
-<%= t('mailer.greetings', username: @content.username) %>
-<br><br>
-<%= raw @content.details %> <a href="<%= @content.event_url %>"><%= t('mailer.flexible_event_reminder.link') %></a>
+<h3><%= raw @content.details %></h3>
+<br>
+<% @content.time_slots.each do |time_slot| %>
+  <div>
+    <%= t('mailer.flexible_event_reminder.time_slot', begin_at: time_slot.begin_at, members_count: time_slot.members_count) %>
+  </div>
+<% end %>
+<br>
+<a href="<%= @content.event_url %>">
+  <div style=" display: inline-block;
+      color: #fff;
+      background-color: #298E28;
+      border-color: #398439;
+      margin-bottom: 0;
+      font-weight: normal;
+      text-align: center;
+      vertical-align: middle;
+      touch-action: manipulation;
+      cursor: pointer;
+      background-image: none;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      padding: 6px 12px;
+      font-size: 14px;
+      line-height: 1.42857;
+      border-radius: 4px;"><%= t('mailer.flexible_event_reminder.link') %>
+  </div>
+</a>
+<br>
+<br>
+<div><%= t('mailer.shared.good_game') %></div>
+<div><%= t('mailer.shared.team') %></div>

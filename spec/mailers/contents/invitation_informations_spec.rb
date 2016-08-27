@@ -10,15 +10,11 @@ RSpec.describe InvitationInformations do
 
     it do
       is_expected.to eq(
-        I18n.t('mailer.invitation_informations.subject', title: invitation.event.title)
+        I18n.t('mailer.invitation_informations.subject',
+          display_name: invitation.sender.display_name, title: invitation.event.title
+        )
       )
     end
-  end
-
-  describe '#username' do
-    subject { content.username }
-
-    it { is_expected.to eq(invitation.email) }
   end
 
   describe '#details' do
@@ -26,11 +22,55 @@ RSpec.describe InvitationInformations do
 
     it do
       is_expected.to eq(
-        I18n.t('mailer.invitation_informations.details',
-          sender: "<b>#{invitation.sender.display_name}</b>", title: "<b>#{invitation.event.title}</b>"
+        I18n.t('mailer.invitation_informations.subject',
+          display_name: "<b>#{invitation.sender.display_name}</b>",
+          title: "<b>#{invitation.event.title}</b>"
         )
       )
     end
+  end
+
+  describe '#when' do
+    subject { content.when }
+
+    it do
+      is_expected.to eq(
+        I18n.t('mailer.invitation_informations.when',
+          begin_at: "<b>#{invitation.event.begin_at}</b>"
+        )
+      )
+    end
+  end
+
+  describe '#address' do
+    subject { content.address }
+
+    it do
+      is_expected.to eq(
+        I18n.t('mailer.invitation_informations.address',
+          street: invitation.event.street, city: invitation.event.city,
+          state: invitation.event.state, country: invitation.event.country
+        ).gsub("\n", '<br><br>')
+      )
+    end
+  end
+
+  describe '#capacity_range' do
+    subject { content.capacity_range }
+
+    it do
+      is_expected.to eq(
+        I18n.t('mailer.invitation_informations.capacity_range',
+          min_capacity: invitation.event.min_capacity, capacity: invitation.event.capacity
+        )
+      )
+    end
+  end
+
+  describe '#short_description' do
+    subject { content.short_description }
+
+    it { is_expected.to eq(invitation.event.short_description) }
   end
 
   describe '#message' do

@@ -1,6 +1,6 @@
 class EmailVerificationInstructions < SimpleDelegator
   def username
-    email
+    display_name
   end
 
   def subject

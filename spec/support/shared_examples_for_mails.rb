@@ -23,7 +23,7 @@ RSpec.shared_examples 'a mail with' do |type, options = {}|
   if greets_user
     it 'greets the user' do
       expect(body).to include(
-        I18n.t('mailer.greetings', username: content.username, locale: culture)
+        I18n.t('mailer.shared.greetings', username: content.username, locale: culture)
       )
     end
   end

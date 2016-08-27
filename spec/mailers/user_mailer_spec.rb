@@ -22,7 +22,7 @@ RSpec.describe UserMailer do
 
     it_behaves_like 'a mail with', :reset_password_instructions,
       greets_user: true,
-      labels:      [:details, :link, :notice],
+      labels:      [:subject, :details, :link, :notice],
       attributes:  [:reset_password_url]
   end
 
@@ -41,7 +41,7 @@ RSpec.describe UserMailer do
 
     it_behaves_like 'a mail with', :email_verification_instructions,
       greets_user: true,
-      labels:      [:details, :link, :notice],
+      labels:      [:subject, :details, :link, :notice],
       attributes:  [:email_verification_url]
   end
 
@@ -59,7 +59,7 @@ RSpec.describe UserMailer do
     end
 
     it_behaves_like 'a mail with', :notifications_informations,
-      greets_user: true, labels: %w(details subscribe.label subscribe.link), attributes: [:subscribe_url]
+      greets_user: true, labels: %w(title details subscribe.label subscribe.link), attributes: [:subscribe_url]
 
     [:description, :url].each do |attribute|
       it "assigns the notifications #{attribute}" do
@@ -82,7 +82,7 @@ RSpec.describe UserMailer do
     end
 
     it_behaves_like 'a mail with', :welcome_informations,
-      greets_user: true, labels: [], attributes: [:subject, :details]
+      greets_user: false, labels: [], attributes: [:subject, :details]
   end
 
   describe '#flexible_event_reminder' do
@@ -100,7 +100,17 @@ RSpec.describe UserMailer do
       FlexibleEventReminder.new(user, event)
     end
 
+    it 'assigns each time slot labels' do
+      content.time_slots.each do |time_slot|
+        expect(mail.body.encoded).to include(
+          I18n.t('mailer.flexible_event_reminder.time_slot', locale: culture,
+            begin_at: time_slot.begin_at, members_count: time_slot.members_count
+          )
+        )
+      end
+    end
+
     it_behaves_like 'a mail with', :flexible_event_reminder,
-      greets_user: true, labels: [:link], attributes: [:details, :event_url]
+      greets_user: false, labels: [:link], attributes: [:details, :event_url]
   end
 end

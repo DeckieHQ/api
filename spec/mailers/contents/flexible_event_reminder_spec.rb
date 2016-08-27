@@ -7,12 +7,6 @@ RSpec.describe FlexibleEventReminder do
 
   subject(:content) { described_class.new(user, event) }
 
-  describe '#username' do
-    subject { content.username }
-
-    it { is_expected.to eq(user.email) }
-  end
-
   describe '#subject' do
     subject { content.subject }
 
@@ -30,6 +24,14 @@ RSpec.describe FlexibleEventReminder do
       is_expected.to eq(
         I18n.t('mailer.flexible_event_reminder.subject', title: "<b>#{event.title}</b>")
       )
+    end
+  end
+
+  describe '#time_slots' do
+    subject { content.time_slots }
+
+    it do
+      is_expected.to eq(event.time_slots)
     end
   end
 
