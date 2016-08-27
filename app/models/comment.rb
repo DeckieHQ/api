@@ -11,6 +11,8 @@ class Comment < ApplicationRecord
 
   has_many :comments, as: :resource, dependent: :destroy, counter_cache: true
 
+  before_save :assigns_private, if: :of_comment?
+
   after_create :update_counter_cache, unless: :of_comment?
 
   after_destroy :update_counter_cache, unless: :of_comment?
@@ -36,6 +38,10 @@ class Comment < ApplicationRecord
   end
 
   private
+
+  def assigns_private
+    self.private = resource.private
+  end
 
   def update_counter_cache
     resource.update({
