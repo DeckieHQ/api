@@ -1,10 +1,10 @@
 <h3><%= t('mailer.notifications_informations.title') %></h3>
 <br>
-<div><%= t('mailer.shared.greetings', username: @content.username) %> <%= t('mailer.notifications_informations.details') %></div>
+<div><%= raw t('mailer.shared.greetings', username: @content.username) %> <%= t('mailer.notifications_informations.details') %></div>
 <br>
 <% @content.notifications.each do |notification| %>
   <div>
-    <%= raw notification.description %> <a href="<%= notification.url %>">/a>
+    <%= raw notification.description %> <a href="<%= notification.url %>">
       <div style=" display: inline-block;
         color: #fff;
         background-color: #298E28;
@@ -21,7 +21,7 @@
         padding: 1px 5px;
         font-size: 12px;
         line-height: 1.42857;
-        border-radius: 4px;"><%= t('mailer.notification_informations.link') %><
+        border-radius: 4px;"><%= t('mailer.notification_informations.link') %>
       </div>
     </a>
   </div>

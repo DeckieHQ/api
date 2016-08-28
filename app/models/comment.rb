@@ -9,13 +9,13 @@ class Comment < ApplicationRecord
 
   validates :message, presence: true, length: { maximum: 200 }
 
-  has_many :comments, as: :resource, dependent: :destroy, counter_cache: true
+  has_many :comments, as: :resource, dependent: :destroy
 
   before_save :assigns_private, if: :of_comment?
 
-  after_create :update_counter_cache, unless: :of_comment?
+  after_create :update_counter_cache
 
-  after_destroy :update_counter_cache, unless: :of_comment?
+  after_destroy :update_counter_cache
 
   scope :publics, -> { where(private: false) }
 
@@ -44,6 +44,8 @@ class Comment < ApplicationRecord
   end
 
   def update_counter_cache
+    return resource.update(comments_count: resource.comments.count) if of_comment?
+
     resource.update({
       "#{counter_cache_prefix}_comments_count": resource.comments.privates(private?).count
     })

@@ -6,7 +6,7 @@ fr:
         not_found_in_database: "L'utilisateur n'existe pas"
   mailer:
     shared:
-      greetings: 'Bonjour %{username} !'
+      greetings: 'Bonjour <b>%{username}</b> !'
       good_game: 'Bon jeu !'
       team: "L'équipe Deckie"
       facebook:
@@ -17,16 +17,15 @@ fr:
         link: 'https://twitter.com/DeckieFR'
     reset_password_instructions:
       subject: 'Réinitialisation du mot de passe'
-      details: 'Vous avez récemment fait une demande de réinitialisation de votre mot de passe. Pour terminer le processus, veuillez cliquer sur le lien ci‑dessous.'
-      link: 'cliquez ici'
+      details: 'Vous avez récemment fait une demande de réinitialisation de votre mot de passe. Pour terminer le processus'
+      link: 'cliquez ici.'
       notice: "Si vous n’êtes pas l’auteur de cette demande, il est probable qu’un autre utilisateur ait saisi votre adresse e-mail par erreur, vous pouvez ignorer cet email et votre mot de passe restera inchangé tant que vous n'accèderez pas au lien suivant."
     email_verification_instructions:
       subject: "Vérification de l'adresse email"
       details: 'Pour vérifier votre email sur Deckie'
-      link: 'cliquez ici'
+      link: 'cliquez ici.'
       notice: >
-        Si vous n’êtes pas l’auteur de cette demande, il est probable qu’un autre utilisateur ait saisi votre adresse e-mail
-        par erreur, vous pouvez ignorer cet email et votre mot de passe restera inchangé.
+        Si vous n’êtes pas l’auteur de cette demande, il est probable qu’un autre utilisateur ait saisi votre adresse e-mail par erreur, vous pouvez ignorer cet email et votre mot de passe restera inchangé.
     notifications_informations:
       subject: 'Vous avez reçu de nouvelles notifications'
       title: 'Nouvelles notifications'
@@ -78,12 +77,7 @@ fr:
       subject: "%{display_name} vous invite à participer à la partie %{title}"
       link: 'Voir la partie'
       when: 'Quand ? %{begin_at}'
-      address: >
-        Où ?
-
-        %{street}
-        %{city}, %{state}
-        %{country}
+      address: 'Où ? %{street}, %{city}, %{country}'
       capacity_range: 'De %{min_capacity} à %{capacity} joueurs'
     welcome_informations:
       subject: 'Bienvenue sur Deckie !'

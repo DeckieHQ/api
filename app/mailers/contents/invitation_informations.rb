@@ -18,7 +18,7 @@ class InvitationInformations < SimpleDelegator
   def address
     I18n.t('mailer.invitation_informations.address',
       street: event.street, city: event.city, state: event.state, country: event.country
-    ).gsub("\n", '<br><br>')
+    )
   end
 
   def capacity_range

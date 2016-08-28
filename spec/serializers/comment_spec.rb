@@ -11,7 +11,7 @@ RSpec.describe CommentSerializer, :type => :serializer do
 
     it 'serializes the specified attributes' do
       expect(serialized.attributes).to have_serialized_attributes(
-        comment.slice(:message, :private, :created_at)
+        comment.slice(:message, :private, :comments_count, :created_at)
       )
     end
 

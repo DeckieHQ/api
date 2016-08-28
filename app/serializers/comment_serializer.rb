@@ -1,5 +1,5 @@
 class CommentSerializer < ActiveModel::Serializer
-  attributes :message, :private, :created_at
+  attributes :message, :private, :comments_count, :created_at
 
   belongs_to :author
 

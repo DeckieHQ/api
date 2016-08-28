@@ -50,7 +50,7 @@ RSpec.describe InvitationInformations do
         I18n.t('mailer.invitation_informations.address',
           street: invitation.event.street, city: invitation.event.city,
           state: invitation.event.state, country: invitation.event.country
-        ).gsub("\n", '<br><br>')
+        )
       )
     end
   end

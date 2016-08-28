@@ -33,7 +33,7 @@ RSpec.describe Comment, :type => :model do
 
     it { is_expected.to include_deleted(:author) }
 
-    it { is_expected.to have_many(:comments).counter_cache(true) }
+    it { is_expected.to have_many(:comments) }
   end
 
   describe 'Validations' do
@@ -50,6 +50,10 @@ RSpec.describe Comment, :type => :model do
 
       it 'assigns private with its resource private' do
         expect(comment.private).to eq(comment.resource.private)
+      end
+
+      it 'updates the resource counter cache' do
+        expect(comment.resource.comments_count).to eq(1)
       end
     end
 
@@ -79,14 +83,26 @@ RSpec.describe Comment, :type => :model do
   end
 
   context 'after destroy' do
-    let!(:comment) { FactoryGirl.create(:comment) }
+    context 'with Comment resource' do
+      let!(:comment) { FactoryGirl.create(:comment, :of_comment) }
 
-    it 'updates the resource counter cache' do
-      prefix = comment.private? ? :private : :public
+      it 'updates the resource counter cache' do
+        expect { comment.destroy }.to change {
+          comment.resource.comments_count
+        }.by(-1)
+      end
+    end
 
-      expect { comment.destroy }.to change {
-        comment.resource.public_send("#{prefix}_comments_count")
-      }.by(-1)
+    context 'with another resource' do
+      let!(:comment) { FactoryGirl.create(:comment) }
+
+      it 'updates the resource counter cache' do
+        prefix = comment.private? ? :private : :public
+
+        expect { comment.destroy }.to change {
+          comment.resource.public_send("#{prefix}_comments_count")
+        }.by(-1)
+      end
     end
   end
 
