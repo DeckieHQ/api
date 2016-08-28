@@ -40,6 +40,14 @@ badge_id = 0
   id: (badge_id = badge_id+1),
   name: 'verified-profile',
   description: 'Verified email and phone number.'
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'first-invitation',
+  description: 'Created a first invitation.'
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'first-flexible-event',
+  description: 'Created a first flexible event.'
 }].each do |attrs|
   Merit::Badge.create! attrs
 end

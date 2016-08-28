@@ -46,11 +46,17 @@ module Merit
         created_early?(event)
       end
 
+      grant_on 'user/hosted_events#create', badge: 'first-flexible-event', model_name: 'User' do |event|
+        event.flexible?
+      end
+
       grant_on 'user/verifications#update', badge: 'verified-profile', model_name: 'User' do |verification|
         verification.model.kind_of?(User) && verification.model.verified?
       end
 
       grant_on 'feedbacks#create', badge: 'first-feedback'
+
+      grant_on 'event/invitations#create', badge: 'first-invitation'
     end
 
     def created_early?(record)

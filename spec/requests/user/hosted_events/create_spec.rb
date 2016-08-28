@@ -41,8 +41,12 @@ RSpec.describe 'User create hosted event', :type => :request do
         expect(response.body).to equal_serialized(created_event)
       end
 
-      it 'grants the user with an achievement' do
+      it 'grants the user with an early event achievement' do
         expect(user).to have_achievement('early-event')
+      end
+
+      it "doesn't grant the user with a first flexible event achievement" do
+        expect(user).to_not have_achievement('first-flexible-event')
       end
 
       context 'with flexible event' do
@@ -50,6 +54,10 @@ RSpec.describe 'User create hosted event', :type => :request do
 
         it 'creates associated times slots' do
           expect(created_event.time_slots).to_not be_empty
+        end
+
+        it 'grants the user with a first flexible event achievement' do
+          expect(user).to have_achievement('first-flexible-event')
         end
       end
     end
