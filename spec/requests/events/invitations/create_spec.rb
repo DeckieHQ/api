@@ -54,6 +54,8 @@ RSpec.describe 'Create event invitation', :type => :request do
 
         it { is_expected.to_not have_sent_mail }
       end
+
+      it { expect(authenticate).to have_achievement('first-invitation') }
     end
 
     context 'as another user' do
