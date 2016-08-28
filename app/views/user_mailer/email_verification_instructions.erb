@@ -1,7 +1,7 @@
 <h3><%= t('mailer.email_verification_instructions.subject') %></h3>
 <br>
 <div>
-  <%= t('mailer.shared.greetings', username: @content.username) %> <%= t('mailer.email_verification_instructions.details') %> <a href="<%= @content.email_verification_url %>"><%= t('mailer.email_verification_instructions.link') %></a>
+  <%= raw t('mailer.shared.greetings', username: @content.username) %> <%= t('mailer.email_verification_instructions.details') %> <a href="<%= @content.email_verification_url %>"><%= t('mailer.email_verification_instructions.link') %></a>
 </div>
 <br>
 <div><%= t('mailer.email_verification_instructions.notice') %></div>

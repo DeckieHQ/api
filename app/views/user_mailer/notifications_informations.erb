@@ -1,6 +1,6 @@
 <h3><%= t('mailer.notifications_informations.title') %></h3>
 <br>
-<div><%= t('mailer.shared.greetings', username: @content.username) %> <%= t('mailer.notifications_informations.details') %></div>
+<div><%= raw t('mailer.shared.greetings', username: @content.username) %> <%= t('mailer.notifications_informations.details') %></div>
 <br>
 <% @content.notifications.each do |notification| %>
   <div>
