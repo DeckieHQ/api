@@ -12,6 +12,7 @@ function init() {
 
     heroku apps:create $app --region eu
 }
+
 function configure() {
     ssl_prefix="http"
 
@@ -54,12 +55,22 @@ function configure() {
                                  EMAIL_SIGNATURE=$email_signature
 }
 
+function provision() {
+    for addon in heroku-postgresql heroku-redis postmark blowerio algoliasearch cloudinary papertrail raygun
+    do
+        echo "Checking $addon presence on $app..."
+        heroku addons:info $addon --app $app &>/dev/null || heroku addons:create $addon --app $app
+    done
+}
+
 function deploy() {
     echo "Deploying heroku app $app..."
 
     maintenance-on
 
-    heroku docker:release --app $app
+    heroku git:remote -a $app -r $app
+
+    git push -f $app master
 
     heroku run --app $app bundle exec rake db:migrate
 
@@ -127,7 +138,7 @@ function maintenance-off() {
     heroku maintenance:off --app $app
 }
 
-for supported_cmd in init configure deploy post-install env upgrade clean name
+for supported_cmd in init configure provision deploy post-install env upgrade clean name
 do
     if [ "$cmd" == $supported_cmd ]; then
         if [ ! $build ]; then
@@ -142,6 +153,6 @@ do
     fi
 done
 
-echo "usage: bash scripts/heroku.sh [init|configure|deploy|post-install|env|upgrade|clean|name] build"
+echo "usage: bash scripts/heroku.sh [init|configure|provision|deploy|post-install|env|upgrade|clean|name] build"
 
 exit -1
