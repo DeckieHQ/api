@@ -8,6 +8,8 @@
     "postmark",
     "blowerio",
     "algoliasearch",
-    "cloudinary"
+    "cloudinary",
+    "papertrail",
+    "raygun"
   ]
 }
