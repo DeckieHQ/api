@@ -42,11 +42,11 @@ module Merit
         created_early?(user)
       end
 
-      grant_on 'user/hosted_events#create', badge: 'early-event', model_name: 'User' do |event|
+      grant_on 'user/hosted_events#create', badge: 'early-event', model_name: 'Event' do |event|
         created_early?(event)
       end
 
-      grant_on 'user/hosted_events#create', badge: 'first-flexible-event', model_name: 'User' do |event|
+      grant_on 'user/hosted_events#create', badge: 'first-flexible-event', model_name: 'Event' do |event|
         event.flexible?
       end
 
