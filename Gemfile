@@ -69,6 +69,9 @@ gem 'cloudinary', '~> 1.1'
 # Achievements
 gem 'merit', '~> 2.3'
 
+# Exceptions
+gem 'raygun4ruby', '~> 1.1.x'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'
