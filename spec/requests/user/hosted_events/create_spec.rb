@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe 'User create hosted event', :type => :request do
-  let(:params)       { Serialize.params(event_params, type: :events) }
-
   let(:event_params) { event.attributes.merge('new_time_slots' => event.new_time_slots) }
+
+  let(:params) { Serialize.params(event_params, type: :events) }
 
   before do
     post user_hosted_events_path, params: params, headers: json_headers

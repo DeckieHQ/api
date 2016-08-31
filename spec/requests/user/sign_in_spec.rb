@@ -29,9 +29,9 @@ RSpec.describe 'User sign in', :type => :request do
     it { is_expected.to return_status_code 401 }
 
     it 'returns an "invalid email or password" error' do
-      error_msg = I18n.t('devise.failure.user.not_found_in_database')
-
-      expect(json_response).to eq({ error: error_msg })
+      expect(response.body).to eq(
+        I18n.t('devise.failure.user.not_found_in_database')
+      )
     end
   end
 

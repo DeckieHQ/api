@@ -13,7 +13,7 @@ class UserSerializer < ActiveModel::Serializer
   has_one :profile do
     link :related, UrlHelpers.profile(object.profile)
 
-    include_data false
+    include_data true 
   end
 
   has_one :preferences do

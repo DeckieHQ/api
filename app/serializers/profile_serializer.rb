@@ -38,6 +38,6 @@ class ProfileSerializer < ActiveModel::Serializer
   has_many :time_slot_submissions do
     link :related, UrlHelpers.profile_time_slot_submissions(object)
 
-    include_data false
+    include_data true
   end
 end
