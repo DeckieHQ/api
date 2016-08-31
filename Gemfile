@@ -7,7 +7,6 @@ gem 'rails', '5.0.0.beta2'
 
 # Serializers
 gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers'
-gem 'activemodel-serializers-xml', '~> 1.0'
 
 # Use postgresql as ActiveRecord database
 gem 'pg', '~> 0.18'
@@ -20,7 +19,7 @@ gem 'puma', '~> 2.15'
 gem 'rack-cors', '~> 0.4'
 
 # Authentication
-gem 'devise', git: 'git://github.com/plataformatec/devise.git'
+gem 'devise', '~> 4.2'
 
 # Mails
 gem 'postmark-rails', '~> 0.10'
