@@ -46,7 +46,7 @@ gem 'immutable-struct', '~> 2.2'
 gem 'pundit', '~> 1.1'
 
 # Soft-delete records
-gem 'paranoia', git: 'git://github.com/radar/paranoia', branch: 'core'
+gem 'paranoia', '~> 2.2.0.pre'
 
 # Search
 gem 'algoliasearch', git: 'git://github.com/algolia/algoliasearch-client-ruby'
