@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '2.2.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.0.0.beta2'
+gem 'rails', '5.0'
 
 # Serializers
 gem 'active_model_serializers','~> 0.10'
@@ -74,7 +74,7 @@ gem 'raygun4ruby', '~> 1.1'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'
-  gem 'rspec-rails', '>= 3.5.0.beta2'
+  gem 'rspec-rails', '~>3.5'
 end
 
 group :development do
