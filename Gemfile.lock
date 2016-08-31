@@ -8,21 +8,12 @@ GIT
 
 GIT
   remote: git://github.com/carrierwaveuploader/carrierwave
-  revision: ef0d36a7c195621d8d7d4c769a47a9aee6f64d95
+  revision: 8ceadb7fca5068564cfa8a33b1a76af86c6cbff3
   specs:
     carrierwave (0.11.0)
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
       mime-types (>= 1.16)
-
-GIT
-  remote: git://github.com/rails-api/active_model_serializers
-  revision: cbca1350b9803fc3a2a8f5f8fd7d863c1ebbe5b7
-  specs:
-    active_model_serializers (0.10.0)
-      actionpack (>= 4.1, < 6)
-      activemodel (>= 4.1, < 6)
-      railties (>= 4.1, < 6)
 
 GIT
   remote: git://github.com/sinatra/sinatra
@@ -59,6 +50,11 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
+    active_model_serializers (0.10.2)
+      actionpack (>= 4.1, < 6)
+      activemodel (>= 4.1, < 6)
+      jsonapi (~> 0.1.1.beta2)
+      railties (>= 4.1, < 6)
     activejob (5.0.0.beta2)
       activesupport (= 5.0.0.beta2)
       globalid (>= 0.3.6)
@@ -137,6 +133,8 @@ GEM
     i18n (0.7.0)
     immutable-struct (2.2.2)
     json (1.8.3)
+    jsonapi (0.1.1.beta2)
+      json (~> 1.8)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -144,7 +142,7 @@ GEM
     merit (2.4.0)
       ambry (~> 1.0.0)
     method_source (0.8.2)
-    mime-types (2.99.1)
+    mime-types (2.99.2)
     mini_portile2 (2.1.0)
     minitest (5.9.0)
     multi_json (1.11.2)
@@ -289,7 +287,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_model_serializers!
+  active_model_serializers (~> 0.10)
   algoliasearch!
   algoliasearch-rails (~> 1.14)
   byebug (~> 8.2)

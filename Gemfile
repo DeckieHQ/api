@@ -6,7 +6,7 @@ ruby '2.2.3'
 gem 'rails', '5.0.0.beta2'
 
 # Serializers
-gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers'
+gem 'active_model_serializers','~> 0.10'
 
 # Use postgresql as ActiveRecord database
 gem 'pg', '~> 0.18'
