@@ -58,7 +58,7 @@ gem 'dotenv-rails', '~> 2.1'
 # Jobs
 gem 'sidekiq', '~> 4.1'
 gem 'sidekiq-scheduler', '~> 2.0'
-gem 'sinatra', git: 'git://github.com/sinatra/sinatra', require: nil
+gem 'sinatra', '~> 2.0.0.beta2', require: nil
 
 # Image upload
 gem 'carrierwave', git: 'git://github.com/carrierwaveuploader/carrierwave'
