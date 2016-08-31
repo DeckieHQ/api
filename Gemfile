@@ -25,7 +25,7 @@ gem 'devise', '~> 4.2'
 gem 'postmark-rails', '~> 0.10'
 
 # HTTP Client
-gem 'rest-client', '2.0.0.rc2'
+gem 'rest-client', '2.0'
 
 # Validations
 gem 'phony_rails', '~> 0.12'
