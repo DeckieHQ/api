@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/algolia/algoliasearch-client-ruby
-  revision: bdd04c3a05366ab924e234fe2f5587f0d85252cb
-  specs:
-    algoliasearch (1.8.0)
-      httpclient (~> 2.7.1)
-      json (>= 1.5.1)
-
-GIT
   remote: git://github.com/carrierwaveuploader/carrierwave
   revision: 8ceadb7fca5068564cfa8a33b1a76af86c6cbff3
   specs:
@@ -72,6 +64,9 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     addressable (2.4.0)
+    algoliasearch (1.11.0)
+      httpclient (~> 2.8.2)
+      json (>= 1.5.1)
     algoliasearch-rails (1.14.1)
       algoliasearch (>= 1.2.14)
       json (>= 1.5.1)
@@ -129,7 +124,7 @@ GEM
     httparty (0.13.7)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
-    httpclient (2.7.1)
+    httpclient (2.8.2.3)
     i18n (0.7.0)
     immutable-struct (2.2.2)
     json (1.8.3)
@@ -288,7 +283,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.10)
-  algoliasearch!
+  algoliasearch (~> 1.10)
   algoliasearch-rails (~> 1.14)
   byebug (~> 8.2)
   carrierwave!

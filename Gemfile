@@ -49,7 +49,7 @@ gem 'pundit', '~> 1.1'
 gem 'paranoia', '~> 2.2.0.pre'
 
 # Search
-gem 'algoliasearch', git: 'git://github.com/algolia/algoliasearch-client-ruby'
+gem 'algoliasearch', '~> 1.10'
 gem 'algoliasearch-rails', '~> 1.14'
 
 # Env
@@ -69,7 +69,7 @@ gem 'cloudinary', '~> 1.1'
 gem 'merit', '~> 2.3'
 
 # Exceptions
-gem 'raygun4ruby', '~> 1.1.x'
+gem 'raygun4ruby', '~> 1.1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
