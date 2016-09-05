@@ -3,11 +3,10 @@ source 'https://rubygems.org'
 ruby '2.2.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.0.0.beta2'
+gem 'rails', '5.0'
 
 # Serializers
-gem 'active_model_serializers', git: 'git://github.com/rails-api/active_model_serializers'
-gem 'activemodel-serializers-xml', '~> 1.0'
+gem 'active_model_serializers','~> 0.10'
 
 # Use postgresql as ActiveRecord database
 gem 'pg', '~> 0.18'
@@ -20,13 +19,13 @@ gem 'puma', '~> 2.15'
 gem 'rack-cors', '~> 0.4'
 
 # Authentication
-gem 'devise', git: 'git://github.com/plataformatec/devise.git'
+gem 'devise', '~> 4.2'
 
 # Mails
 gem 'postmark-rails', '~> 0.10'
 
 # HTTP Client
-gem 'rest-client', '2.0.0.rc2'
+gem 'rest-client', '2.0'
 
 # Validations
 gem 'phony_rails', '~> 0.12'
@@ -47,10 +46,10 @@ gem 'immutable-struct', '~> 2.2'
 gem 'pundit', '~> 1.1'
 
 # Soft-delete records
-gem 'paranoia', git: 'git://github.com/radar/paranoia', branch: 'core'
+gem 'paranoia', '~> 2.2.0.pre'
 
 # Search
-gem 'algoliasearch', git: 'git://github.com/algolia/algoliasearch-client-ruby'
+gem 'algoliasearch', '~> 1.10'
 gem 'algoliasearch-rails', '~> 1.14'
 
 # Env
@@ -59,7 +58,7 @@ gem 'dotenv-rails', '~> 2.1'
 # Jobs
 gem 'sidekiq', '~> 4.1'
 gem 'sidekiq-scheduler', '~> 2.0'
-gem 'sinatra', git: 'git://github.com/sinatra/sinatra', require: nil
+gem 'sinatra', '~> 2.0.0.beta2', require: nil
 
 # Image upload
 gem 'carrierwave', git: 'git://github.com/carrierwaveuploader/carrierwave'
@@ -70,12 +69,12 @@ gem 'cloudinary', '~> 1.1'
 gem 'merit', '~> 2.3'
 
 # Exceptions
-gem 'raygun4ruby', '~> 1.1.x'
+gem 'raygun4ruby', '~> 1.1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', '~> 8.2'
-  gem 'rspec-rails', '>= 3.5.0.beta2'
+  gem 'rspec-rails', '~>3.5'
 end
 
 group :development do

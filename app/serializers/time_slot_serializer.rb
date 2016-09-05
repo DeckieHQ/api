@@ -3,11 +3,7 @@ class TimeSlotSerializer < ActiveModel::Serializer
 
   alias_method :current_user, :scope
 
-  has_one :event do
-    link :related, UrlHelpers.event(object.event_id)
-
-    include_data false
-  end
+  belongs_to :event  
 
   has_many :members do
     link :related, UrlHelpers.time_slot_members(object)
