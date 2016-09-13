@@ -20,4 +20,14 @@ RSpec.describe FeedbackInformations do
 
     it { is_expected.to eq(feedback.description) }
   end
+
+  describe '#sender' do
+    subject { content.sender }
+
+    it do
+      is_expected.to eq(
+        feedback.email || I18n.t('mailer.feedback_informations.default_sender')
+      )
+    end
+  end
 end
