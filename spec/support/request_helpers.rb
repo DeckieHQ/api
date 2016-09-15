@@ -25,7 +25,7 @@ module RequestHelpers
         }
       end
       headers.merge({
-        'Accept': 'application/vnd.api+json', 'Content-Type': 'application/json'
+        'Accept': 'application/vnd.api+json', 'Content-Type': 'application/vnd.api+json'
       })
     end
   end
