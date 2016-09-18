@@ -1,13 +1,10 @@
 # Deckie API
-[![Circle CI](https://circleci.com/gh/foliea/deckie-api.svg?style=svg&circle-token=b3609c7f157c2a1dee147f9a26674685bd01e651)](https://circleci.com/gh/foliea/deckie-api)
-[![Code Climate](https://codeclimate.com/repos/56952273300abe0069003150/badges/eaf4748164208d70e374/gpa.svg)](https://codeclimate.com/repos/56952273300abe0069003150/feed)
-[![Test Coverage](https://codeclimate.com/repos/56952273300abe0069003150/badges/eaf4748164208d70e374/coverage.svg)](https://codeclimate.com/repos/56952273300abe0069003150/coverage)
-[![Issue Count](https://codeclimate.com/repos/56952273300abe0069003150/badges/eaf4748164208d70e374/issue_count.svg)](https://codeclimate.com/repos/56952273300abe0069003150/feed)
 
 This is the code source of deckie's platform API. This API is written in
 [Ruby](https://www.ruby-lang.org) with [Rails 5](http://rubyonrails.org/).
 
-This API is following the [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) architecture.
+This API is following the [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) architecture
+and the [JSON API](http://jsonapi.org) specification.
 
 ## Prerequisite
 
@@ -25,13 +22,19 @@ In foreground:
 
     make up
 
-In background:
+## Run the job worker in production mode
+
+    make worker
+
+## Run the whole stack in production mode
 
     make detach
 
-To stop and clean everything after running the API in foreground:
+> This will run both the API and the job worker inside their own container.
 
-  make clean
+To stop and clean everything after running the whole stack in background:
+
+    make clean
 
 ## Open a shell in the development environment:
 
