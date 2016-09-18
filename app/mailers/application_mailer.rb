@@ -3,7 +3,7 @@ class ApplicationMailer < ActionMailer::Base
 
   attr_reader :content
 
-  def send_mail(user, layout: nil)
+  def send_mail(user)
     change_locale_for(user) do
       mail(to: user.email, subject: content.subject)
     end

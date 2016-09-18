@@ -71,7 +71,7 @@ module EventSearch
         geoloc :latitude, :longitude
       end
 
-      def self.index_worker(record, remove)
+      def self.index_worker(record, _remove)
         IndexRecordJob.perform_later(record.class.name, record.id)
       end
 

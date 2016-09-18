@@ -46,7 +46,7 @@ class ApplicationController < ActionController::API
     )
   end
 
-  def authenticate!(options={})
+  def authenticate!(_options = {})
     authenticate || render_error_for(:unauthorized)
   end
 
