@@ -1,5 +1,9 @@
 # Deckie API
 
+[![CircleCI](https://circleci.com/gh/DeckieHQ/api.svg?style=svg)](https://circleci.com/gh/DeckieHQ/api)
+[![Code Climate](https://codeclimate.com/github/DeckieHQ/api/badges/gpa.svg)](https://codeclimate.com/github/DeckieHQ/api)
+[![Test Coverage](https://codeclimate.com/github/DeckieHQ/api/badges/coverage.svg)](https://codeclimate.com/github/DeckieHQ/api/coverage)
+
 This is the code source of deckie's platform API. This API is written in
 [Ruby](https://www.ruby-lang.org) with [Rails 5](http://rubyonrails.org/).
 
