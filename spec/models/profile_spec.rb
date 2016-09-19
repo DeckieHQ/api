@@ -17,6 +17,13 @@ RSpec.describe Profile, :type => :model do
           .of_type(:boolean).with_options(null: false, default: false)
       end
     end
+
+    [:organization, :moderator].each do |attribute|
+      it do
+        is_expected.to have_db_column(attribute)
+          .of_type(:boolean).with_options(null: false, default: false)
+      end
+    end
   end
 
   describe 'Validations' do

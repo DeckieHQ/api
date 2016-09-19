@@ -10,6 +10,18 @@ RSpec.describe User, :type => :model do
     end
 
     it do
+      is_expected.to have_db_column(:first_name).of_type(:string).with_options(null: false)
+    end
+
+    it do
+      is_expected.to have_db_column(:last_name).of_type(:string).with_options(null: true)
+    end
+
+    it do
+      is_expected.to have_db_column(:birthday).of_type(:date).with_options(null: true)
+    end
+
+    it do
       is_expected.to have_db_column(:preferences)
         .of_type(:jsonb).with_options(null: false, default: {})
     end
@@ -19,9 +31,11 @@ RSpec.describe User, :type => :model do
         .of_type(:integer).with_options(null: false, default: 0)
     end
 
-    it do
-      is_expected.to have_db_column(:moderator)
-        .of_type(:boolean).with_options(null: false, default: false)
+    [:organization, :moderator].each do |attribute|
+      it do
+        is_expected.to have_db_column(attribute)
+          .of_type(:boolean).with_options(null: false, default: false)
+      end
     end
   end
 
