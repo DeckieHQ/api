@@ -13,6 +13,14 @@ FactoryGirl.define do
 
     moderator false
 
+    factory :user_elder do
+      birthday { Faker::Date.between(100.years.ago - 10.day, 100.years.ago) }
+
+      to_create do |user|
+        user.save(validate: false)
+      end
+    end
+
     factory :user_update do
       moderator { [true, false].sample }
     end

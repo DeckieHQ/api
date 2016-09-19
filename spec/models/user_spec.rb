@@ -47,6 +47,16 @@ RSpec.describe User, :type => :model do
     it { is_expected.to validate_date_before(:birthday, { limit: 18.year.ago + 1.day }) }
 
     it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en fr)) }
+
+    context 'with a previous user olrder than limits' do
+      subject { FactoryGirl.create(:user_elder) }
+
+      it { is_expected.to be_valid }
+
+      context 'when updating birthday' do
+        it { is_expected.to validate_date_after(:birthday, { limit: 100.year.ago }) }
+      end
+    end
   end
 
   describe 'Relationships' do

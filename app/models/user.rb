@@ -44,9 +44,12 @@ class User < ApplicationRecord
   validates :first_name, :last_name, presence: true, length: { maximum: 64 }
 
   validates :birthday, presence: true, date: {
-    after:              Proc.new { 100.year.ago },
     before_or_equal_to: Proc.new {  18.year.ago }
   }
+  validates :birthday, date: { after: Proc.new { 100.year.ago } },
+    if: -> { !persisted? || birthday_changed? }
+
+
   validates :culture, presence: true, inclusion: { in: %w(en fr) }
 
   validates_plausible_phone :phone_number
