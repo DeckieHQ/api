@@ -96,6 +96,14 @@ FactoryGirl.define do
       moderator true
     end
 
+    trait :organization do
+      organization true
+
+      last_name nil
+
+      birthday nil
+    end
+
     trait :with_submissions do
       transient do
         submissions_count        5

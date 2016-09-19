@@ -71,6 +71,14 @@ RSpec.describe User, :type => :model do
         it { is_expected.to validate_date_after(:birthday, { limit: 100.year.ago }) }
       end
     end
+
+    context 'with an organization' do
+      subject { FactoryGirl.create(:user, :organization) }
+
+      it { is_expected.to validate_absence_of(:last_name) }
+
+      it { is_expected.to validate_absence_of(:birthday) }
+    end
   end
 
   describe 'Relationships' do
@@ -128,7 +136,8 @@ RSpec.describe User, :type => :model do
       display_name:          user.display_name,
       email_verified:        user.email_verified?,
       phone_number_verified: user.phone_number_verified?,
-      moderator:             user.moderator?
+      moderator:             user.moderator?,
+      organization:          user.organization?
     })
   end
 
@@ -306,5 +315,11 @@ RSpec.describe User, :type => :model do
     subject { user.display_name }
 
     it { is_expected.to eq("#{user.first_name} #{user.last_name.capitalize[0]}") }
+
+    context 'with organization' do
+      let(:user) { FactoryGirl.create(:user, :organization) }
+
+      it { is_expected.to eq(user.first_name) }
+    end
   end
 end

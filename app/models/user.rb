@@ -41,14 +41,17 @@ class User < ApplicationRecord
          :trackable,
          :validatable
 
-  validates :first_name, :last_name, presence: true, length: { maximum: 64 }
+  validates :first_name, presence: true, length: { maximum: 64 }
 
-  validates :birthday, presence: true, date: {
-    before_or_equal_to: Proc.new {  18.year.ago }
-  }
+  validates :last_name, presence: true, length: { maximum: 64 }, unless: :organization?
+
+  validates :birthday, presence: true, date: { before_or_equal_to: Proc.new {  18.year.ago } },
+    unless: :organization?
+
   validates :birthday, date: { after: Proc.new { 100.year.ago } },
-    if: -> { !persisted? || birthday_changed? }
+    if: -> { !persisted? || birthday_changed? }, unless: :organization?
 
+  validates :last_name, :birthday, absence: true, if: :organization?
 
   validates :culture, presence: true, inclusion: { in: %w(en fr) }
 
@@ -89,7 +92,7 @@ class User < ApplicationRecord
   end
 
   def display_name
-    "#{first_name} #{last_name.capitalize.chr}"
+    organization? ? first_name : "#{first_name} #{last_name.capitalize.chr}"
   end
 
   private
@@ -103,7 +106,7 @@ class User < ApplicationRecord
   end
 
   def update_profile
-    profile.update(display_name: display_name, moderator: moderator?,
+    profile.update(display_name: display_name, moderator: moderator?, organization: organization?,
       email_verified: email_verified?, phone_number_verified: phone_number_verified?
     )
   end
