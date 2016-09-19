@@ -23,7 +23,7 @@ class User < ApplicationRecord
 
   has_secure_token :authentication_token
 
-  before_create :subscribe_to_notifications
+  before_create :initialize_preferences
 
   after_create :build_profile
 
@@ -97,18 +97,26 @@ class User < ApplicationRecord
 
   private
 
-  def subscribe_to_notifications
-    preferences['notifications'] = Notification.types
+  def initialize_preferences
+    self.preferences = { 'notifications': Notification.types }
   end
 
   def build_profile
-    create_profile(display_name: display_name)
+    create_profile(propagation_attributes)
   end
 
   def update_profile
-    profile.update(display_name: display_name, moderator: moderator?, organization: organization?,
-      email_verified: email_verified?, phone_number_verified: phone_number_verified?
-    )
+    profile.update(propagation_attributes)
+  end
+
+  def propagation_attributes
+    {
+      display_name: display_name,
+      moderator: moderator?,
+      organization: organization?,
+      email_verified: email_verified?,
+      phone_number_verified: phone_number_verified?
+    }
   end
 
   def propagate_changes?

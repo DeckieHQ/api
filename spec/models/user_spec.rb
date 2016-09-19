@@ -90,13 +90,13 @@ RSpec.describe User, :type => :model do
   end
 
   context 'after create' do
-    subject(:user) { FactoryGirl.create(:user) }
+    subject(:user) { FactoryGirl.create(:user, [:moderator, :organization].sample) }
 
     it 'has an authentication token' do
       expect(user.authentication_token).to be_valid_token :secure
     end
 
-    it 'has a profile' do
+    it 'has a profile properly propagated' do
       expect_profile_propagation
     end
 
