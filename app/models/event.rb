@@ -70,11 +70,9 @@ class Event < ApplicationRecord
 
   validates :begin_at, presence: true, unless: :flexible?
 
-  validates :begin_at, date: { after: Proc.new { Time.now } }, on: :create, unless: :flexible?
-
   # Allows events closed to be valid.
-  validates :begin_at, date: { after: Proc.new { Time.now } }, on: :update,
-    if: -> { !flexible? && begin_at_changed? }
+  validates :begin_at, date: { after: Proc.new { Time.now } },
+    unless: -> { flexible? || (persisted? && !begin_at_changed?) }
 
   validates :end_at, date: { after: :begin_at }, allow_nil: true, unless: :flexible?
 

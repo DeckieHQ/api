@@ -5,6 +5,12 @@ RSpec.describe 'User sign up', :type => :request do
 
   let(:sign_up_params) { user.attributes.merge(password: user.password) }
 
+  let(:permited_params) do
+    user.slice(
+      :first_name, :last_name, :birthday, :phone_number, :culture, :organization
+    )
+  end
+
   before do
     post user_path, params: params, headers: json_headers
   end
@@ -12,15 +18,13 @@ RSpec.describe 'User sign up', :type => :request do
   include_examples 'check parameters for', :users
 
   context 'when attributes are valid' do
-    let(:user)         { FactoryGirl.build(:user) }
+    let(:user) { FactoryGirl.build(:user) }
+
     let(:created_user) { User.find_by(email: user.email) }
 
     it { is_expected.to return_status_code 201 }
 
     it 'creates a new user with permited parameters' do
-      permited_params = user.slice(
-        :first_name, :last_name, :birthday, :phone_number, :culture
-      )
       expect(created_user).to have_attributes(permited_params)
     end
 
@@ -37,6 +41,16 @@ RSpec.describe 'User sign up', :type => :request do
     end
 
     it { is_expected.to have_enqueued_welcome_email_for(created_user) }
+
+    context 'with an organization' do
+      let(:user) { FactoryGirl.build(:user, :organization) }
+
+      it { is_expected.to return_status_code 201 }
+
+      it 'creates a new user with permited parameters' do
+        expect(created_user).to have_attributes(permited_params)
+      end
+    end
   end
 
   context 'when attributes are invalid' do

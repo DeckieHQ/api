@@ -23,7 +23,7 @@ class User < ApplicationRecord
 
   has_secure_token :authentication_token
 
-  before_create :subscribe_to_notifications
+  before_create :initialize_preferences
 
   after_create :build_profile
 
@@ -41,12 +41,18 @@ class User < ApplicationRecord
          :trackable,
          :validatable
 
-  validates :first_name, :last_name, presence: true, length: { maximum: 64 }
+  validates :first_name, presence: true, length: { maximum: 64 }
 
-  validates :birthday, presence: true, date: {
-    after:              Proc.new { 100.year.ago },
-    before_or_equal_to: Proc.new {  18.year.ago }
-  }
+  validates :last_name, presence: true, length: { maximum: 64 }, unless: :organization?
+
+  validates :birthday, presence: true, date: { before_or_equal_to: Proc.new {  18.year.ago } },
+    unless: :organization?
+
+  validates :birthday, date: { after: Proc.new { 100.year.ago } },
+    if: -> { !persisted? || birthday_changed? }, unless: :organization?
+
+  validates :last_name, :birthday, absence: true, if: :organization?
+
   validates :culture, presence: true, inclusion: { in: %w(en fr) }
 
   validates_plausible_phone :phone_number
@@ -86,23 +92,31 @@ class User < ApplicationRecord
   end
 
   def display_name
-    "#{first_name} #{last_name.capitalize.chr}"
+    organization? ? first_name : "#{first_name} #{last_name.capitalize.chr}"
   end
 
   private
 
-  def subscribe_to_notifications
-    preferences['notifications'] = Notification.types
+  def initialize_preferences
+    self.preferences = { 'notifications': Notification.types }
   end
 
   def build_profile
-    create_profile(display_name: display_name)
+    create_profile(propagation_attributes)
   end
 
   def update_profile
-    profile.update(display_name: display_name, moderator: moderator?,
-      email_verified: email_verified?, phone_number_verified: phone_number_verified?
-    )
+    profile.update(propagation_attributes)
+  end
+
+  def propagation_attributes
+    {
+      display_name: display_name,
+      moderator: moderator?,
+      organization: organization?,
+      email_verified: email_verified?,
+      phone_number_verified: phone_number_verified?
+    }
   end
 
   def propagate_changes?

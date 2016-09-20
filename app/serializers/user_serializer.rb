@@ -6,6 +6,7 @@ class UserSerializer < ActiveModel::Serializer
              :phone_number,
              :culture,
              :moderator,
+             :organization,
              :email_verified,
              :phone_number_verified,
              :notifications_count
@@ -13,7 +14,7 @@ class UserSerializer < ActiveModel::Serializer
   has_one :profile do
     link :related, UrlHelpers.profile(object.profile)
 
-    include_data true 
+    include_data true
   end
 
   has_one :preferences do

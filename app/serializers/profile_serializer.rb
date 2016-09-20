@@ -6,6 +6,7 @@ class ProfileSerializer < ActiveModel::Serializer
              :description,
              :hosted_events_count,
              :moderator,
+             :organization,
              :email_verified,
              :phone_number_verified,
              :created_at,
