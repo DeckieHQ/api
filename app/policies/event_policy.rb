@@ -47,7 +47,8 @@ class EventPolicy < ApplicationPolicy
       :city,
       :state,
       :country,
-      :private
+      :private,
+      :unlimited_capacity
     ]
   end
 
