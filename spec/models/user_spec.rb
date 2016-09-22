@@ -62,7 +62,9 @@ RSpec.describe User, :type => :model do
 
     it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en fr)) }
 
-    context 'with a previous user olrder than limits' do
+    it { is_expected.to_not allow_value(nil).for(:organization) }
+
+    context 'with a previous user older than limits' do
       subject { FactoryGirl.create(:user_elder) }
 
       it { is_expected.to be_valid }
