@@ -10,10 +10,10 @@ RSpec.describe Event, :type => :model do
 
     it do
       is_expected.to have_db_column(:capacity)
-        .of_type(:integer).with_options(null: false)
+        .of_type(:integer).with_options(null: true, default: nil)
     end
 
-    [:auto_accept, :private, :flexible].each do |attribute|
+    [:auto_accept, :private, :flexible, :unlimited_capacity].each do |attribute|
       it do
         is_expected.to have_db_column(attribute)
           .of_type(:boolean).with_options(null: false, default: false)
@@ -78,7 +78,6 @@ RSpec.describe Event, :type => :model do
     it { is_expected.to have_many(:actions).dependent(:destroy) }
 
     it { is_expected.to have_many(:invitations).dependent(:destroy) }
-
   end
 
   describe 'Validations' do
@@ -139,7 +138,7 @@ RSpec.describe Event, :type => :model do
       it { is_expected.to be_valid }
     end
 
-    [:auto_accept, :flexible, :private].each do |attribute|
+    [:auto_accept, :flexible, :private, :unlimited_capacity].each do |attribute|
       it { is_expected.to_not allow_value(nil).for(attribute) }
     end
 
@@ -168,6 +167,12 @@ RSpec.describe Event, :type => :model do
       ].each do |value|
         it { is_expected.to_not allow_value(value).for(:new_time_slots).on(:create) }
       end
+    end
+
+    context 'when event has unlimited capacity' do
+      subject(:event) { FactoryGirl.create(:event, :unlimited_access) }
+
+      it { is_expected.to validate_absence_of(:capacity) }
     end
   end
 
@@ -240,6 +245,16 @@ RSpec.describe Event, :type => :model do
         subject(:method) { FactoryGirl.create(:"event_#{state}").send(method) }
 
         it { is_expected.to be_truthy }
+
+        if state == :full
+          context 'when event has unlimited capacity' do
+            subject(:method) do
+              FactoryGirl.create(:event, :unlimited_access).full?
+            end
+
+            it { is_expected.to be_falsy }
+          end
+        end
       end
 
       context 'when event is flexible' do

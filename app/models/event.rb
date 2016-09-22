@@ -52,13 +52,15 @@ class Event < ApplicationRecord
 
   validates :capacity, presence: true, numericality: { only_integer: true,
     greater_than: 0, less_than: 1000, greater_than_or_equal_to: ->(e) { e.attendees_count }
-  }
+  }, unless: :unlimited_capacity?
+
+  validates :capacity, absence: true, if: :unlimited_capacity?
 
   validates :min_capacity, numericality: { only_integer: true,
     greater_than_or_equal_to: 0, less_than_or_equal_to: ->(e) { e.capacity || e.min_capacity }
   }
 
-  validates :auto_accept, :flexible, :private, inclusion: { in: [true, false] }
+  validates :auto_accept, :flexible, :private, :unlimited_capacity, inclusion: { in: [true, false] }
 
   validates :postcode, presence: true, length: { maximum: 10 }
 
@@ -124,7 +126,7 @@ class Event < ApplicationRecord
   end
 
   def full?
-    attendees_count == capacity
+    !unlimited_capacity? && attendees_count == capacity
   end
 
   def reached_time_slot_min?

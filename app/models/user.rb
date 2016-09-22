@@ -55,6 +55,8 @@ class User < ApplicationRecord
 
   validates :culture, presence: true, inclusion: { in: %w(en fr) }
 
+  validates :organization, inclusion: { in: [true, false] }
+
   validates_plausible_phone :phone_number
 
   def verified?

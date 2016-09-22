@@ -33,11 +33,21 @@ FactoryGirl.define do
     association :host, factory: :profile_verified
 
     after(:create) do |event|
-      event.update(min_capacity: Faker::Number.between(0, event.capacity))
+      unless event.unlimited_capacity?
+        event.update(min_capacity: Faker::Number.between(0, event.capacity))
+      end
     end
 
     trait :auto_accept do
       auto_accept true
+    end
+
+    trait :unlimited_access do
+      min_capacity 0
+
+      capacity nil
+
+      unlimited_capacity true
     end
 
     trait :flexible do

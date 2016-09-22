@@ -29,6 +29,7 @@ module EventSearch
                    :private_comments_count,
                    :private,
                    :flexible,
+                   :unlimited_capacity,
                    :reached_time_slot_min
 
         attribute :full do

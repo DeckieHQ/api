@@ -48,6 +48,10 @@ badge_id = 0
   id: (badge_id = badge_id+1),
   name: 'first-flexible-event',
   description: 'Created a first flexible event.'
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'first-unlimited-event-capacity',
+  description: 'Created a first event with unlimited capacity.'
 }].each do |attrs|
-  Merit::Badge.create! attrs
+  Merit::Badge.create!(attrs)
 end

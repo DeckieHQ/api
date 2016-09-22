@@ -60,6 +60,14 @@ RSpec.describe 'User create hosted event', :type => :request do
           expect(user).to have_achievement('first-flexible-event')
         end
       end
+
+      context 'with event with unlimited capacity' do
+        let(:event) { FactoryGirl.build(:event, :unlimited_access) }
+
+        it 'grants the user with a first flexible event achievement' do
+          expect(user).to have_achievement('first-unlimited-event-capacity')
+        end
+      end
     end
 
     context 'when attributes are invalid' do
