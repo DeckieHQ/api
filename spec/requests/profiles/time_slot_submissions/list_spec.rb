@@ -3,8 +3,6 @@ require 'rails_helper'
 RSpec.describe 'List user time slot submissions', :type => :request do
   let(:profile) { FactoryGirl.create(:profile, :with_time_slot_submissions) }
 
-  let(:params) {}
-
   before do
     get profile_time_slot_submissions_path(profile), params: params, headers: json_headers
   end
@@ -18,6 +16,8 @@ RSpec.describe 'List user time slot submissions', :type => :request do
     accept: %w(time_slot time_slot.event)
 
   context "when profile doesn't exist" do
+    let(:params) {}
+
     let(:profile) { { profile_id: 0 } }
 
     it { is_expected.to return_not_found }

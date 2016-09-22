@@ -63,6 +63,8 @@ Rails.application.routes.draw do
     resources :achievements, only: [:index], controller: 'profile/achievements'
 
     resources :time_slot_submissions, only: [:index], controller: 'profile/time_slot_submissions'
+
+    resources :hosted_events, only: [:index], controller: 'profile/hosted_events'
   end
 
   resources :contacts, only: :show

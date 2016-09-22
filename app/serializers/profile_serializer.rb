@@ -36,6 +36,12 @@ class ProfileSerializer < ActiveModel::Serializer
     include_data false
   end
 
+  has_many :hosted_events do
+    link :related, UrlHelpers.profile_hosted_events(object)
+
+    include_data false
+  end
+
   has_many :time_slot_submissions do
     link :related, UrlHelpers.profile_time_slot_submissions(object)
 
