@@ -1,6 +1,8 @@
 class Event < ApplicationRecord
   acts_as_paranoid
 
+  self.inheritance_column = nil
+
   include EventSearch
 
   include Filterable
@@ -9,6 +11,8 @@ class Event < ApplicationRecord
 
   belongs_to :host, -> { with_deleted },
     class_name: 'Profile', foreign_key: 'profile_id', counter_cache: :hosted_events_count
+
+  enum type: [:normal, :flexible, :recurrent]
 
   has_many :submissions, dependent: :destroy
 
@@ -60,7 +64,7 @@ class Event < ApplicationRecord
     greater_than_or_equal_to: 0, less_than_or_equal_to: ->(e) { e.capacity || e.min_capacity }
   }
 
-  validates :auto_accept, :flexible, :private, :unlimited_capacity, inclusion: { in: [true, false] }
+  validates :auto_accept, :private, :unlimited_capacity, inclusion: { in: [true, false] }
 
   validates :postcode, presence: true, length: { maximum: 10 }
 
@@ -68,42 +72,52 @@ class Event < ApplicationRecord
 
   validates :state, length: { maximum: 64 }
 
-  # Non-flexible validations
+  # Normal validations
 
-  validates :begin_at, presence: true, unless: :flexible?
+  validates :begin_at, presence: true, if: :normal?
 
   # Allows events closed to be valid.
-  validates :begin_at, date: { after: Proc.new { Time.now } },
-    unless: -> { flexible? || (persisted? && !begin_at_changed?) }
+  validates :begin_at, date: { after: Proc.new { Time.now } }, if: :normal?,
+    unless: -> { persisted? && !begin_at_changed? }
 
-  validates :end_at, date: { after: :begin_at }, allow_nil: true, unless: :flexible?
+  validates :end_at, date: { after: :begin_at }, allow_nil: true, if: :normal?
 
-  validates :new_time_slots, absence: true, unless: :flexible?
+  validates :new_time_slots, absence: true, if: :normal?
 
-  # Flexible validations
+  # Flexible and Recurrent validations
 
-  validates :begin_at, absence: true, if: :flexible?
+  validates :begin_at, absence: true, unless: :normal?
 
-  validates :end_at, absence: true, if: :flexible?
+  validates :end_at, absence: true, unless: :normal?
 
-  validate :new_time_slots_must_be_valid, on: :create, if: :flexible?
+  validates :new_time_slots, presence: true, multiple_times: { min: 2, max: 5, after: 1.day },
+    on: :create, if: :flexible?
+
+  validates :new_time_slots, presence: true, multiple_times: { min: 2, max: 200, after: 1.day },
+    on: :create, if: :recurrent?
+
+  # Address
 
   geocoded_by :address
 
   before_save :geocode, if: :address_changed?
 
+  # Flexible
+
   before_create :assign_begin_at_range, if: :flexible?
 
   after_create :create_time_slots, if: :flexible?
+
+  # Recurrent
 
   scope :with_pending_submissions,
     -> { joins(:submissions).merge(Submission.pending).distinct }
 
   def self.opened(opened = true)
     if opened.to_s.to_b
-      where("flexible = 't' OR begin_at > ?", Time.now)
+      where("type != ? OR begin_at > ?", 0, Time.now)
     else
-      where("flexible = 'f' AND begin_at <= ?", Time.now)
+      where(type: :normal).where('begin_at <= ?', Time.now)
     end
   end
 
@@ -122,7 +136,7 @@ class Event < ApplicationRecord
   end
 
   def closed?
-    !flexible? && begin_at <= Time.now
+    normal? && begin_at <= Time.now
   end
 
   def full?
@@ -164,7 +178,7 @@ class Event < ApplicationRecord
     when :submit, :unsubmit
       [ host.id ]
     when :cancel
-      if flexible
+      if flexible?
         time_slots_members.pluck('id')
       else
         submissions.pluck('profile_id')
@@ -207,18 +221,6 @@ class Event < ApplicationRecord
   def create_time_slots
     new_time_slots.each do |time|
       time_slots << TimeSlot.new(begin_at: time)
-    end
-  end
-
-  def new_time_slots_must_be_valid
-    unless new_time_slots.kind_of?(Array) &&
-      new_time_slots.tap(&:uniq!).length >= 2 && new_time_slots.length <= 5
-      return errors.add(:new_time_slots, :unsupported)
-    end
-    new_time_slots.each do |slot|
-      unless slot.respond_to?(:to_time) && slot.to_time >= Time.now + 1.day
-        return errors.add(:new_time_slots, :unsupported)
-      end
     end
   end
 end

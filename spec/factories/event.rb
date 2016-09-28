@@ -18,7 +18,7 @@ FactoryGirl.define do
 
     end_at { Faker::Time.between(Time.now + 10.day, Time.now + 20.day, :all) }
 
-    flexible false
+    type :normal
 
     street   { Faker::Address.street_address }
     postcode { Faker::Address.postcode       }
@@ -55,7 +55,17 @@ FactoryGirl.define do
 
       end_at nil
 
-      flexible true
+      type :flexible
+
+      new_time_slots { Fake::Event.time_slots }
+    end
+
+    trait :recurrent do
+      begin_at nil
+
+      end_at nil
+
+      type :recurrent
 
       new_time_slots { Fake::Event.time_slots }
     end
