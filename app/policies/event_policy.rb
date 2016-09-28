@@ -18,7 +18,8 @@ class EventPolicy < ApplicationPolicy
   end
 
   def submit?
-    !event_host? && !submission_already_exist? && !event_closed? && !event_full?  && !event_flexible?
+    !event_host? && !submission_already_exist? && !event_closed? && !event_full? &&
+    !event_flexible? && !event_recurrent?
   end
 
   def submissions?

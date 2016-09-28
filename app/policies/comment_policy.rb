@@ -1,4 +1,6 @@
 class CommentPolicy < ApplicationPolicy
+  include PolicyMatchers::Event
+  
   alias_method :comment, :record
 
   def index?
@@ -6,7 +8,7 @@ class CommentPolicy < ApplicationPolicy
   end
 
   def create?
-    !comment.of_comment? && (!comment.private? || member?)
+    !comment.of_comment? && (!comment.private? || member?) && !event_recurrent?
   end
 
   def update?
@@ -26,6 +28,10 @@ class CommentPolicy < ApplicationPolicy
   end
 
   private
+
+  def event
+    comment.resource
+  end
 
   def member?
     comment.resource.member?(user.profile)
