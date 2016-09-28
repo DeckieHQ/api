@@ -4,6 +4,8 @@ RSpec.describe Event, :type => :model do
   describe 'Database' do
     it { is_expected.to have_db_index(:profile_id) }
 
+    it { is_expected.to have_db_index(:event_id).unique(true) }
+
     it { is_expected.to have_db_column(:short_description).of_type(:text) }
 
     it { is_expected.to have_db_column(:description).of_type(:text) }
@@ -28,7 +30,7 @@ RSpec.describe Event, :type => :model do
 
     [
       :submissions_count,      :attendees_count, :public_comments_count,
-      :private_comments_count, :min_capacity
+      :private_comments_count, :children_count, :min_capacity
     ].each do |attribute|
       it do
         is_expected.to have_db_column(attribute)
@@ -44,11 +46,22 @@ RSpec.describe Event, :type => :model do
 
   describe 'Relationships' do
     it do
-      is_expected.to belong_to(:host)
+      is_expected.to belong_to(:host).class_name('Profile')
         .with_foreign_key('profile_id').counter_cache(:hosted_events_count)
     end
 
+    it do
+      is_expected.to belong_to(:parent).class_name('Event')
+        .with_foreign_key('event_id').counter_cache(:children_count)
+    end
+
     it { is_expected.to include_deleted(:host) }
+
+    context 'with child events' do
+      subject { FactoryGirl.create_list(:event, 3, :of_recurrent) }
+
+      it { is_expected.to include_deleted(:parent) }
+    end
 
     it { is_expected.to have_many(:submissions).dependent(:destroy) }
 

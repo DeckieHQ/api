@@ -27,7 +27,9 @@ module EventSearch
                    :submissions_count,
                    :public_comments_count,
                    :private_comments_count,
+                   :children_count,
                    :private,
+                   :type,
                    :unlimited_capacity,
                    :reached_time_slot_min
 
@@ -64,7 +66,7 @@ module EventSearch
           'unordered(description)'
         ]
 
-        attributesForFaceting ['category', 'ambiance', 'level']
+        attributesForFaceting ['category', 'ambiance', 'level', 'type']
 
         customRanking ['asc(begin_at_i)', 'desc(attendees_count / capacity)']
 
@@ -81,7 +83,7 @@ module EventSearch
     private
 
     def indexable?
-      !(closed? || private?)
+      !(closed? || private? || recurrent?)
     end
   end
 end

@@ -9,10 +9,13 @@ class Event < ApplicationRecord
 
   attr_accessor :new_time_slots
 
+  enum type: [:normal, :flexible, :recurrent]
+
   belongs_to :host, -> { with_deleted },
     class_name: 'Profile', foreign_key: 'profile_id', counter_cache: :hosted_events_count
 
-  enum type: [:normal, :flexible, :recurrent]
+  belongs_to :parent, -> { with_deleted },
+    class_name: 'Event', foreign_key: 'event_id', counter_cache: :children_count
 
   has_many :submissions, dependent: :destroy
 
@@ -107,8 +110,6 @@ class Event < ApplicationRecord
   before_create :assign_begin_at_range, if: :flexible?
 
   after_create :create_time_slots, if: :flexible?
-
-  # Recurrent
 
   scope :with_pending_submissions,
     -> { joins(:submissions).merge(Submission.pending).distinct }
