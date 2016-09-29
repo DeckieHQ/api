@@ -27,7 +27,7 @@ class EventPolicy < ApplicationPolicy
   end
 
   def permited_attributes_for_create
-    permited_attributes_for_update.concat([:flexible, new_time_slots: []])
+    permited_attributes_for_update.concat([:type, new_time_slots: []])
   end
 
   def permited_attributes_for_update
