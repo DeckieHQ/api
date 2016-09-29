@@ -32,9 +32,9 @@ FactoryGirl.define do
 
     association :host, factory: :profile_verified
 
-    after(:create) do |event|
+    before(:create) do |event|
       unless event.unlimited_capacity?
-        event.update(min_capacity: Faker::Number.between(0, event.capacity))
+        event.min_capacity = 0
       end
     end
 
@@ -122,6 +122,7 @@ FactoryGirl.define do
     factory :event_with_submissions do
       transient do
         submissions_count 10
+
         capacity 15
       end
 

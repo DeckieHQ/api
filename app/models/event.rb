@@ -17,6 +17,8 @@ class Event < ApplicationRecord
   belongs_to :parent, -> { with_deleted },
     class_name: 'Event', foreign_key: 'event_id', counter_cache: :children_count
 
+  has_many :children, class_name: 'Event'
+
   has_many :submissions, dependent: :destroy
 
   has_many :pending_submissions, -> { pending }, class_name: 'Submission'
@@ -113,6 +115,10 @@ class Event < ApplicationRecord
 
   scope :with_pending_submissions,
     -> { joins(:submissions).merge(Submission.pending).distinct }
+
+  # Recurrent
+
+  after_create :create_children, if: :recurrent?
 
   def self.opened(opened = true)
     if opened.to_s.to_b
@@ -223,5 +229,15 @@ class Event < ApplicationRecord
     new_time_slots.each do |time|
       time_slots << TimeSlot.new(begin_at: time)
     end
+  end
+
+  def create_children
+    new_time_slots.each do |time|
+      children << Event.new(propagation_attributes.merge({ begin_at: time }))
+    end
+  end
+
+  def propagation_attributes
+    attributes.except('id').except('children_count').merge({ 'type': :normal })
   end
 end

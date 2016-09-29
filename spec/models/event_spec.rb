@@ -4,7 +4,7 @@ RSpec.describe Event, :type => :model do
   describe 'Database' do
     it { is_expected.to have_db_index(:profile_id) }
 
-    it { is_expected.to have_db_index(:event_id).unique(true) }
+    it { is_expected.to have_db_index(:event_id) }
 
     it { is_expected.to have_db_column(:short_description).of_type(:text) }
 
@@ -62,6 +62,8 @@ RSpec.describe Event, :type => :model do
 
       it { is_expected.to include_deleted(:parent) }
     end
+
+    it { is_expected.to have_many(:children).class_name('Event') }
 
     it { is_expected.to have_many(:submissions).dependent(:destroy) }
 
@@ -233,6 +235,38 @@ RSpec.describe Event, :type => :model do
         expect(event.begin_at_range).to eq(
           { min: event.new_time_slots.min, max: event.new_time_slots.max }.as_json
         )
+      end
+    end
+
+    context 'when event is recurrent' do
+      subject(:event) { FactoryGirl.create(:event, :recurrent) }
+
+      it 'creates a normal event child for each new_time_slots datetime' do
+        expect(
+          event.children.where(
+            begin_at: event.new_time_slots, type: :normal, children_count: 0
+          )
+        ).to_not be_empty
+      end
+
+      it 'assigns event attributes for each children' do
+        event.children.each do |child|
+          expect(propagation_attributes_for(child)).to eq(propagation_attributes_for(event))
+        end
+      end
+
+      def propagation_attributes_for(record)
+        record
+        .attributes
+        .except('id')
+        .except('type')
+        .except('event_id')
+        .except('children_count')
+        .except('created_at')
+        .except('updated_at')
+        .except('begin_at')
+        .except('latitude')
+        .except('longitude')
       end
     end
   end
