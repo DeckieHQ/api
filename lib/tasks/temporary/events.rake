@@ -11,7 +11,6 @@ namespace :events do
         puts '.'
       end
     end
+    puts ' All done now!'
   end
-
-  puts ' All done now!'
 end
