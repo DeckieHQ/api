@@ -17,6 +17,10 @@ FactoryGirl.define do
       association :resource, factory: :comment
     end
 
+    trait :of_recurrent_event do
+      association :resource, factory: [:event, :recurrent]
+    end
+
     trait :with_comments do
       transient { comments_count 4 }
 

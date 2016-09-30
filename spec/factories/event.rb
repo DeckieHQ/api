@@ -18,7 +18,7 @@ FactoryGirl.define do
 
     end_at { Faker::Time.between(Time.now + 10.day, Time.now + 20.day, :all) }
 
-    flexible false
+    type :normal
 
     street   { Faker::Address.street_address }
     postcode { Faker::Address.postcode       }
@@ -32,9 +32,9 @@ FactoryGirl.define do
 
     association :host, factory: :profile_verified
 
-    after(:create) do |event|
+    before(:create) do |event|
       unless event.unlimited_capacity?
-        event.update(min_capacity: Faker::Number.between(0, event.capacity))
+        event.min_capacity = 0
       end
     end
 
@@ -55,9 +55,23 @@ FactoryGirl.define do
 
       end_at nil
 
-      flexible true
+      type :flexible
 
       new_time_slots { Fake::Event.time_slots }
+    end
+
+    trait :recurrent do
+      begin_at nil
+
+      end_at nil
+
+      type :recurrent
+
+      new_time_slots { Fake::Event.time_slots }
+    end
+
+    trait :of_recurrent do
+      association :parent, factory: [:event, :recurrent]
     end
 
     factory :event_with_time_slots_members, traits: [:flexible] do
@@ -108,6 +122,7 @@ FactoryGirl.define do
     factory :event_with_submissions do
       transient do
         submissions_count 10
+
         capacity 15
       end
 

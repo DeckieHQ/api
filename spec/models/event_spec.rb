@@ -4,6 +4,8 @@ RSpec.describe Event, :type => :model do
   describe 'Database' do
     it { is_expected.to have_db_index(:profile_id) }
 
+    it { is_expected.to have_db_index(:event_id) }
+
     it { is_expected.to have_db_column(:short_description).of_type(:text) }
 
     it { is_expected.to have_db_column(:description).of_type(:text) }
@@ -13,16 +15,22 @@ RSpec.describe Event, :type => :model do
         .of_type(:integer).with_options(null: true, default: nil)
     end
 
-    [:auto_accept, :private, :flexible, :unlimited_capacity].each do |attribute|
+    [:auto_accept, :private, :unlimited_capacity].each do |attribute|
       it do
         is_expected.to have_db_column(attribute)
           .of_type(:boolean).with_options(null: false, default: false)
       end
     end
 
+    it do
+      is_expected.to have_db_column(:type).of_type(:integer)
+        .with_options(null: false)
+    end
+
+
     [
       :submissions_count,      :attendees_count, :public_comments_count,
-      :private_comments_count, :min_capacity
+      :private_comments_count, :children_count, :min_capacity
     ].each do |attribute|
       it do
         is_expected.to have_db_column(attribute)
@@ -38,11 +46,24 @@ RSpec.describe Event, :type => :model do
 
   describe 'Relationships' do
     it do
-      is_expected.to belong_to(:host)
+      is_expected.to belong_to(:host).class_name('Profile')
         .with_foreign_key('profile_id').counter_cache(:hosted_events_count)
     end
 
+    it do
+      is_expected.to belong_to(:parent).class_name('Event')
+        .with_foreign_key('event_id').counter_cache(:children_count)
+    end
+
     it { is_expected.to include_deleted(:host) }
+
+    context 'with child events' do
+      subject { FactoryGirl.create_list(:event, 3, :of_recurrent) }
+
+      it { is_expected.to include_deleted(:parent) }
+    end
+
+    it { is_expected.to have_many(:children).class_name('Event') }
 
     it { is_expected.to have_many(:submissions).dependent(:destroy) }
 
@@ -78,15 +99,15 @@ RSpec.describe Event, :type => :model do
     it { is_expected.to have_many(:actions).dependent(:destroy) }
 
     it { is_expected.to have_many(:invitations).dependent(:destroy) }
-  end
-
-  describe 'Validations' do
-    subject(:event) { FactoryGirl.create(:event) }
 
     it do
       is_expected.to have_many(:public_comments)
         .conditions(private: false).class_name('Comment')
     end
+  end
+
+  describe 'Validations' do
+    subject(:event) { FactoryGirl.create(:event) }
 
     [
       :title,  :category, :ambiance, :level, :capacity, :begin_at,
@@ -138,7 +159,7 @@ RSpec.describe Event, :type => :model do
       it { is_expected.to be_valid }
     end
 
-    [:auto_accept, :flexible, :private, :unlimited_capacity].each do |attribute|
+    [:auto_accept, :private, :unlimited_capacity].each do |attribute|
       it { is_expected.to_not allow_value(nil).for(attribute) }
     end
 
@@ -157,6 +178,20 @@ RSpec.describe Event, :type => :model do
 
     context 'when event is flexible' do
       subject(:event) { FactoryGirl.create(:event, :flexible) }
+
+      it { is_expected.to validate_absence_of(:begin_at) }
+
+      it { is_expected.to validate_absence_of(:end_at) }
+
+      [
+        nil, 'lol', [], [Time.now + 2.days], [Time.now + 2.days, nil], [Time.now + 2.days, 2.days.ago]
+      ].each do |value|
+        it { is_expected.to_not allow_value(value).for(:new_time_slots).on(:create) }
+      end
+    end
+
+    context 'when event is recurrent' do
+      subject(:event) { FactoryGirl.create(:event, :recurrent) }
 
       it { is_expected.to validate_absence_of(:begin_at) }
 
@@ -200,6 +235,38 @@ RSpec.describe Event, :type => :model do
         expect(event.begin_at_range).to eq(
           { min: event.new_time_slots.min, max: event.new_time_slots.max }.as_json
         )
+      end
+    end
+
+    context 'when event is recurrent' do
+      subject(:event) { FactoryGirl.create(:event, :recurrent) }
+
+      it 'creates a normal event child for each new_time_slots datetime' do
+        expect(
+          event.children.where(
+            begin_at: event.new_time_slots, type: :normal, children_count: 0
+          )
+        ).to_not be_empty
+      end
+
+      it 'assigns event attributes for each children' do
+        event.children.each do |child|
+          expect(propagation_attributes_for(child)).to eq(propagation_attributes_for(event))
+        end
+      end
+
+      def propagation_attributes_for(record)
+        record
+        .attributes
+        .except('id')
+        .except('type')
+        .except('event_id')
+        .except('children_count')
+        .except('created_at')
+        .except('updated_at')
+        .except('begin_at')
+        .except('latitude')
+        .except('longitude')
       end
     end
   end
@@ -257,60 +324,13 @@ RSpec.describe Event, :type => :model do
         end
       end
 
-      context 'when event is flexible' do
-        subject(:method) { FactoryGirl.create(:event, :flexible).send(method) }
+      [:flexible, :recurrent].each do |type|
+        context "when event is #{type}" do
+          subject(:method) { FactoryGirl.create(:event, type).send(method) }
 
-        it { is_expected.to be_falsy }
+          it { is_expected.to be_falsy }
+        end
       end
-    end
-  end
-
-  describe '.member?' do
-    let(:event) { FactoryGirl.create(:event_with_attendees) }
-
-    context 'when user is member of the event' do
-      let(:profile) { FactoryGirl.create(:profile) }
-
-      it { expect(event.member?(profile)).to be_falsy }
-    end
-
-    context 'when user is member of the event' do
-      let(:profile) { event.attendees.last }
-
-      it { expect(event.member?(profile)).to be_truthy }
-    end
-  end
-
-  describe '.submission_of' do
-    let(:event) { FactoryGirl.create(:event_with_submissions) }
-
-    context 'when there is no user' do
-      it { expect(event.submission_of()).to be_nil }
-    end
-
-    context "when user hasn't a submission on the event" do
-      let(:user) { FactoryGirl.create(:user) }
-
-      it { expect(event.submission_of(user)).to be_nil }
-    end
-
-    context 'when user has a submission on the event' do
-      let(:submission) { event.submissions.last }
-      let(:user)       { submission.profile.user }
-
-      it { expect(event.submission_of(user).to_json).to eq(submission.to_json) }
-    end
-  end
-
-  describe '#max_confirmable_submissions' do
-    let(:event) do
-      FactoryGirl.create(:event_with_submissions, :with_pending_submissions)
-    end
-
-    it 'returns the possible confirmable submissions' do
-      expect(event.max_confirmable_submissions).to eq(
-        event.pending_submissions.take(event.capacity - event.attendees_count)
-      )
     end
   end
 
@@ -502,6 +522,7 @@ RSpec.describe Event, :type => :model do
       FactoryGirl.create_list(:event,        Faker::Number.between(1, 4))
       FactoryGirl.create_list(:event_closed, Faker::Number.between(1, 4))
       FactoryGirl.create_list(:event,        Faker::Number.between(1, 4), :flexible)
+      FactoryGirl.create_list(:event,        Faker::Number.between(1, 4), :recurrent)
     end
 
     it 'returns the opened events' do
@@ -517,7 +538,11 @@ RSpec.describe Event, :type => :model do
         end
 
         it 'includes flexible events' do
-          expect(events.where(flexible: true)).to_not be_empty
+          expect(events.flexible).to_not be_empty
+        end
+
+        it 'includes recurrent events' do
+          expect(events.recurrent).to_not be_empty
         end
       end
     end
@@ -531,13 +556,13 @@ RSpec.describe Event, :type => :model do
         end
 
         it "doesn't include flexible events" do
-          expect(events.where(flexible: true)).to be_empty
+          expect(events.flexible).to be_empty
         end
       end
     end
 
     def expect_opened_events(opened)
-      results = events.where(flexible: false).pluck(:begin_at).keep_if do |begin_at|
+      results = events.normal.pluck(:begin_at).keep_if do |begin_at|
         opened ? begin_at > Time.now : begin_at <= Time.now
       end
       expect(results).to_not be_empty
@@ -556,6 +581,55 @@ RSpec.describe Event, :type => :model do
     it 'returns the event with submissions' do
       expect(Event.with_pending_submissions).to have_records(
         Event.joins(:submissions).where({ submissions: { status: :pending } }).distinct
+      )
+    end
+  end
+
+  describe '.member?' do
+    let(:event) { FactoryGirl.create(:event_with_attendees) }
+
+    context 'when user is member of the event' do
+      let(:profile) { FactoryGirl.create(:profile) }
+
+      it { expect(event.member?(profile)).to be_falsy }
+    end
+
+    context 'when user is member of the event' do
+      let(:profile) { event.attendees.last }
+
+      it { expect(event.member?(profile)).to be_truthy }
+    end
+  end
+
+  describe '.submission_of' do
+    let(:event) { FactoryGirl.create(:event_with_submissions) }
+
+    context 'when there is no user' do
+      it { expect(event.submission_of()).to be_nil }
+    end
+
+    context "when user hasn't a submission on the event" do
+      let(:user) { FactoryGirl.create(:user) }
+
+      it { expect(event.submission_of(user)).to be_nil }
+    end
+
+    context 'when user has a submission on the event' do
+      let(:submission) { event.submissions.last }
+      let(:user)       { submission.profile.user }
+
+      it { expect(event.submission_of(user).to_json).to eq(submission.to_json) }
+    end
+  end
+
+  describe '#max_confirmable_submissions' do
+    let(:event) do
+      FactoryGirl.create(:event_with_submissions, :with_pending_submissions)
+    end
+
+    it 'returns the possible confirmable submissions' do
+      expect(event.max_confirmable_submissions).to eq(
+        event.pending_submissions.take(event.capacity - event.attendees_count)
       )
     end
   end
