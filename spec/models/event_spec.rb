@@ -24,9 +24,13 @@ RSpec.describe Event, :type => :model do
 
     it do
       is_expected.to have_db_column(:type).of_type(:integer)
-        .with_options(null: false)
+        .with_options(null: false, default: :normal)
     end
 
+    it do
+      is_expected.to have_db_column(:flexible).of_type(:boolean)
+        .with_options(null: false, default: false)
+    end
 
     [
       :submissions_count,      :attendees_count, :public_comments_count,
