@@ -48,6 +48,8 @@ Rails.application.routes.draw do
       resources :time_slots, only: :index, controller: 'event/time_slots'
 
       resources :time_slots_members, only: :index, controller: 'event/time_slots_members'
+
+      resources :children, only: :index, controller: 'event/children'
     end
   end
 

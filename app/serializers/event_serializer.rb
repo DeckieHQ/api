@@ -70,6 +70,11 @@ class EventSerializer < ActiveModel::Serializer
     include_data false
   end
 
+  has_many :children do
+    link :related, UrlHelpers.event_children(object)
+    include_data false
+  end
+
   def opened
     !object.closed?
   end
