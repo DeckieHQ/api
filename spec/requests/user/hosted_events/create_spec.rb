@@ -21,7 +21,7 @@ RSpec.describe 'User create hosted event', :type => :request do
     context 'when attributes are valid' do
       let(:event) { FactoryGirl.build(:event) }
 
-      let(:created_event) { user.hosted_events.last }
+      let(:created_event) { user.hosted_events.first }
 
       it { is_expected.to return_status_code 201 }
 
@@ -49,6 +49,10 @@ RSpec.describe 'User create hosted event', :type => :request do
         expect(user).to_not have_achievement('first-flexible-event')
       end
 
+      it "doesn't grant the user with a first recurrent event achievement" do
+        expect(user).to_not have_achievement('first-recurrent-event')
+      end
+
       context 'with flexible event' do
         let(:event) { FactoryGirl.build(:event, :flexible) }
 
@@ -59,6 +63,10 @@ RSpec.describe 'User create hosted event', :type => :request do
         it 'grants the user with a first flexible event achievement' do
           expect(user).to have_achievement('first-flexible-event')
         end
+
+        it "doesn't grant the user with a first recurrent event achievement" do
+          expect(user).to_not have_achievement('first-recurrent-event')
+        end
       end
 
       context 'with event with unlimited capacity' do
@@ -66,6 +74,22 @@ RSpec.describe 'User create hosted event', :type => :request do
 
         it 'grants the user with a first flexible event achievement' do
           expect(user).to have_achievement('first-unlimited-event-capacity')
+        end
+      end
+
+      context 'with recurrent event' do
+        let(:event) { FactoryGirl.build(:event, :recurrent) }
+
+        it 'creates associated children' do
+          expect(created_event.children).to_not be_empty
+        end
+
+        it 'grants the user with a first recurrent event achievement' do
+          expect(user).to have_achievement('first-recurrent-event')
+        end
+
+        it "doesn't grant the user with a first flexible event achievement" do
+          expect(user).to_not have_achievement('first-flexible-event')
         end
       end
     end
