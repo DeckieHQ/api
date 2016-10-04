@@ -3,7 +3,3 @@ languages:
 exclude_paths:
 - ".rubocop.yml"
 - spec/**/*
-
-engines:
-  bundler-audit:
-    enabled: false
