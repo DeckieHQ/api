@@ -6,6 +6,8 @@ class CancelEvent < ActionService
   def call
     create_action(:cancel)
 
+    self.class.for(actor, event.children)
+
     event.destroy
   end
 

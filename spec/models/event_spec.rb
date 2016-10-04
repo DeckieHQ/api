@@ -126,7 +126,7 @@ RSpec.describe Event, :type => :model do
         strategy cooperative ambiance playful tile-based, other
       ),
       ambiance: %w(relaxed serious teasing),
-      level: %w(beginner intermediate advanced)
+      level: %w(beginner intermediate advanced),
     }.each do |attribute, values|
       it { is_expected.to validate_inclusion_of(attribute).in_array(values) }
     end

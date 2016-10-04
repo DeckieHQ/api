@@ -77,6 +77,8 @@ class Event < ApplicationRecord
 
   validates :state, length: { maximum: 64 }
 
+  validates :type, inclusion: { in: types.keys }
+
   # Normal validations
 
   validates :begin_at, presence: true, if: :normal?
@@ -122,7 +124,7 @@ class Event < ApplicationRecord
 
   def self.opened(opened = true)
     if opened.to_s.to_b
-      where("type != ? OR begin_at > ?", 0, Time.now)
+      where("type != ? OR begin_at > ?", types['normal'], Time.now)
     else
       where(type: :normal).where('begin_at <= ?', Time.now)
     end
