@@ -136,6 +136,10 @@ class Event < ApplicationRecord
     )
   end
 
+  def self.type(type)
+    where(type: type)
+  end
+
   def optimum_time_slot
     time_slots.order('begin_at ASC').max_by(&:members_count)
   end
