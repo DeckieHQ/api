@@ -140,6 +140,10 @@ class Event < ApplicationRecord
     where(type: type)
   end
 
+  def self.not_type(type)
+    where.not(type: type)
+  end
+
   def optimum_time_slot
     time_slots.order('begin_at ASC').max_by(&:members_count)
   end

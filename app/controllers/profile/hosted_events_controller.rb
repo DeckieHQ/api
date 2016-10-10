@@ -1,7 +1,7 @@
 class Profile::HostedEventsController < ApplicationController
   def index
     search = Search.new(
-      params, sort: %w(begin_at end_at), filters: { scopes: [:opened, :type] }
+      params, sort: %w(begin_at end_at), filters: { scopes: [:opened, :type, :not_type] }
     )
     return render_search_errors(search) unless search.valid?
 
