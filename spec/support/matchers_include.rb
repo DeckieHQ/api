@@ -2,17 +2,21 @@ require 'rspec/expectations'
 
 RSpec::Matchers.define :include_deleted do |relationship|
   match do
-    collection.first.public_send(relationship).destroy
+    check_relations = {}
 
-    described_class.all.includes(relationship).each do |member|
-      member_relationship = member.public_send(relationship)
+    records.each do |record|
+      check_relations[record.id] = true if record.public_send(relationship)
+    end
 
-      expect(member_relationship).to_not be_nil
+    records.first.public_send(relationship).destroy
+
+    described_class.all.includes(relationship).each do |record|
+      expect(record.public_send(relationship)).to_not be_nil if check_relations[record.id]
     end
   end
 
-  def collection
-    FactoryGirl.create_list(described_class.to_s.downcase, 3)
+  def records
+    subject.respond_to?(:count) ? subject : FactoryGirl.create_list(described_class.to_s.downcase, 3)
   end
 end
 

@@ -48,6 +48,8 @@ Rails.application.routes.draw do
       resources :time_slots, only: :index, controller: 'event/time_slots'
 
       resources :time_slots_members, only: :index, controller: 'event/time_slots_members'
+
+      resources :children, only: :index, controller: 'event/children'
     end
   end
 
@@ -63,6 +65,8 @@ Rails.application.routes.draw do
     resources :achievements, only: [:index], controller: 'profile/achievements'
 
     resources :time_slot_submissions, only: [:index], controller: 'profile/time_slot_submissions'
+
+    resources :hosted_events, only: [:index], controller: 'profile/hosted_events'
   end
 
   resources :contacts, only: :show

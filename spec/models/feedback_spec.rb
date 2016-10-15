@@ -9,6 +9,20 @@ RSpec.describe Feedback, :type => :model do
     { title: 128, description: 8192 }.each do |attribute, length|
       it { is_expected.to validate_length_of(attribute).is_at_most(length) }
     end
+
+    it { is_expected.to allow_value(nil).for(:email) }
+
+    context 'with valid email' do
+      subject(:feedback) { FactoryGirl.build(:feedback) }
+
+      it { is_expected.to be_valid }
+    end
+
+    context 'with invalid email' do
+      subject(:feedback) { FactoryGirl.build(:feedback, :with_invalid_email) }
+
+      it { is_expected.to_not be_valid }
+    end
   end
 
   describe '#send_informations' do

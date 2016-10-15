@@ -1,5 +1,5 @@
 class FeedbackPolicy < ApplicationPolicy
   def permited_attributes
-    [:title, :description]
+    [:title, :description, :email]
   end
 end

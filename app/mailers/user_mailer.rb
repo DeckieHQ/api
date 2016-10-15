@@ -5,7 +5,7 @@ class UserMailer < ApplicationMailer
     send_mail(user)
   end
 
-  def reset_password_instructions(user, token, opts={})
+  def reset_password_instructions(user, token, _opts={})
     @content = ResetPasswordInstructions.new(user, token)
 
     send_mail(user)

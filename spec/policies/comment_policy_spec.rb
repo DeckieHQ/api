@@ -39,6 +39,16 @@ RSpec.describe CommentPolicy do
 
   context 'posting a public comment' do
     it { is_expected.to permit_action(:create) }
+
+    context 'when comment event is recurrent' do
+      let(:comment) { FactoryGirl.create(:comment, :of_recurrent_event) }
+
+      it { is_expected.to forbid_action(:create) }
+
+      it do
+        is_expected.to have_authorization_error(:event_recurrent, on: :create)
+      end
+    end
   end
 
   context 'posting a private comment' do

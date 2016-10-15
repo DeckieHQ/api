@@ -6,6 +6,7 @@ class ProfileSerializer < ActiveModel::Serializer
              :description,
              :hosted_events_count,
              :moderator,
+             :organization,
              :email_verified,
              :phone_number_verified,
              :created_at,
@@ -35,9 +36,15 @@ class ProfileSerializer < ActiveModel::Serializer
     include_data false
   end
 
+  has_many :hosted_events do
+    link :related, UrlHelpers.profile_hosted_events(object)
+
+    include_data false
+  end
+
   has_many :time_slot_submissions do
     link :related, UrlHelpers.profile_time_slot_submissions(object)
 
-    include_data false
+    include_data true
   end
 end

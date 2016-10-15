@@ -10,6 +10,18 @@ RSpec.describe User, :type => :model do
     end
 
     it do
+      is_expected.to have_db_column(:first_name).of_type(:string).with_options(null: false)
+    end
+
+    it do
+      is_expected.to have_db_column(:last_name).of_type(:string).with_options(null: true)
+    end
+
+    it do
+      is_expected.to have_db_column(:birthday).of_type(:date).with_options(null: true)
+    end
+
+    it do
       is_expected.to have_db_column(:preferences)
         .of_type(:jsonb).with_options(null: false, default: {})
     end
@@ -19,9 +31,11 @@ RSpec.describe User, :type => :model do
         .of_type(:integer).with_options(null: false, default: 0)
     end
 
-    it do
-      is_expected.to have_db_column(:moderator)
-        .of_type(:boolean).with_options(null: false, default: false)
+    [:organization, :moderator].each do |attribute|
+      it do
+        is_expected.to have_db_column(attribute)
+          .of_type(:boolean).with_options(null: false, default: false)
+      end
     end
   end
 
@@ -47,6 +61,26 @@ RSpec.describe User, :type => :model do
     it { is_expected.to validate_date_before(:birthday, { limit: 18.year.ago + 1.day }) }
 
     it { is_expected.to validate_inclusion_of(:culture).in_array(%w(en fr)) }
+
+    it { is_expected.to_not allow_value(nil).for(:organization) }
+
+    context 'with a previous user older than limits' do
+      subject { FactoryGirl.create(:user_elder) }
+
+      it { is_expected.to be_valid }
+
+      context 'when updating birthday' do
+        it { is_expected.to validate_date_after(:birthday, { limit: 100.year.ago }) }
+      end
+    end
+
+    context 'with an organization' do
+      subject { FactoryGirl.create(:user, :organization) }
+
+      it { is_expected.to validate_absence_of(:last_name) }
+
+      it { is_expected.to validate_absence_of(:birthday) }
+    end
   end
 
   describe 'Relationships' do
@@ -58,13 +92,13 @@ RSpec.describe User, :type => :model do
   end
 
   context 'after create' do
-    subject(:user) { FactoryGirl.create(:user) }
+    subject(:user) { FactoryGirl.create(:user, [:moderator, :organization].sample) }
 
     it 'has an authentication token' do
       expect(user.authentication_token).to be_valid_token :secure
     end
 
-    it 'has a profile' do
+    it 'has a profile properly propagated' do
       expect_profile_propagation
     end
 
@@ -104,7 +138,8 @@ RSpec.describe User, :type => :model do
       display_name:          user.display_name,
       email_verified:        user.email_verified?,
       phone_number_verified: user.phone_number_verified?,
-      moderator:             user.moderator?
+      moderator:             user.moderator?,
+      organization:          user.organization?
     })
   end
 
@@ -282,5 +317,11 @@ RSpec.describe User, :type => :model do
     subject { user.display_name }
 
     it { is_expected.to eq("#{user.first_name} #{user.last_name.capitalize[0]}") }
+
+    context 'with organization' do
+      let(:user) { FactoryGirl.create(:user, :organization) }
+
+      it { is_expected.to eq(user.first_name) }
+    end
   end
 end

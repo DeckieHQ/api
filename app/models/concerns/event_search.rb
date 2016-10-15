@@ -27,8 +27,10 @@ module EventSearch
                    :submissions_count,
                    :public_comments_count,
                    :private_comments_count,
+                   :children_count,
                    :private,
-                   :flexible,
+                   :type,
+                   :unlimited_capacity,
                    :reached_time_slot_min
 
         attribute :full do
@@ -64,14 +66,14 @@ module EventSearch
           'unordered(description)'
         ]
 
-        attributesForFaceting ['category', 'ambiance', 'level']
+        attributesForFaceting ['category', 'ambiance', 'level', 'type']
 
         customRanking ['asc(begin_at_i)', 'desc(attendees_count / capacity)']
 
         geoloc :latitude, :longitude
       end
 
-      def self.index_worker(record, remove)
+      def self.index_worker(record, _remove)
         IndexRecordJob.perform_later(record.class.name, record.id)
       end
 
@@ -81,7 +83,7 @@ module EventSearch
     private
 
     def indexable?
-      !(closed? || private?)
+      !(closed? || private? || recurrent?)
     end
   end
 end

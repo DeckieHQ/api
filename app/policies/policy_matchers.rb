@@ -2,7 +2,7 @@ module PolicyMatchers
   module Event
     def self.included(base)
       base.instance_eval do
-        [:full, :closed, :flexible, :reached_time_slot_min].each do |state|
+        [:full, :closed, :flexible, :recurrent, :reached_time_slot_min].each do |state|
           define_method :"event_#{state}?" do
             add_error(:"event_#{state}") if event.public_send(:"#{state}?")
           end

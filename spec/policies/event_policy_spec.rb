@@ -30,13 +30,15 @@ RSpec.describe EventPolicy do
       end
     end
 
-    context 'when event is flexible' do
-      let(:event) { FactoryGirl.create(:event, :flexible) }
+    [:flexible, :recurrent].each do |type|
+      context "when event is #{type}" do
+        let(:event) { FactoryGirl.create(:event, type) }
 
-      it { is_expected.to forbid_action(:submit) }
+        it { is_expected.to forbid_action(:submit) }
 
-      it do
-        is_expected.to have_authorization_error(:event_flexible, on: :submit)
+        it do
+          is_expected.to have_authorization_error(:"event_#{type}", on: :submit)
+        end
       end
     end
   end

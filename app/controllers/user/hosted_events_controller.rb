@@ -2,8 +2,9 @@ class User::HostedEventsController < ApplicationController
   before_action :authenticate!
 
   def index
-    search = Search.new(params, sort: %w(begin_at end_at), filters: { scopes: [:opened] })
-
+    search = Search.new(
+      params, sort: %w(begin_at end_at), filters: { scopes: [:opened, :type, :not_type] }
+    )
     return render_search_errors(search) unless search.valid?
 
     render json: search.apply(current_user.hosted_events)

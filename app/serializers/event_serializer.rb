@@ -22,14 +22,18 @@ class EventSerializer < ActiveModel::Serializer
              :submissions_count,
              :public_comments_count,
              :private_comments_count,
+             :children_count,
              :private,
-             :flexible,
+             :type,
+             :unlimited_capacity,
              :reached_time_slot_min,
              :opened,
              :full,
              :ready
 
   belongs_to :host
+
+  belongs_to :parent
 
   has_many :attendees do
     link :related, UrlHelpers.event_attendees(object)
@@ -63,6 +67,11 @@ class EventSerializer < ActiveModel::Serializer
 
   has_many :time_slots_members do
     link :related, UrlHelpers.event_time_slots_members(object)
+    include_data false
+  end
+
+  has_many :children do
+    link :related, UrlHelpers.event_children(object)
     include_data false
   end
 

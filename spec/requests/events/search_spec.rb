@@ -1,13 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe 'Event search', :type => :search do
-  let(:indexable_events) { Event.opened.where(private: false) }
+  let(:indexable_events) do
+    Event.opened.where.not(type: :recurrent).where(private: false)
+  end
 
   before(:all) do
     Event.without_auto_index do
-      FactoryGirl.create_list(:event,        5)
-      FactoryGirl.create_list(:event_closed, 5)
-      FactoryGirl.create_list(:event_full,   5)
+      FactoryGirl.create_list(:event,        2)
+      FactoryGirl.create_list(:event_closed, 2)
+      FactoryGirl.create_list(:event_full,   2)
+      FactoryGirl.create_list(:event, 1, :recurrent)
     end
     Event.reindex!(1000, true)
 
@@ -50,7 +53,7 @@ RSpec.describe 'Event search', :type => :search do
     end
   end
 
-  [:category, :ambiance, :level].each do |attribute|
+  [:category, :ambiance, :level, :type].each do |attribute|
     it "has faceting on #{attribute}" do
       value = event.public_send(attribute)
 
@@ -58,7 +61,7 @@ RSpec.describe 'Event search', :type => :search do
         facets: attribute, facetFilters: ["#{attribute}:#{value}"]
       })
       expect(results).to have_records(
-        indexable_events.where("#{attribute} = ?", value)
+        indexable_events.where({ "#{attribute}": value })
       )
     end
   end

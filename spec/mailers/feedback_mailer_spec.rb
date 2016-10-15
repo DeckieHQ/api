@@ -24,8 +24,10 @@ RSpec.describe FeedbackMailer do
       expect(mail.subject).to eq(content.subject)
     end
 
-    it 'assigns description' do
-      expect(mail.body.encoded).to include(content.description)
+    [:description, :sender].each do |attribute|
+      it "assigns #{attribute}" do
+        expect(mail.body.encoded).to include(content.public_send(attribute))
+      end
     end
   end
 end

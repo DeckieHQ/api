@@ -40,6 +40,14 @@ RSpec.describe 'Event update', :type => :request do
         expect(event.end_at).to   equal_time(event_update.end_at)
       end
 
+      context 'when updating to unlimited capacity' do
+        let(:event_update) { FactoryGirl.build(:event, :unlimited_access) }
+
+        it 'grants the user with a first flexible event achievement' do
+          expect(authenticate).to have_achievement('first-unlimited-event-capacity')
+        end
+      end
+
       context 'when attributes are invalid' do
         let(:event_update) { Event.new }
 

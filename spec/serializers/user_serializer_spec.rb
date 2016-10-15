@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe UserSerializer, :type => :serializer do
 
   context 'Individual Resource Representation' do
-    let(:user) { FactoryGirl.create([:user, :user_verified].sample) }
+    let(:user) { FactoryGirl.create([:user, :user_verified].sample, [:moderator, :organization].sample) }
 
     let(:serialized) do
       Serialized.new(UserSerializer.new(user))
@@ -12,7 +12,7 @@ RSpec.describe UserSerializer, :type => :serializer do
     it 'serializes the specified attributes' do
       expected_attributes = user.slice(
         :first_name, :last_name, :birthday, :email, :phone_number, :culture,
-        :notifications_count, :moderator
+        :notifications_count, :moderator, :organization
       ).merge({
         email_verified: user.email_verified?,
         phone_number_verified: user.phone_number_verified?

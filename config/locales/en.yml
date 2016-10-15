@@ -83,17 +83,17 @@ en:
       details: >
         Good luck and have fun!
       link: 'View events on Deckie'
-    # This doesn't need translation.
-    feedback_informations:
-      subject: '[ New Feedback ] - %{title}'
     flexible_event_reminder:
       subject: "You didn't confirm a time slot for the event %{title}"
       link: 'View on Deckie'
       time_slot: "%{begin_at}: %{members_count} members"
+    # This doesn't need translation.
+    feedback_informations:
+      subject: '[ New Feedback ] - %{title}'
+      default_sender: 'anonymous'
   smser:
     phone_number_verification_instructions:
       message: 'Deckie: To verify your phone number, please enter this code: %{code}.'
-
 # Keys below don't need a translation.
   failure:
     unauthorized: 'Bad credentials.'
@@ -112,6 +112,7 @@ en:
         event_full: 'Event is full.'
         event_closed: 'Event is closed.'
         event_flexible: 'Event is flexible.'
+        event_recurrent: 'Event is recurrent.'
         event_reached_time_slot_min: 'Event reached minimum time slots required.'
         email_already_verified: 'Email is already verified.'
         phone_number_already_verified: 'Email is already verified.'
@@ -122,7 +123,7 @@ en:
         event:
           attributes:
             new_time_slots:
-              unsupported: 'must be an array from 2 to 5 unique datetime values above 24 hours from current datetime.'
+              unsupported: 'must be an array of valid datetimes.'
   activemodel:
     errors:
       models:

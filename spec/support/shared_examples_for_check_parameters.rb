@@ -34,7 +34,7 @@ RSpec.shared_examples 'check parameters for' do |type|
     end
 
     context 'with invalid data attributes' do
-      let(:options) { { data: { type: type, attributes: 'test' } } }
+      let(:options) { { data: { type: type, attributes: ['test', nil, true, 1, [{}]].sample } } }
 
       it { is_expected.to return_validation_errors :parameters, on: :data }
     end

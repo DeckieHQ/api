@@ -36,12 +36,28 @@ RSpec.describe CancelEvent do
 
     subject(:call) { service.call }
 
-    before { service.call }
+    before do
+      allow(described_class).to receive(:for)
+
+      call
+    end
 
     it { is_expected.to have_created_action(profile, event, :cancel) }
 
     it 'destroys the resource' do
       expect(event).to be_deleted
+    end
+
+    it "didn't cancel any children" do
+      expect(described_class).to have_received(:for).with(profile, [])
+    end
+
+    context 'when event has children' do
+      let(:event) { FactoryGirl.create(:event, :recurrent) }
+
+      it 'cancels the event children' do
+        expect(described_class).to have_received(:for).with(profile, event.children)
+      end
     end
   end
 end

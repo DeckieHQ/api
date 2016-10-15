@@ -43,7 +43,9 @@ class User::RegistrationsController < Devise::RegistrationsController
   protected
 
   def sign_up_params
-    attributes(:users).permit(shared_attributes, subscriptions: [])
+    attributes(:users).permit(
+      shared_attributes.push(:organization), subscriptions: []
+    )
   end
 
   def account_update_params

@@ -1,7 +1,7 @@
 class Feedback
   include ActiveModel::Validations
 
-  attr_accessor :title, :description
+  attr_accessor :title, :description, :email
 
   validates :title, :description, presence: true
 
@@ -9,9 +9,12 @@ class Feedback
 
   validates :description, length: { maximum: 8192 }
 
+  validates :email, email: true, allow_nil: true
+
   def initialize(attributes = {})
     @title       = attributes[:title]
     @description = attributes[:description]
+    @email       = attributes[:email]
   end
 
   def send_informations

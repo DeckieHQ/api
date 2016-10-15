@@ -50,6 +50,14 @@ module Merit
         event.flexible?
       end
 
+      grant_on 'user/hosted_events#create', badge: 'first-recurrent-event', model_name: 'Event' do |event|
+        event.recurrent?
+      end
+
+      grant_on ['user/hosted_events#create', 'events#update'], badge: 'first-unlimited-event-capacity', model_name: 'Event' do |event|
+        event.unlimited_capacity?
+      end
+
       grant_on 'user/verifications#update', badge: 'verified-profile', model_name: 'User' do |verification|
         verification.model.kind_of?(User) && verification.model.verified?
       end
