@@ -6,7 +6,7 @@ namespace :events do
     puts "Going to update #{events.count} event"
 
     ActiveRecord::Base.transaction do
-      events.each do |event|
+      events.with_deleted.each do |event|
         event.flexible!
         puts '.'
       end
