@@ -573,6 +573,33 @@ RSpec.describe Event, :type => :model do
     end
   end
 
+  describe '.type' do
+    let(:type) { Event.types.keys.sample }
+    before do
+      FactoryGirl.create_list(:event, Faker::Number.between(1, 4))
+      FactoryGirl.create_list(:event, Faker::Number.between(1, 4), :flexible)
+      FactoryGirl.create_list(:event, Faker::Number.between(1, 4), :recurrent)
+    end
+
+    it 'returns events with specified type' do
+      expect(Event.type(type).pluck(:type)).to all( eq(type) )
+    end
+  end
+
+  describe '.not_type' do
+    let(:type) { Event.types.keys.sample }
+
+    before do
+      FactoryGirl.create_list(:event, Faker::Number.between(1, 4))
+      FactoryGirl.create_list(:event, Faker::Number.between(1, 4), :flexible)
+      FactoryGirl.create_list(:event, Faker::Number.between(1, 4), :recurrent)
+    end
+
+    it 'returns all events excepts ones with specified type' do
+      expect(Event.not_type(type).pluck(:type)).to_not include(type)
+    end
+  end
+
   describe '.with_pending_submissions' do
     let!(:events) do
       FactoryGirl.create_list(:event_with_submissions, 5)
