@@ -21,4 +21,14 @@ RSpec.describe TimeSlotSubmission, :type => :model do
 
     it { is_expected.to belong_to(:profile) }
   end
-end
+
+  context 'after create' do
+    let(:time_slot_submission) { FactoryGirl.create(:time_slot_submission) }
+
+    let(:event) { time_slot_submission.event }
+
+    it 'updates the time slot event counter cache' do
+      expect(event.attendees_count).to eq(event.optimum_time_slot.members_count)
+    end
+  end
+ end
