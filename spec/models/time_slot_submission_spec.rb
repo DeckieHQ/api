@@ -31,4 +31,16 @@ RSpec.describe TimeSlotSubmission, :type => :model do
       expect(event.attendees_count).to eq(event.optimum_time_slot.members_count)
     end
   end
+
+  context 'after destroy' do
+    let(:time_slot_submission) { FactoryGirl.create(:time_slot_submission) }
+
+    let(:event) { time_slot_submission.event }
+
+    before { time_slot_submission.destroy }
+
+    it 'updates the time slot event counter cache' do
+      expect(event.attendees_count).to eq(event.optimum_time_slot.members_count)
+    end
+  end
  end

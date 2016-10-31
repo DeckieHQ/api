@@ -7,6 +7,8 @@ class TimeSlotSubmission < ApplicationRecord
 
   after_create :update_counter_cache
 
+  after_destroy :update_counter_cache
+
   delegate :event, to: :time_slot
 
   private
