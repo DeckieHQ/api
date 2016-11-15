@@ -5,11 +5,11 @@ staging:
 production:
   :concurrency: 10
 :queues:
-  - default
-  - [indexation, 2]
-  - [notifications, 2]
+  - [indexation, 4]
+  - [notifications, 4]
   - [scheduler, 3]
-  - [mailers, 4]
+  - [mailers, 2]
+  - default
 :schedule:
   reindex_events:
     every: 1h
