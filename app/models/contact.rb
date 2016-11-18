@@ -8,10 +8,7 @@ class Contact
     @user = user
   end
 
-  def id
-    user.id
-  end
-
+  delegate :id,           to: :user
   delegate :email,        to: :user
   delegate :phone_number, to: :user
 end
