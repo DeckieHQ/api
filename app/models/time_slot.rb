@@ -42,7 +42,7 @@ class TimeSlot < ApplicationRecord
         time_slot_id: event.time_slots.pluck('id')
       ).pluck('profile_id').uniq
     else
-      throw "Unsupported action: #{action.type}"
+      fail "Unsupported action: #{action.type}"
     end
   end
 
