@@ -17,6 +17,6 @@ class SearchOption
   end
 
   def unsupported
-    throw 'Must be implemented!'
+    fail 'Must be implemented!'
   end
 end
