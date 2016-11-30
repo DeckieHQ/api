@@ -207,7 +207,7 @@ class Event < ApplicationRecord
     when :update, :leave, :comment
       attendees_with_host_ids.tap { |ids| ids.delete(action.actor.id) }
     else
-      throw "Unsupported action: #{action.type}"
+      fail "Unsupported action: #{action.type}"
     end
   end
 
