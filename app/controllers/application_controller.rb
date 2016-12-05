@@ -35,7 +35,7 @@ class ApplicationController < ActionController::API
   def permited_attributes(record)
     type = (record.is_a?(Class) ? record : record.class).to_s.downcase.pluralize
 
-    method = "permited_attributes_for_#{params[:action]}"
+    method = "permited_attributes_for_#{action_name}"
 
     record_policy = policy(record)
 
