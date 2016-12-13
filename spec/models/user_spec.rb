@@ -3,7 +3,10 @@ require 'rails_helper'
 RSpec.describe User, :type => :model do
   describe 'Database' do
     [
-      :email, :reset_password_token, :email_verification_token,
+      :email,
+      :authentication_token,
+      :reset_password_token,
+      :email_verification_token,
       :phone_number_verification_token
     ].each do |attribute|
       it { is_expected.to have_db_index(attribute).unique(true) }
