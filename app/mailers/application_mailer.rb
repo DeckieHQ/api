@@ -4,16 +4,9 @@ class ApplicationMailer < ActionMailer::Base
   attr_reader :content
 
   def send_mail(user)
-    change_locale_for(user) do
+    I18n.with_locale(user.culture) do
       mail(to: user.email, subject: content.subject)
     end
   end
 
-  def change_locale_for(user)
-    I18n.locale = user.culture
-
-    yield
-
-    I18n.locale = I18n.default_locale
-  end
 end
